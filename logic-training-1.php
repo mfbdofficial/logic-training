@@ -125,8 +125,6 @@ function replaceAll($s) {
     return strtok($s, "#");
 }
 
-
-/*
 //Codewars - Check for factor
 //Factors are numbers you can multiply together to get another number.
 //2 and 3 are factors of 6 because: 2 * 3 = 6
@@ -249,4 +247,3 @@ function tower_builder(int $n): array {
     }
     return $result;
 }
-*/

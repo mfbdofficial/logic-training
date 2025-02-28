@@ -141,8 +141,6 @@ function removeUrlAnchor(url){
     return url.replace(/#.*/gi, ""); //pakai regex, ganti bagian yg "#..." (ada anchor, juga karakter
 } //seterusnya) menjadi string kosong ''
 
-
-/*
 //Codewars - Check for factor
 //Factors are numbers you can multiply together to get another number.
 //2 and 3 are factors of 6 because: 2 * 3 = 6
@@ -226,4 +224,3 @@ function towerBuilder(n) {
 function towerBuilder(n) {
     return [...Array(n)].map((_, i) => " ".repeat(n - 1 - i) + "*".repeat(i * 2 + 1) + " ".repeat(n - 1 -i))
 }
-*/
