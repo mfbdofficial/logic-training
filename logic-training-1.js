@@ -224,3 +224,109 @@ function towerBuilder(n) {
 function towerBuilder(n) {
     return [...Array(n)].map((_, i) => " ".repeat(n - 1 - i) + "*".repeat(i * 2 + 1) + " ".repeat(n - 1 -i))
 }
+
+//Codewars - Counting Duplicates
+//Write a function that will return the count of distinct case-insensitive alphabetic characters and 
+//numeric digits that occur more than once in the input string. The input string can be assumed to contain 
+//only alphabets (both uppercase and lowercase) and numeric digits.
+//"abcde" -> 0 -> no characters repeats more than once)
+//"aabbcde" -> 2 -> 'a' and 'b'
+//"aabBcde" -> 2 -> 'a' occurs twice and 'b' twice (`b` and `B`)
+//"indivisibility" -> 1 -> 'i' occurs six times
+//"Indivisibilities" -> 2 -> 'i' occurs seven times and 's' occurs twice
+function duplicateCount(text) {
+    let alreadyThere = []; //array kosong untuk riwayat element yg sudah ada
+    let count = 0; //counter jika ditemukan yg sesuai kriteria
+    for (let i = 0; i < text.length; i++) { //perulangan semua character
+        let state = false; //keadaan awal saat belum membandingkan
+        if (alreadyThere.indexOf(text[i].toLowerCase()) == -1) { //hanya jalan untuk character yg belum ada
+            for (let j = i + 1; j < text.length; j++) { //perulangan dengan character pembanding
+                if (text[i].toLowerCase() == text[j].toLowerCase()) { //cek char sama (case-insensitive)?
+                    state = true; //kalo ada yg sama maka state true
+                }
+            }
+            alreadyThere.push(text[i].toLowerCase()); //masukkan ke riwayat
+        }
+        if (state == true) {//state true akan mengakibatkan counter up
+            count++;
+        }
+    }
+    return count;
+}
+//Pro solution 1
+function duplicateCount(text){
+    return (text.toLowerCase().split('').sort().join('').match(/([^])\1+/g) || []).length; //pakai regex
+} //semua dijadikan lowercase, dipisah jadi array, disorting, digabungin lagi string-nya, lalu regex 
+//lalu entah gimana proses-nya dari regex itu diambil length-nya dan itu hasilnya
+//Pro solution 2
+function duplicateCount(text){
+    return text.toLowerCase().split('').filter(function(val, i, arr) {
+        return arr.indexOf(val) !== i && arr.lastIndexOf(val) === i;
+    }).length;
+}
+
+//Codewars - Array.diff
+//Implement a function that computes the difference between two lists. The function should remove all 
+//occurrences of elements from the first list (a) that are present in the second list (b). The order 
+//of elements in the first list should be preserved in the result.
+//If a = [1, 2] and b = [1], the result should be [2].
+//If a = [1, 2, 2, 2, 3] and b = [2], the result should be [1, 3].
+function arrayDiff(a, b) {
+    let lengthA = a.length;
+    for (let i = 0; i < b.length; i++) {
+        for (let j = lengthA - 1; j > -1; j--) { //pakai perulangan angka yg besar, bukan dari 0,
+            if (typeof a[j] !== 'undefined') { //jadi kita akan hapus element array-nya dari belakang
+                if (b[i] == a[j]) { //karena di JavaScript akan bergesar (kalo di hapus) dan membuat kacau
+                    a.splice(j, 1); 
+                }
+            }
+        }
+    } //sifat array di JavaScript sepertinya beda dengan PHP, index PHP akan terus menempel jika elemen
+    return a; //di bagian tengahnya di hapus, kalo JavaScript element yg di belakang akan maju ke depan
+} //mengisi index yg kosong (jika ada element di pertengahan yg dihapus)
+//Pro solution 1
+function array_diff(a, b) {
+    return a.filter(e => !b.includes(e));
+}
+//Pro solution 2
+function array_diff(a, b) {
+    return a.filter(function(x) { 
+        return b.indexOf(x) == -1; 
+    });
+}
+
+//Codewars - Delete Occurrences of An Element If It Occurs More Than N Times
+//Alice and Bob were on a holiday. Both of them took many pictures of the places they've been, and 
+//now they want to show Charlie their entire collection. However, Charlie doesn't like these sessions, 
+//since the motif usually repeats. He isn't fond of seeing the Eiffel tower 40 times. He tells them that 
+//he will only sit for the session if they show the same motif at most N times. 
+//[1, 2, 3, 1, 2, 1, 2, 3] & 2 -> [1, 2, 3, 1, 2]
+//[20, 37, 20, 21] & 1 -> [20, 37, 21]
+function deleteNth(arr, n) {
+    let list = [];
+    for (let i = 0; i < arr.length; i++) {
+        let count = 0;
+        for (let j = 0; j < list.length; j++) {
+            if (arr[i] == list[j]) {
+                count++;
+            }
+        }
+        if (n > count) {
+            list.push(arr[i]);
+        }
+    }
+    return list;
+}
+//Pro solution 1
+function deleteNth(arr, x) {
+    var cache = {};
+    return arr.filter(function(n) {
+        cache[n] = (cache[n]||0) + 1; //still don't know how the hell is this work
+        return cache[n] <= x;
+    });
+}
+//Pro solution 2
+const deleteNth = (a, x) => {
+    let m = {};
+    return a.filter( v => (m[v] = m[v]+1||1) <= x ); //still don't know how the hell is this work
+} 

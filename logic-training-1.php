@@ -247,3 +247,123 @@ function tower_builder(int $n): array {
     }
     return $result;
 }
+
+//Codewars - Counting Duplicates
+//Write a function that will return the count of distinct case-insensitive alphabetic characters and 
+//numeric digits that occur more than once in the input string. The input string can be assumed to contain 
+//only alphabets (both uppercase and lowercase) and numeric digits.
+//"abcde" -> 0 -> no characters repeats more than once)
+//"aabbcde" -> 2 -> 'a' and 'b'
+//"aabBcde" -> 2 -> 'a' occurs twice and 'b' twice (`b` and `B`)
+//"indivisibility" -> 1 -> 'i' occurs six times
+//"Indivisibilities" -> 2 -> 'i' occurs seven times and 's' occurs twice
+function duplicateCount($text) {
+    $alreadyThere = []; //array kosong untuk riwayat element yg sudah ada
+    $count = 0; //counter jika ditemukan yg sesuai kriteria
+    for ($i = 0; $i < strlen($text); $i++) { //perulangan semua character
+        $state = false; //keadaan awal saat belum membandingkan
+        if (!in_array(strtolower($text[$i]), $alreadyThere)) { //hanya jalan untuk character yg belum ada
+            for ($j = $i + 1; $j < strlen($text); $j++) { //perulangan dengan character pembanding
+                if (strcasecmp($text[$i], $text[$j]) == 0) { //cek apakah char sama (case-insensitive)?
+                    $state = true; //kalo ada yg sama maka state true
+                }
+            }
+            $alreadyThere[] = strtolower($text[$i]); //masukkan ke riwayat
+        }
+        if ($state == true) { //state true akan mengakibatkan counter up
+            $count++; 
+        }
+    }
+    return $count;
+}
+//Pro solution 1
+function duplicateCount($text) {
+    $dupCount = 0; //counter
+    $text = array_count_values(str_split(strtolower($text))); //text jadikan lowercase, dipisah jadi array
+    foreach ($text as $val) { //perulangan dari hasil array_count_values()
+        if ($val > 1) { 
+            $dupCount = $dupCount+1; //kalo frekuensi-nya lebih dari 1 maka counter up
+        }   
+    }
+    return $dupCount;
+}
+//NOTE : array_count_values() returns an array using the values of array (which must be ints or strings) 
+//as keys and their frequency in array as values.
+//Pro solution 2
+function duplicateCount($text) {
+    $text = strtolower($text);
+    $count = 0;
+    foreach (count_chars($text, 1) as $val) { 
+        if ($val > 1) {
+            $count++;
+        }
+    }
+    return $count;
+}
+//NOTE : count_chars(string $string, int $mode = 0): array|string, Counts the number of occurrences of 
+//every byte-value (0..255) in string and returns it in various ways. There's some mode in count_chars() :
+//0 - an array with the byte-value as key and the frequency of every byte as value.
+//1 - same as 0 but only byte-values with a frequency greater than zero are listed.
+//2 - same as 0 but only byte-values with a frequency equal to zero are listed.
+//3 - a string containing all unique characters is returned.
+//4 - a string containing all unused characters is returned.
+
+//Codewars - Array.diff
+//Implement a function that computes the difference between two lists. The function should remove all 
+//occurrences of elements from the first list (a) that are present in the second list (b). The order 
+//of elements in the first list should be preserved in the result.
+//If a = [1, 2] and b = [1], the result should be [2].
+//If a = [1, 2, 2, 2, 3] and b = [2], the result should be [1, 3].
+function arrayDiff($a, $b) {
+    $lengthA = count($a); //kenapa bikin variable baru?
+    for ($i = 0; $i < count($b); $i++) {
+        for  ($j = 0; $j < $lengthA; $j++) { //karena nanti kita akan hapus element di $a maka nilai
+            if (isset($a[$j])) { //dari count($a) akan berubah dan mengacaukan looping
+                if ($b[$i] == $a[$j]) {
+                    unset($a[$j]); //menghapus value dari array $a maka count($a) berubah (memendek)
+                }
+            }
+        }
+    }
+    $newArr = [];
+    foreach ($a as $value) {
+        $newArr[] = $value;
+    }
+    return $newArr;
+}
+//Pro solution 1
+function arrayDiff($a, $b) {
+    return array_values(array_diff($a, $b)); //array_diff() menghapus array yg ada di array pembanding,
+} //lalu langsung array_values() untuk pebaiki urutan index array-nya
+//Pro solution 2
+function arrayDiff($a, $b) {
+	foreach ($a as $key => $element){ //perulangan untuk array $a-nya
+		if (in_array($a[$key], $b)){ //cek apakah ada di array pembanding $b?
+			unset($a[$key]); //kalo ada langsung unset()
+        };
+    }
+	return array_values($a);
+}
+
+//Codewars - Delete Occurrences of An Element If It Occurs More Than N Times
+//Alice and Bob were on a holiday. Both of them took many pictures of the places they've been, and 
+//now they want to show Charlie their entire collection. However, Charlie doesn't like these sessions, 
+//since the motif usually repeats. He isn't fond of seeing the Eiffel tower 40 times. He tells them that 
+//he will only sit for the session if they show the same motif at most N times. 
+//[1, 2, 3, 1, 2, 1, 2, 3] & 2 -> [1, 2, 3, 1, 2]
+//[20, 37, 20, 21] & 1 -> [20, 37, 21]
+function deleteNth($arr, $n) {
+    $list = [];
+    for ($i = 0; $i < count($arr); $i++) {
+        $count = 0;
+        for ($j = 0; $j < count($list); $j++) {
+            if ($arr[$i] == $list[$j]) {
+                $count++;
+            }
+        }
+        if ($n > $count) {
+            $list[] = $arr[$i];
+        }
+    }
+    return $list;
+}
