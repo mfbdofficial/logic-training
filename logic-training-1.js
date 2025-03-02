@@ -122,7 +122,7 @@ const Kata = {
 //Complete the function/method so that it returns the url with anything after the anchor (#) removed.
 //"www.codewars.com#about" --> "www.codewars.com"
 //"www.codewars.com?page=1" --> "www.codewars.com?page=1"
-function removeUrlAnchor(url){
+function removeUrlAnchor(url) {
     let cleanURL = "";
     for (let i = 0; i < url.length; i++) {
         if (url[i] == "#") {
@@ -133,11 +133,11 @@ function removeUrlAnchor(url){
     return cleanURL;
 }
 //Pro solution 1
-function removeUrlAnchor(url){
+function removeUrlAnchor(url) {
     return url.split('#')[0]; //split (pisahkan) string berdasarkan "#" lalu ambil yg pertama saja,
 } //yaitu index ke 0
 //Pro solution 2
-function removeUrlAnchor(url){
+function removeUrlAnchor(url) {
     return url.replace(/#.*/gi, ""); //pakai regex, ganti bagian yg "#..." (ada anchor, juga karakter
 } //seterusnya) menjadi string kosong ''
 
@@ -254,12 +254,12 @@ function duplicateCount(text) {
     return count;
 }
 //Pro solution 1
-function duplicateCount(text){
+function duplicateCount(text) {
     return (text.toLowerCase().split('').sort().join('').match(/([^])\1+/g) || []).length; //pakai regex
 } //semua dijadikan lowercase, dipisah jadi array, disorting, digabungin lagi string-nya, lalu regex 
 //lalu entah gimana proses-nya dari regex itu diambil length-nya dan itu hasilnya
 //Pro solution 2
-function duplicateCount(text){
+function duplicateCount(text) {
     return text.toLowerCase().split('').filter(function(val, i, arr) {
         return arr.indexOf(val) !== i && arr.lastIndexOf(val) === i;
     }).length;
@@ -330,3 +330,85 @@ const deleteNth = (a, x) => {
     let m = {};
     return a.filter( v => (m[v] = m[v]+1||1) <= x ); //still don't know how the hell is this work
 } 
+
+//Codewars - You're a Square!
+//Given an integral number, determine if it's a square number. In mathematics, a square number or perfect
+//square is an integer that is the square of an integer; in other words, it is the product of some 
+//integer with itself.
+//-1  =>  false, 0  =>  true, 3  =>  false, 4  =>  true, 25  =>  true, 26  =>  false
+var isSquare = function(n) {
+    if (Math.floor(Math.sqrt(n)) == Math.sqrt(n)) {
+        return true;
+    }
+    return false; // fix me
+}
+//Pro solution 1
+function isSquare(n) {
+    return Math.sqrt(n) % 1 === 0;
+}
+//Pro solution 2
+const isSquare = n => Number.isInteger(Math.sqrt(n));
+
+//HackerRank - Breaking the Records
+//Given the scores for a season, determine the number of times that score breaks it's records for most 
+//and least points scored during the season.
+//Description, breakingRecords has the following parameter(s): int scores[n]: points scored per game
+//Returns int[2]: An array with the numbers of times she broke her records. Index  is for breaking most 
+//points records, and index  is for breaking least points records.
+//[10, 5, 20, 20, 4, 5, 2, 25, 1] -> [2, 4]
+//Explanation : 10 5  20 20 4  5  2  25 1
+//              00 01 11 11 12 12 13 23 24
+//[3, 4, 21, 36, 10, 28, 35, 5, 24, 42] -> [4, 0]
+//Explanation : 3  4  21 36 10 28 35 5  24 42
+//              00 10 20 30 30 30 30 30 30 40
+function breakingRecords(scores) {
+    let countMax = 0;
+    let countMin = 0;
+    let currentMax = scores[0];
+    let currentMin = scores[0];
+    for (let i = 1; i < scores.length; i++) {
+        if (scores[i] > currentMax) {
+            currentMax = scores[i];
+            countMax++;
+        } else if (scores[i] < currentMin) {
+            currentMin = scores[i];
+            countMin++;
+        }
+    }
+    return [countMax, countMin];
+}
+
+//Codewars - Unique In Order
+//Implement the function unique_in_order which takes as argument a sequence and returns a list of items 
+//without any elements with the same value next to each other and preserving the original order of elements.
+//"AAAABBBCCDAABBB" -> ['A', 'B', 'C', 'D', 'A', 'B']
+//"ABBCcAD"  -> ['A', 'B', 'C', 'c', 'A', 'D']
+//[1,2,2,3,3] -> [1,2,3]
+//[] or "" -> []
+var uniqueInOrder=function(iterable) {
+    if (iterable.length == 0) {
+        return [];
+    }
+    let itemList = [iterable[0]];
+    for (let i = 0; i < iterable.length; i++) {
+        if (iterable[i] !== itemList[itemList.length -1]) {
+            itemList.push(iterable[i]);
+        }
+    }
+    return itemList;
+}
+//Pro solution 1
+var uniqueInOrder = function(iterable) {
+    return [...iterable].filter((current, index) => current !== iterable[index-1]); //[...iterable] artinya 
+} //spread operator untuk bikin array baru dari variable iterable, bisa untuk data type array, string dll
+//Pro solution 2
+function uniqueInOrder(iterable) {
+    var result = [];
+    var last; //saat awal last itu value-nya undefined 
+    for (var i = 0; i < iterable.length; i++) {
+        if (iterable[i] !== last) {
+            result.push(last = iterable[i]); //push array sekaligus ubah nilai variable
+        }
+    }
+    return result
+}

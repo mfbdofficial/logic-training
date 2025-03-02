@@ -20,7 +20,7 @@ function capitals($word) {
 //number.The numbering starts at 1. The format is n: string. Notice the colon and space in between.
 //[] --> []
 //["a", "b", "c"] --> ["1: a", "2: b", "3: c"]
-function number(array $lines): array{
+function number(array $lines): array {
     $prependedCorrectNumber = [];
     for($i = 0; $i < count($lines); $i++) {
         $stringNumber = strval($i + 1);
@@ -29,7 +29,7 @@ function number(array $lines): array{
     return $prependedCorrectNumber; // your code here
 }
 //pro solution 1
-function number(array $lines): array{
+function number(array $lines): array {
     return array_map(function($l, $k){ //langsung mapping $l itu index-nya, $k itu value-nya
         return ($k + 1).": ".$l; //return bentuk seperti ini
     }, $lines, array_keys($lines)); //$lines menjadi $l, lalu array_keys($lines) menjadi $k
@@ -367,3 +367,102 @@ function deleteNth($arr, $n) {
     }
     return $list;
 }
+
+//Codewars - You're a Square!
+//Given an integral number, determine if it's a square number. In mathematics, a square number or perfect
+//square is an integer that is the square of an integer; in other words, it is the product of some 
+//integer with itself.
+//-1  =>  false, 0  =>  true, 3  =>  false, 4  =>  true, 25  =>  true, 26  =>  false
+function isSquare($n) {
+    if (floor(sqrt($n)) == sqrt($n)) {
+        return true;
+    }
+    return false;
+}
+//Pro solution 1
+function isSquare($n) {
+    return !fmod(sqrt($n), 1);
+}
+
+//HackerRank - Breaking the Records
+//Given the scores for a season, determine the number of times that score breaks it's records for most 
+//and least points scored during the season.
+//Description, breakingRecords has the following parameter(s): int scores[n]: points scored per game
+//Returns int[2]: An array with the numbers of times she broke her records. Index  is for breaking most 
+//points records, and index  is for breaking least points records.
+//[10, 5, 20, 20, 4, 5, 2, 25, 1] -> [2, 4]
+//Explanation : 10 5  20 20 4  5  2  25 1
+//              00 01 11 11 12 12 13 23 24
+//[3, 4, 21, 36, 10, 28, 35, 5, 24, 42] -> [4, 0]
+//Explanation : 3  4  21 36 10 28 35 5  24 42
+//              00 10 20 30 30 30 30 30 30 40
+function breakingRecords($scores) {
+    $countMax = 0;
+    $countMin = 0;
+    $currentMax = $scores[0];
+    $currentMin = $scores[0];
+    for ($i = 1; $i < count($scores); $i++) {
+        if ($scores[$i] > $currentMax) {
+            $currentMax = $scores[$i];
+            $countMax++;
+        } else if ($scores[$i] < $currentMin) {
+            $currentMin = $scores[$i];
+            $countMin++;
+        }
+    }
+    return [$countMax, $countMin];
+}
+
+//Codewars - Unique In Order
+//Implement the function unique_in_order which takes as argument a sequence and returns a list of items 
+//without any elements with the same value next to each other and preserving the original order of elements.
+//"AAAABBBCCDAABBB" -> ['A', 'B', 'C', 'D', 'A', 'B']
+//"ABBCcAD"  -> ['A', 'B', 'C', 'c', 'A', 'D']
+//[1,2,2,3,3] -> [1,2,3]
+//[] or "" -> []
+function uniqueInOrder($iterable) {
+    if (is_array($iterable)) {
+        if (count($iterable) === 0) {
+            return [];
+        }
+        $itemList = [$iterable[0]];
+        for ($i = 1; $i < count($iterable); $i++) {
+            if ($iterable[$i] !== $itemList[count($itemList) - 1]) {
+                $itemList[] = $iterable[$i];
+            }
+        }
+        return $itemList;
+    }
+    if ($iterable == "") {
+        return [];
+    }
+    $itemList = [$iterable[0]];
+    for ($j = 1; $j < strlen($iterable); $j++) {
+        if ($iterable[$j] !== $itemList[count($itemList) - 1]) {
+            $itemList[] = $iterable[$j];
+        }
+    }
+    return $itemList;
+}
+//Pro solution 1
+function uniqueInOrder($iterable) { 
+    $arr = is_string($iterable) ? str_split($iterable) : $iterable; //jika string maka diubah jadi array
+    $ret = array_reduce($arr, function($carry, $item) { //array_reduce() applies iteratively the callback
+        if ($item != end($carry)) { //function to the elements of the array
+            $carry[] = $item;
+        }
+        return $carry;
+    }, []); //parameter terakhir [] disebut initial, If the optional initial is available, it will be 
+    return $ret; //used at the beginning of the process, or as a final result in case the array is empty.
+}
+//Pro solution 2
+function uniqueInOrder($iterable) {
+    return array_values(array_filter(!is_array($iterable) ? str_split($iterable) : $iterable, function($current, $index) use ($iterable) {
+        return ($current !== $iterable[$index - 1]);
+    }, 1)); //array_filter mode 1
+}
+//NOTE : array_filter() Iterates over each value in the array passing them to the callback function. 
+//If the callback function returns true, the current value from array is returned into the result array.
+//Ada 2 mode array_filter() : 
+//1. ARRAY_FILTER_USE_KEY - pass key as the only argument to callback instead of the value
+//2. ARRAY_FILTER_USE_BOTH - pass both value and key as arguments to callback instead of the value
