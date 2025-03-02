@@ -466,3 +466,5 @@ function uniqueInOrder($iterable) {
 //Ada 2 mode array_filter() : 
 //1. ARRAY_FILTER_USE_KEY - pass key as the only argument to callback instead of the value
 //2. ARRAY_FILTER_USE_BOTH - pass both value and key as arguments to callback instead of the value
+
+//Codewars - 
