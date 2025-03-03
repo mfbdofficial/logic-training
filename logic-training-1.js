@@ -413,4 +413,83 @@ function uniqueInOrder(iterable) {
     return result
 }
 
-//Codewars - 
+//Codewars - Is This a Triangle
+//Implement a function that accepts 3 integer values a, b, c. The function should return true if a 
+//triangle can be built with the sides of given length and false in any other case.
+//1,2,2 -> true
+//4,2,3 -> true
+//2,2,2 -> true
+//1,2,3 -> false
+//-5,1,3 -> false
+//0,2,3 -> false
+//1,2,9 -> false 
+function isTriangle(a, b, c) { //Syarat segitiga (simak di bawah):
+    if (a <= 0 || b <= 0 || c <= 0) { //tidak boleh ada sisi yg sepanjang 0 atau lebih kecil dari 0
+        return false;
+    }
+    let longestSide;
+    let sidesLeft;
+    if (a >= b && a >= c) {
+        longestSide = a;
+        sidesLeft = [b, c];
+    } else if (b >= a && b >= c) {
+        longestSide = b;
+        sidesLeft = [a, c];
+    } else if (c >= a && c >= b) {
+        longestSide = c;
+        sidesLeft = [a, b];
+    } 
+    if (longestSide < (sidesLeft[0] + sidesLeft[1])) { //sisi yg paling panjang tidak melebihi hasil
+        return true; //jumlah dari 2 sisi lainnya yg lebih pendek (bayangkan saja, 2 sisi pendek jika
+    } //dijumlahkan sama saja itu posisinya sudah lurus dan jadi garis sambung panjang, jika 1 sisi yg
+    return false; //paling panjang digabungkan, maka gaakan bisa buat bentuk segitiga atau garis bablas)
+}
+//Pro solution 1
+function isTriangle(a, b, c) {
+   return a + b > c && a + c > b && c + b > a; //langsung saja ga peduli sisi yg paling panjang yg mana,
+} //pokoknya tidak boleh ada 1 sisi yg panjangnya melebihi hasil jumlah 2 sisi lainnya
+//Pro solution 2
+var isTriangle = (a, b, c) => Math.max(a, b, c) < (a + b + c) / 2 //sisi terpanjang harus lebih kecil
+//dari jumlah keseluruhan sisi dibagi 2?
+
+//Codewars - Round Up to the Next Multiple of 5
+//Given an integer as input, can you round it to the next (greater than or equal) multiple of 5?
+//0 -> 0, 2 -> 5, 3 -> 5, 12 -> 15, 21 -> 25, 30 -> 30, -2 -> 0, -5 -> -5
+function roundToNext5(n) {
+    if (n % 5 == 0) {
+        return n;
+    }
+    return Math.ceil(n / 5) * 5;
+}
+//Pro solution 1
+function roundToNext5(n) {
+    while(n % 5 !== 0) n++;
+    return n;
+}
+//Pro solution 2
+const roundToNext5 = n => Math.ceil(n / 5) * 5;
+
+//HackerRank - Subarray Division
+//Two children, Lily and Ron, want to share a chocolate bar. Each of the squares has an integer on it.
+//Lily decides to share a contiguous segment of the bar selected such that:
+//-The length of the segment matches Ron's birth month.
+//-The sum of the integers on the squares is equal to his birth day.
+//Determine how many ways she can divide the chocolate.
+//s = [2, 2, 1, 3, 2]; d = 4; m = 2 -> 2 (from [2 + 2] and [1 + 3])
+//s = [1, 1, 1, 1, 1, 1]; d = 3; m = 2 -> 0 (tidak ada deret sepanjang m=2 yg kalo di-sum hasilnya d = 3)
+//s = [4, 1]; d = 2; m = 1 -> 1 (deret di-sum-kan sejauh 1 yg hasilnya 4 hanya ada 1)
+function birthday(s, d, m) {
+    let count = 0;
+    for (let i = 0; i < s.length; i++) {
+        let sum = 0;
+        if (i + m - 1 < s.length) {
+            for (let j = i; j < i + m; j++) {
+                sum = sum + s[j];
+            }
+        }
+        if (sum == d) {
+            count++;
+        }
+    }
+    return count;
+}

@@ -467,4 +467,101 @@ function uniqueInOrder($iterable) {
 //1. ARRAY_FILTER_USE_KEY - pass key as the only argument to callback instead of the value
 //2. ARRAY_FILTER_USE_BOTH - pass both value and key as arguments to callback instead of the value
 
-//Codewars - 
+//Codewars - Is This a Triangle
+//Implement a function that accepts 3 integer values a, b, c. The function should return true if a 
+//triangle can be built with the sides of given length and false in any other case.
+//1,2,2 -> true
+//4,2,3 -> true
+//2,2,2 -> true
+//1,2,3 -> false
+//-5,1,3 -> false
+//0,2,3 -> false
+//1,2,9 -> false 
+function isTriangle(int $a, int $b, int $c): bool { //Syarat segitiga (simak di bawah):
+    if ($a <= 0 || $b <= 0 || $c <= 0) { //tidak boleh ada sisi yg sepanjang 0 atau lebih kecil dari 0
+        return false;
+    }
+    if ($a >= $b && $a >= $c) {
+        $longestSide = $a;
+        $sidesLeft = [$b, $c];
+    } else if ($b >= $a && $b >= $c) {
+        $longestSide = $b;
+        $sidesLeft = [$a, $c];
+    } else if ($c >= $a && $c >= $b) {
+        $longestSide = $c;
+        $sidesLeft = [$a, $b];
+    } 
+    if ($longestSide < ($sidesLeft[0] + $sidesLeft[1])) { //sisi yg paling panjang tidak melebihi hasil
+        return true; //jumlah dari 2 sisi lainnya yg lebih pendek (bayangkan saja, 2 sisi pendek jika
+    } //dijumlahkan sama saja itu posisinya sudah lurus dan jadi garis sambung panjang, jika 1 sisi yg
+    return false; //paling panjang digabungkan, maka gaakan bisa buat bentuk segitiga atau garis bablas)
+}
+//Pro solution 1
+function isTriangle(int $a, int $b, int $c): bool {
+    $arr = array($a, $b, $c);
+    sort($arr);
+    return $arr[0] + $arr[1] > $arr[2];
+}
+//Pro solution 2
+function isTriangle(int $a, int $b, int $c): bool {
+    return 2 * max($a, $b, $c) < $a + $b + $c; //sisi yg paling panjang jika dikali 2 maka hasilnya ga
+} //melebihi atau sama dengan jumlah keseluruhan sisi?
+
+//Codewars - Round Up to the Next Multiple of 5
+//Given an integer as input, can you round it to the next (greater than or equal) multiple of 5?
+//0 -> 0, 2 -> 5, 3 -> 5, 12 -> 15, 21 -> 25, 30 -> 30, -2 -> 0, -5 -> -5
+function round_to_next_5(int $n): int{
+    if ($n % 5 == 0) {
+        return $n; 
+    }
+    return ceil($n / 5) * 5;
+}
+//Pro solution 1
+function round_to_next_5(int $n): int{ 
+    while ($n % 5 !== 0) {
+        $n++;
+    } 
+    return $n;
+}
+//Pro solution 2
+function round_to_next_5(int $n): int {
+    for ($i = 0; $i <= 5; $i++) {
+        if (($n + $i) % 5 === 0) return $n + $i;
+    }
+}
+
+//HackerRank - Subarray Division
+//Two children, Lily and Ron, want to share a chocolate bar. Each of the squares has an integer on it.
+//Lily decides to share a contiguous segment of the bar selected such that:
+//-The length of the segment matches Ron's birth month.
+//-The sum of the integers on the squares is equal to his birth day.
+//Determine how many ways she can divide the chocolate.
+//s = [2, 2, 1, 3, 2]; d = 4; m = 2 -> 2 (from [2 + 2] and [1 + 3])
+//s = [1, 1, 1, 1, 1, 1]; d = 3; m = 2 -> 0 (tidak ada deret sepanjang m=2 yg kalo di-sum hasilnya d = 3)
+//s = [4, 1]; d = 2; m = 1 -> 1 (deret di-sum-kan sejauh 1 yg hasilnya 4 hanya ada 1)
+function birthday($s, $d, $m) {
+    $count = 0;
+    for ($i = 0; $i < count($s); $i++) {
+        $sum = 0;
+        if ($i + $m - 1 < count($s)) {
+          for ($j = $i; $j < $i + $m; $j++) {
+            $sum += $s[$j];
+          }  
+        }
+        if ($sum == $d) {
+            $count++;
+        }
+    }
+    return $count;
+}
+//Pro solution 1
+function birthday($s, $d, $m) {
+    $count = 0;
+	for ($i = 0; $i <= count($s)-$m; $i++) {
+		$sum = array_sum(array_slice($s, $i, $m)); //this way is more simple to get the sum of current
+		if ($sum == $d) {
+			$count++;
+		}
+	}
+	return $count;
+} //not tried it yet
