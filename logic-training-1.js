@@ -493,3 +493,93 @@ function birthday(s, d, m) {
     }
     return count;
 }
+
+//Codewars - Two to One
+//Take 2 strings s1 and s2 including only letters from a to z. Return a new sorted string (alphabetical 
+//ascending), the longest possible containing distinct letters, each taken only once, coming from s1 or s2.
+//a = "xyaabbbccccdefww" & b = "xxxxyyyyabklmopq" -> "abcdefklmopqwxy"
+//a = "abcdefghijklmnopqrstuvwxyz" & b = "abcdefghijklmnopqrstuvwxyz" -> "abcdefghijklmnopqrstuvwxyz"
+function longest(s1, s2) {
+    let allString = s1 + s2;
+    let allStringArr = allString.split("");
+    allStringArr.sort();
+    let newArr = [allStringArr[0]];
+    for (let i = 0; i < allStringArr.length; i++) {
+        if (newArr[newArr.length -1] != allStringArr[i]) {
+            newArr.push(allStringArr[i]);
+        }
+    }
+    return newArr.join("");
+}
+//Pro solution 1
+const longest = (s1, s2) => [...new Set(s1 + s2)].sort().join('')
+//Pro solution 2
+function longest(s1, s2) {
+    return Array.from(new Set(s1 + s2)).sort().join('');
+}
+
+//Codewars - Playing with Digits
+//Some numbers have funny properties. For example:
+//89 --> 8¹ + 9² = 89 * 1
+//695 --> 6² + 9³ + 5⁴= 1390 = 695 * 2
+//46288 --> 4³ + 6⁴+ 2⁵ + 8⁶ + 8⁷ = 2360688 = 46288 * 51
+//Given two positive integers n and p, we want to find a positive integer k, if it exists, such that the 
+//sum of the digits of n raised to consecutive powers starting from p is equal to k * n. In other words, 
+//writing the consecutive digits of n as a, b, c, d ..., is there an integer k such that :
+//(a^p + b^(p+1) + c^(p+2) + d^(p+3) + ...)
+//If it is the case we will return k, if not return -1 (n and p will always be strictly positive integers)
+//n = 89; p = 1 -> 1 since 8¹ + 9² = 89 = 89 * 1
+//n = 92; p = 1 -> -1 since there is no k such that 9¹ + 2² equals 92 * k
+//n = 695; p = 2 -> 2 since 6² + 9³ + 5⁴= 1390 = 695 * 2
+//n = 46288; p = 3 -> 51 since 4³ + 6⁴+ 2⁵ + 8⁶ + 8⁷ = 2360688 = 46288 * 51
+function digPow(n, p){
+    let nArr = String(n).split("").map(Number);
+    let sumAll = 0;
+    for (let i = 0; i < nArr.length; i++) {
+        let sumElement = nArr[i];
+        for (let j = 0; j < p + i - 1; j++) {
+            sumElement *= nArr[i];
+        }
+        sumAll += sumElement;
+    }
+    if (sumAll % n == 0) {
+        return sumAll / n;
+    }
+    return -1;
+}
+//Pro solution 1
+function digPow(n, p) {
+    var x = String(n).split("").reduce((s, d, i) => s + Math.pow(d, p + i), 0)
+    return x % n ? -1 : x / n
+}
+//Pro solution 2
+function digPow(n, p){
+    var ans = ('' + n).split('').map(function (d, i) {
+        return Math.pow(+ d, i + p);
+    }).reduce(function (s,v) {
+        return s + v;
+    }) / n;
+    return ans%1 ? -1 : ans; 
+} //still don't know how this is work, what is pow() for?
+
+//HackerRank - Divisible Sum Pairs
+//Given an array of integers and a positive integer k, determine the number of (i, j) pairs where 
+//i < j and  ar[i] + ar[j] is divisible by k. Example 
+//n = 6; k = 5; ar = [1, 2, 3, 4, 5, 6] -> 3 (Three pairs meet the criteria: [1, 4], [2, 3], and [4, 6].
+//n = 6; k = 3; ar = [1, 3, 2, 6, 1, 2] -> 5 (Three pairs meet the criteria: [1, 2], [1, 2], [3, 6],
+//[2, 1] & [1, 2]
+//Intinya cari jumlah ada berapa pair (pasangan angka) kalo yg keduanya dijumlahkan itu bise dibagi pas
+//dengan k sebagai divisor (sisa jumlahnya jika dibagi k adalah 0)
+function divisibleSumPairs(n, k, ar) {
+    let count = 0;
+    for (let i = 0; i < n; i++) {
+        if (i + 1 < n) {
+            for (let j = i + 1; j < n; j++) {
+                if ((ar[i] + ar[j]) % k == 0) {
+                    count++;
+                }
+            }
+        }
+    }
+    return count;
+}

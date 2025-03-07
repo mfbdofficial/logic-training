@@ -565,3 +565,99 @@ function birthday($s, $d, $m) {
 	}
 	return $count;
 } //not tried it yet
+
+//Codewars - Two to One
+//Take 2 strings s1 and s2 including only letters from a to z. Return a new sorted string (alphabetical 
+//ascending), the longest possible containing distinct letters, each taken only once, coming from s1 or s2.
+//a = "xyaabbbccccdefww" & b = "xxxxyyyyabklmopq" -> "abcdefklmopqwxy"
+//a = "abcdefghijklmnopqrstuvwxyz" & b = "abcdefghijklmnopqrstuvwxyz" -> "abcdefghijklmnopqrstuvwxyz"
+function longest($a, $b) {
+    $allString = $a . $b;
+    $allStringArr = str_split($allString);
+    sort($allStringArr);
+    $newArr = [$allStringArr[0]];
+    for ($i = 1; $i < count($allStringArr); $i++) {
+        if ($newArr[count($newArr) - 1] !== $allStringArr[$i]) {
+            $newArr[] = $allStringArr[$i];
+        } 
+    }
+    return implode($newArr);
+}
+//Pro solution 1
+function longest($a, $b) {
+    return count_chars($a . $b, 3);
+}
+//Pro solution 2
+function longest($a, $b) {
+    $chars = array_unique(str_split($a . $b));
+    sort($chars);
+    return implode('', $chars);
+}
+
+//Codewars - Playing with Digits
+//Some numbers have funny properties. For example:
+//89 --> 8¹ + 9² = 89 * 1
+//695 --> 6² + 9³ + 5⁴= 1390 = 695 * 2
+//46288 --> 4³ + 6⁴+ 2⁵ + 8⁶ + 8⁷ = 2360688 = 46288 * 51
+//Given two positive integers n and p, we want to find a positive integer k, if it exists, such that the 
+//sum of the digits of n raised to consecutive powers starting from p is equal to k * n. In other words, 
+//writing the consecutive digits of n as a, b, c, d ..., is there an integer k such that :
+//(a^p + b^(p+1) + c^(p+2) + d^(p+3) + ...)
+//If it is the case we will return k, if not return -1 (n and p will always be strictly positive integers)
+//n = 89; p = 1 -> 1 since 8¹ + 9² = 89 = 89 * 1
+//n = 92; p = 1 -> -1 since there is no k such that 9¹ + 2² equals 92 * k
+//n = 695; p = 2 -> 2 since 6² + 9³ + 5⁴= 1390 = 695 * 2
+//n = 46288; p = 3 -> 51 since 4³ + 6⁴+ 2⁵ + 8⁶ + 8⁷ = 2360688 = 46288 * 51
+function digPow($n, $p) {
+    $nArr = str_split($n);
+    $sumAll = 0;
+    for ($i = 0; $i < count($nArr); $i++) {
+        $sumElement = $nArr[$i];
+        for ($j = 0; $j < $p + $i - 1; $j++) {
+            $sumElement *= $nArr[$i];
+        }
+        $sumAll += $sumElement;
+    }
+    if ($sumAll % $n == 0) {
+        return $sumAll / $n;
+    }
+    return -1;
+}
+//Pro solution 1
+function digPow($n, $p) {
+    $mathSum = 0;
+    foreach (str_split((string)$n) as $index => $value) {
+        $mathSum += pow($value, $index + $p);
+    }
+    return (is_int($mathSum / $n)) ? $mathSum / $n : -1;
+}
+//Pro solution 2
+function digPow($n, $p) {
+    $digits = str_split($n); // Split $n into array
+    array_walk($digits, function (&$elem, $index, $param) { $elem = pow($elem, $param + $index); }, $p);
+    $calc_result = array_sum($digits); //calculate sum
+    return (($calc_result % $n == 0) ? ($calc_result / $n) : -1);  //return $calc_result / $n if
+} //$calc_result % $n == 0, return -1 otherwise
+//NOTE : array_walk() in this code is for walk through digits to calculate x ^ p + index
+
+//HackerRank - Divisible Sum Pairs
+//Given an array of integers and a positive integer k, determine the number of (i, j) pairs where 
+//i < j and  ar[i] + ar[j] is divisible by k. Example 
+//n = 6; k = 5; ar = [1, 2, 3, 4, 5, 6] -> 3 (Three pairs meet the criteria: [1, 4], [2, 3], and [4, 6].
+//n = 6; k = 3; ar = [1, 3, 2, 6, 1, 2] -> 5 (Three pairs meet the criteria: [1, 2], [1, 2], [3, 6],
+//[2, 1] & [1, 2]
+//Intinya cari jumlah ada berapa pair (pasangan angka) kalo yg keduanya dijumlahkan itu bise dibagi pas
+//dengan k sebagai divisor (sisa jumlahnya jika dibagi k adalah 0)
+function divisibleSumPairs($n, $k, $ar) {
+    $count = 0;
+    for($i = 0; $i < $n; $i++) {
+        if ($i + 1 < $n){
+            for ($j = $i + 1; $j < $n; $j++) {
+                if (($ar[$i] + $ar[$j]) % $k == 0) {
+                    $count++;
+                }
+            }
+        }
+    }
+    return $count;
+}
