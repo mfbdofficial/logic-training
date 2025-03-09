@@ -532,7 +532,7 @@ function longest(s1, s2) {
 //n = 92; p = 1 -> -1 since there is no k such that 9¹ + 2² equals 92 * k
 //n = 695; p = 2 -> 2 since 6² + 9³ + 5⁴= 1390 = 695 * 2
 //n = 46288; p = 3 -> 51 since 4³ + 6⁴+ 2⁵ + 8⁶ + 8⁷ = 2360688 = 46288 * 51
-function digPow(n, p){
+function digPow(n, p) {
     let nArr = String(n).split("").map(Number);
     let sumAll = 0;
     for (let i = 0; i < nArr.length; i++) {
@@ -553,7 +553,7 @@ function digPow(n, p) {
     return x % n ? -1 : x / n
 }
 //Pro solution 2
-function digPow(n, p){
+function digPow(n, p) {
     var ans = ('' + n).split('').map(function (d, i) {
         return Math.pow(+ d, i + p);
     }).reduce(function (s,v) {
