@@ -327,3 +327,108 @@ function bonAppetit($bill, $k, $b) {
         echo $b - $actual;
     }
 }
+
+//Codewars - Lario and Muigi Pipe Problem
+//Looks like some hoodlum plumber and his brother has been running around and damaging your stages again.
+//The pipes connecting your level's stages together need to be fixed before you receive any more complaints.
+//The pipes are correct when each pipe after the first is 1 more than the previous one. Given a list of 
+//unique numbers sorted in ascending order, return a new list so that the values increment by 1 for each 
+//index from the minimum value up to the maximum value (both included).
+//[1, 3, 5, 6, 7, 8] -> [1, 2, 3, 4, 5, 6, 7, 8]
+function pipeFix(array $numbers): array {
+    $first = $numbers[0];
+    $last = $numbers[count($numbers) - 1];
+    $result = [];
+    for ($i = $first; $i <= $last; $i++) {
+        $result[] = $i;
+    }
+    return $result; 
+}
+//Pro solution 1
+function pipeFix($numbers) {
+    return range(min($numbers), max($numbers));
+}
+//Pro solution 2
+function pipeFix($a) {
+    return range($a[0], $a[count($a) - 1]);
+}
+
+//Codewars - Replace All Vowel to Exclamation Mark in the Sentence
+//Replace all vowel to exclamation mark in the sentence. aeiouAEIOU is vowel.
+//"Hi!" -> "H!!"
+//"!Hi! Hi!" -> "!H!! H!!"
+//"aeiou" -> "!!!!!"
+//"ABCDE" -> "!BCD!"
+function replace(string $s): string {
+    $exclamation = "";
+    for ($i = 0; $i < strlen($s); $i++) {
+        if (preg_match("/[aiueo]/i", $s[$i])) {
+            $exclamation .= "!";
+        } else {
+            $exclamation .= $s[$i];
+        }
+    }
+    return $exclamation;
+}
+//Pro solution 1
+function replace(string $s): string {
+    return preg_replace('/[aeiou]/i', "!", $s);
+}
+//Pro solution 2
+function replace(string $s): string {
+    return str_ireplace(['a', 'e', 'i', 'o', 'u'], '!', $s);
+}
+//Pro solution 3
+function replace(string $s): string {
+    return str_replace(str_split('aeiouAEIOU'), '!', $s);
+}
+
+//HackerRank - Sales by Match
+//There is a large pile of socks that must be paired by color. Given an array of integers representing 
+//the color of each sock, determine how many pairs of socks with matching colors there are. Example:
+//n = 7, ar = [1, 2, 1, 2, 1, 3, 2] -> 2 (There is one pair of color 1 and one of color 2. There are 
+//three odd socks left, one of each color. The number of pairs is 2)
+//n = 9, ar = [10, 20, 20, 10, 10, 30, 50, 10, 20] -> 3 (2 pairs of 10 & 1 pair of 20)
+function sockMerchant($n, $ar) {
+    $colorsDone = [];
+    $pairs = 0;
+    for ($i = 0; $i < $n; $i++) {
+        $count = 0;
+        if (!in_array($ar[$i], $colorsDone)) {
+            $current = $ar[$i];
+            $colorsDone[] = $ar[$i];
+            for ($j = 0; $j < $n; $j++) {
+                if ($current == $ar[$j]) {
+                    $count++;
+                }
+                if ($count == 2) {
+                    $count = 0;
+                    $pairs++;
+                }
+            }
+        }
+    }
+    return $pairs;
+}
+//Pro solution 1
+function sockMerchant($n, $ar) {
+    $result = 0;
+    $counted = array_count_values($ar); //array_count_values() returns a new array using the values of old array as keys and their frequency in old array as values.
+    foreach($counted as $value) { //doing looping for every element of associative array (key -> frequency)
+        $result += floor($value / 2); //doing result calculation for every element (result is increase)
+    }
+    return $result;
+}
+//Pro solution 2
+function sockMerchant($n, $ar) {
+    sort($ar);
+    $counterPairs = 0;
+    for ($i = 1; $i < count($ar); $i++) {
+        if ($ar[$i] == $ar[$i - 1]) {
+            $counterPairs++;
+            array_splice($ar, $i - 1, 2); //splice an array start from certain index for certain length
+            $i--;
+        }
+    } //the concept is like the array would be decrease (result increase) by the time if there's pair in sorted array
+    return $counterPairs;
+}

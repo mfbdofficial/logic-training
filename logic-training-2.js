@@ -304,3 +304,120 @@ function bonAppetit(bill, k, b) {
         console.log(b - actual);
     }
 }
+
+//Codewars - Lario and Muigi Pipe Problem
+//Codewars - Lario and Muigi Pipe Problem
+//Looks like some hoodlum plumber and his brother has been running around and damaging your stages again.
+//The pipes connecting your level's stages together need to be fixed before you receive any more complaints.
+//The pipes are correct when each pipe after the first is 1 more than the previous one. Given a list of 
+//unique numbers sorted in ascending order, return a new list so that the values increment by 1 for each 
+//index from the minimum value up to the maximum value (both included).
+//[1, 3, 5, 6, 7, 8] -> [1, 2, 3, 4, 5, 6, 7, 8]
+function pipeFix(numbers){
+    let first = numbers[0];
+    let last = numbers[numbers.length - 1];
+    let result = [];
+    for (let i = first; i <= last; i++) {
+        result.push(i);
+    }
+    return result;
+}
+//Pro solution 1
+let pipeFix = numbers => Array.from({length: numbers.pop() - numbers[0] + 1}, (v, i) => i + numbers[0]);
+//pro solution 2
+const pipeFix = numbers => Array(numbers.pop() - numbers[0] + 1).fill(0).map((e, i) => i + numbers[0]);
+//Pro solution 3
+function pipeFix(numbers) {
+    let results = [], i = Math.min(...numbers);
+    while(i <= Math.max(...numbers)) { 
+        results.push(i); 
+        i++; 
+    }
+    return results
+}
+
+//Codewars - Replace All Vowel to Exclamation Mark in the Sentence
+//Replace all vowel to exclamation mark in the sentence. aeiouAEIOU is vowel.
+//"Hi!" -> "H!!"
+//"!Hi! Hi!" -> "!H!! H!!"
+//"aeiou" -> "!!!!!"
+//"ABCDE" -> "!BCD!"
+function replace(s) {
+    let exclamation = "";
+    for (let i = 0; i < s.length; i++) {
+        if (/[aiueo]/i.test(s[i])) {
+            exclamation += "!";
+        } else {
+            exclamation += s[i];
+        }
+    }
+    return exclamation;
+}
+//Pro solution 1
+function replace(s){
+    return s.replace(/[aeoiu]/ig, '!'); //beda ig dan gi di regex itu apa?
+}
+//Pro solution 2
+function replace(s){
+    return s.replace(/[aeiou]/gi,"!")
+}
+//Pro solution 3
+const replace = s => (s.split('').map(e => 'aeiou'.includes(e.toLowerCase()) ? '!' : e)).join('');
+
+//HackerRank - Sales by Match
+//There is a large pile of socks that must be paired by color. Given an array of integers representing 
+//the color of each sock, determine how many pairs of socks with matching colors there are. Example:
+//n = 7, ar = [1, 2, 1, 2, 1, 3, 2] -> 2 (There is one pair of color 1 and one of color 2. There are 
+//three odd socks left, one of each color. The number of pairs is 2)
+//n = 9, ar = [10, 20, 20, 10, 10, 30, 50, 10, 20] -> 3 (2 pairs of 10 & 1 pair of 20)
+function sockMerchant(n, ar) {
+    let colorsDone = [];
+    let pairs = 0;
+    for (let i = 0; i < n; i++) {
+        let count = 0;
+        if (!colorsDone.includes(ar[i])) {
+            let current = ar[i];
+            colorsDone.push(ar[i]);
+            for (let j = 0; j < n; j++) {
+                if (current == ar[j]) {
+                    count++;
+                }
+                if (count == 2) {
+                    pairs++;
+                    count = 0;
+                }
+            }
+        }
+    }
+    return pairs;
+}
+//Pro solution 1
+function sockMerchant(n, ar) {
+    var res = 0;
+    ar.sort(); //sorting the array
+    for(let i = 0; i < n; i++) { //looping for sorted array
+        if(ar[i] == ar[i + 1]) { //check if current index same as next index
+            i++; //if same the index will increse faster, precedes (mendahului) that next index
+            res++; //the result is increase (+1)
+        }
+    }
+    return res;
+}
+//Pro solution 2
+function sockMerchant(n, ar) {
+    let storage = {}; //the concept is making a toggle for every color of the socks (false/true toggle)
+    let pairs = 0; 
+    for (var i = 0; i < n; i++) { 
+        storage[ar[i]] = !storage[ar[i]]; //saat pertama lewat, toggle nyala jadi true, kalo toggle kedua ya bikin jadi false
+        if (!storage[ar[i]]) pairs++; //every the 2nd toggle will do counter up for pairs (when current situation is false)
+    }
+    return pairs;
+}
+//First Time a Sock Appears
+//  -storage[ar[i]] is initially undefined (falsy).
+//  -!undefined is true, so storage[ar[i]] = true.
+//  -No pair is counted.
+//Second Time the Same Sock Appears
+//  -storage[ar[i]] = true (from previous appearance).
+//  -!true becomes false, so storage[ar[i]] = false.
+//  -Now if (!storage[ar[i]]) is true, so pairs++.
