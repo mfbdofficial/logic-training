@@ -421,3 +421,56 @@ function sockMerchant(n, ar) {
 //  -storage[ar[i]] = true (from previous appearance).
 //  -!true becomes false, so storage[ar[i]] = false.
 //  -Now if (!storage[ar[i]]) is true, so pairs++.
+
+//Codewars - Opposites Attract
+//Timmy & Sarah think they are in love, but around where they live, they will only know once they pick a flower 
+//each. If one of the flowers has an even number of petals and the other has an odd number of petals it means they 
+//are in love. Write a function that will take the number of petals of each flower and return true if they are in 
+//love and false if they aren't.
+function lovefunc(flower1, flower2) {
+    if (flower1 % 2 == flower2 % 2) {
+        return false;
+    }
+    return true;
+}
+//Pro Solution 1
+function lovefunc(flower1, flower2){
+    return flower1 % 2 !== flower2 % 2;
+}
+//Pro Solution 2
+function lovefunc(flower1, flower2){
+    return (flower1 + flower2) % 2 === 1;
+}
+//Pro Solution 3
+         const
+        lovefunc
+      =( Ͼ , Ͽ )=> 
+          ! !
+( ( Ͼ & 1) ^ (1 & Ͽ ) ); //how tf this is work haha
+
+//Codewars - Printer Errors
+//In a factory a printer prints labels for boxes. For one kind of boxes the printer has to use colors which, for the 
+//sake of simplicity, are named with letters from a to m. The colors used by the printer are recorded in a control 
+//string. For example a "good" control string would be aaabbbbhaijjjm meaning that the printer used three times color 
+//a, four times color b, one time color h then one time color a...
+//Sometimes there are problems: lack of colors, technical malfunction and a "bad" control string is produced e.g. 
+//aaaxbbbbyyhwawiwjjjwwm with letters not from a to m. You have to write a function printer_error which given a 
+//string will return the error rate of the printer as a string representing a rational whose numerator is the number
+//of errors and the denominator the length of the control string. Don't reduce this fraction to a simpler expression.
+//"aaabbbbhaijjjm" -> "0/14"
+//"aaaxbbbbyyhwawiwjjjwwm" -> "8/22"
+function printerError(s) {
+    let counter = 0;
+    for (let i = 0; i < s.length; i++) {
+        if (!/[a-m]/.test(s[i])) {
+            counter++;
+        }
+    }
+    return counter + "/" + s.length;
+}
+//Pro Solution 1
+const printerError = s => `${s.replace(/[a-m]/gi, "").length}/${s.length}`;
+//Pro Solution 2
+var printerError = s => (s.match(/[n-z]/g) || []).length + '/' + s.length;
+//Pro Solution 3
+const printerError = (s) => [ (s.match(/[n-z]/g) || []).length, s.length ].join('/');

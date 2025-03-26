@@ -432,3 +432,64 @@ function sockMerchant($n, $ar) {
     } //the concept is like the array would be decrease (result increase) by the time if there's pair in sorted array
     return $counterPairs;
 }
+
+//Codewars - Opposites Attract
+//Timmy & Sarah think they are in love, but around where they live, they will only know once they pick a flower 
+//each. If one of the flowers has an even number of petals and the other has an odd number of petals it means they 
+//are in love. Write a function that will take the number of petals of each flower and return true if they are in 
+//love and false if they aren't.
+function lovefunc(int $flower1, int $flower2) : bool{
+    if ($flower1 % 2 == 0 && $flower2 % 2 == 0 || $flower1 % 2 != 0 && $flower2 %2 != 0) {
+        return false;
+    }
+    return true;
+}
+//Pro Solution 1
+function lovefunc(int $flower1, int $flower2) : bool {
+    return ($flower1 % 2 !== $flower2 % 2);
+}
+//Pro Solution 2
+function lovefunc($flower1, $flower2) {
+    return (bool) (($flower1 + $flower2) % 2); //kalo angka yg sama dijumlahkan pasti hasilnya genap, kalo angka yg
+} //beda dijumlahkan pasti hasilnya ganjil
+//Pro Solution 3
+function lovefunc($f1, $f2):bool {
+    return ($f1 + $f2) % 2;
+}
+
+//Codewars - Printer Errors
+//In a factory a printer prints labels for boxes. For one kind of boxes the printer has to use colors which, for the 
+//sake of simplicity, are named with letters from a to m. The colors used by the printer are recorded in a control 
+//string. For example a "good" control string would be aaabbbbhaijjjm meaning that the printer used three times color 
+//a, four times color b, one time color h then one time color a...
+//Sometimes there are problems: lack of colors, technical malfunction and a "bad" control string is produced e.g. 
+//aaaxbbbbyyhwawiwjjjwwm with letters not from a to m. You have to write a function printer_error which given a 
+//string will return the error rate of the printer as a string representing a rational whose numerator is the number
+//of errors and the denominator the length of the control string. Don't reduce this fraction to a simpler expression.
+//"aaabbbbhaijjjm" -> "0/14"
+//"aaaxbbbbyyhwawiwjjjwwm" -> "8/22"
+function printerError($s) {
+    $counter = 0;
+    for ($i = 0; $i < strlen($s); $i++) {
+        if (!preg_match("/[a-m]/", $s[$i])) {
+            $counter++;
+        }
+    }
+    return $counter . "/" . strlen($s);
+}
+//Pro Solution 1
+function printerError($s) {
+    return strlen(preg_replace('/[a-m]/i', '', $s)) . '/' . strlen($s);
+}
+//Pro Solution 2
+function printerError($s) {
+    $errorCount = strlen(str_replace(range('a', 'm'), '', $s));
+    $totalCount = strlen($s);
+    return $errorCount . '/' . $totalCount;
+}
+//Pro Solution 3
+function printerError($s) {
+    return preg_match_all('/[^a-m]/', $s) . '/' . strlen($s);
+}
+
+//HackerRank - Drawing Book
