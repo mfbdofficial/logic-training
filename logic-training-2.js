@@ -474,3 +474,108 @@ const printerError = s => `${s.replace(/[a-m]/gi, "").length}/${s.length}`;
 var printerError = s => (s.match(/[n-z]/g) || []).length + '/' + s.length;
 //Pro Solution 3
 const printerError = (s) => [ (s.match(/[n-z]/g) || []).length, s.length ].join('/');
+
+//HackerRank - Drawing Book
+//Always turn pages one at a time. When they open the book, page  is always on the right side: When they flip page 1,
+//they see pages 2 and 3. Each page except the last page will always be printed on both sides. The last page may only 
+//be printed on the front, given the length of the book. If the book is n pages long, and a student wants to turn to
+//page p, what is the minimum number of pages to turn? They can start at the beginning or the end of the book.
+//n = 5, p = 3 -> 1 (flip 1 page from front, flip 1 page from back)
+//n = 6, p = 2 -> 1 (flip 1 page from front, flip 2 page from back)
+//n = 5, p = 4 -> 0 (flip 2 page from front, flip 0 page from back)
+function pageCount(n, p) {
+    let front = Math.floor(p / 2);
+    let back = 0;
+    if (n % 2 != 0) {
+        back = Math.floor((n - p) / 2);
+    } else {
+        back = Math.ceil((n - p) / 2);
+    }
+    return front < back ? front : back;
+}
+
+//Codewars - Return Negative
+//In this simple assignment you are given a number and have to make it negative. But maybe the number is already 
+//negative? 1 -> -1, -5 -> -5, 0 -> 0, 0,12 -> -0,12
+function makeNegative(num) {
+    return num > 0 ? 0 - num : num;
+}
+//Pro solution 1
+function makeNegative(num) {
+    return -Math.abs(num);
+}
+//Pro solution 2
+function makeNegative(num) {
+    return num < 0 ? num : -num;
+}
+
+//Codewars - Keep Up the Hoop
+//Alex just got a new hula hoop, he loves it but feels discouraged because his little brother is better than him. 
+//Write a program where Alex can input (n) how many times the hoop goes round and it will return him an encouraging 
+//message:
+//- If Alex gets 10 or more hoops, return the string "Great, now move on to tricks".
+//- If he doesn't get 10 hoops, return the string "Keep at it until you get it".
+function hoopCount (n) {
+    return n >= 10 ? "Great, now move on to tricks" : "Keep at it until you get it";
+}
+//Pro solution 1
+const hoopCount = n => n < 10 ? 'Keep at it until you get it' : 'Great, now move on to tricks';
+//Pro solution 2
+function hoopCount (n) {
+    if (n >= 10) {
+        return "Great, now move on to tricks";
+    } else {
+        return "Keep at it until you get it";
+    }
+}
+
+//HackerRank - Counting Valleys
+//An avid hiker keeps meticulous records of their hikes. During the last hike that took exactly "steps" steps, for 
+//every step it was noted if it was an uphill, U, or a downhill, D step. Hikes always start and end at sea level, 
+//and each step up or down represents a 1 unit change in altitude. We define the following terms:
+//- A mountain is a sequence of consecutive steps above sea level, starting with a step up from sea level and ending 
+//  with a step down to sea level.
+//- A valley is a sequence of consecutive steps below sea level, starting with a step down from sea level and ending 
+//  with a step up to sea level.
+//steps = 8, path = "UDDDUDUU" -> 1 (If we represent _ as sea level, a step up as /, and a step down as \, the hike 
+//can be drawn as (the hiker enters and leaves 1 valley):
+//_/\      _
+//   \    /
+//    \/\/
+function countingValleys(steps, path) {
+    let altitude = 0;
+    let isValley = false;
+    let valleyCount = 0;
+    for (let i = 0; i < path.length; i++) {
+        if (path[i] == "U") {
+            altitude++;
+        } else {
+            altitude--;
+        }
+        if (altitude < 0) {
+            isValley = true;
+        }
+        if (isValley && altitude == 0) {
+            isValley = false;
+            valleyCount++;
+        }
+    }
+    return valleyCount;
+}
+//Pro solution 1
+function countingValleys(n, s) {
+    let seaLevel = 0;
+    let currLevel = 0;
+    let valleys = 0; 
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === 'U') {
+            currLevel += 1;
+            if (currLevel == 0) {
+                valleys += 1;
+            }
+        } else {
+            currLevel -= 1;
+        }     
+    }  
+    return valleys;
+}
