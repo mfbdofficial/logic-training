@@ -334,7 +334,7 @@ function arrayDiff($a, $b) {
 //Pro solution 1
 function arrayDiff($a, $b) {
     return array_values(array_diff($a, $b)); //array_diff() menghapus array yg ada di array pembanding,
-} //lalu langsung array_values() untuk pebaiki urutan index array-nya
+} //lalu langsung array_values() untuk perbaiki urutan index array-nya
 //Pro solution 2
 function arrayDiff($a, $b) {
 	foreach ($a as $key => $element){ //perulangan untuk array $a-nya
