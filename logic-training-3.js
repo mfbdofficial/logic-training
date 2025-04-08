@@ -60,7 +60,6 @@ function getMoneySpent(keyboards, drives, b) {
     return maxBuy;
 }
 
-/*
 //Codewars - Moving Zeros To The End
 //Write an algorithm that takes an array and moves all of the zeros to the end, preserving the order of the other 
 //elements.
@@ -140,4 +139,108 @@ function createPhoneNumber(numbers){
 function createPhoneNumber(numbers){
     return numbers.reduce((p, c) => p.replace('x', c), "(xxx) xxx-xxxx");
 }
+
+//HackerRank - Cats and a Mouse
+//Two cats and a mouse are at various positions on a line. You will be given their starting positions. Your task is 
+//to determine which cat will reach the mouse first, assuming the mouse does not move and the cats travel at equal 
+//speed. If the cats arrive at the same time, the mouse will be allowed to move and it will escape while they fight.
+//U given x, y, z representing the respective positions for cats A and B, and for mouse C
+//- If cat A catches the mouse first, print Cat A.
+//- If cat B catches the mouse first, print Cat B.
+//- If both cats reach the mouse at the same time, print Mouse C as the two cats fight and mouse escapes.
+//x = 2, y = 5, z = 4 -> "Cat B" (The cats are at positions 2 {Cat A} and 5 {Cat B}, and the mouse is at position 4.
+//Cat B, at position 5 will arrive first since it is only 1 unit away while the other is 2 units away)
+function catAndMouse(x, y, z) {
+    let cat1Distance = x > z ? x - z : z - x;
+    let cat2Distance = y > z ? y - z : z - y;
+    if (cat1Distance == cat2Distance) {
+        return "Mouse C";
+    } else if (cat1Distance < cat2Distance) {
+        return "Cat A";
+    } else {
+        return "Cat B";
+    }
+}
+//Pro solution 1
+function catAndMouse(x, y, z) {
+    if (Math.abs(x - z) == Math.abs(y - z)) {
+        return "Mouse C";
+    }
+    return Math.abs(x - z) < Math.abs(y - z) ? "Cat A" : "Cat B";
+}
+//Pro solution 2
+function catAndMouse(x, y, z) {
+    const catADistance = Math.abs(x - z);
+    const catBDistance = Math.abs(y - z);
+    return catADistance == catBDistance ? "Mouse C" : (catADistance > catBDistance ? "Cat B" : "Cat A");
+}
+
+/*
+//Codewars - Duplicate Encoder
+//The goal of this exercise is to convert a string to a new string where each character in the new string is "(" if 
+//that character appears only once in the original string, or ")" if that character appears more than once in the 
+//original string. Ignore capitalization when determining if a character is a duplicate.
+//"din" -> "((("
+//"recede" -> "()()()"
+//"Success" -> ")())())"
+//"(( @" -> "))((" 
+function duplicateEncode(word){
+    word = word.toLowerCase();
+    let encoded = "";
+    for (let i = 0; i < word.length; i++) {
+        let current = word[i];
+        let count = 0;
+        for (let j = 0; j < word.length; j++) {
+            if (word[j] == current) {
+                count++;
+            }
+        }
+        if (count > 1) {
+            encoded += ")";
+        } else if (count == 1) {
+            encoded += "(";
+        }
+    }
+    return encoded;
+}
+//Pro solution 1
+function duplicateEncode(word){
+    return word
+        .toLowerCase()
+        .split('')
+        .map(function (a, i, w) { //parameter di callback map() JavaScript itu adalah currentValue, index, arr
+            return w.indexOf(a) == w.lastIndexOf(a) ? '(' : ')' //indexOf() mengembalikan first index
+        }) //lastIndexOf() mengembalikan last index
+        .join(''); //jadi kalo fist & last index sama maka cuma ada 1 di array
+}
+//Pro solution 2
+function duplicateEncode(word) {
+    word = word.toLowerCase();
+    return word.replace(/./g, m => word.indexOf(m) == word.lastIndexOf(m) ? '(' : ')');
+}
+
+//Codewars - Determine Offspring Sex Based on Genes XX and XY Chromosomes
+//The male gametes or sperm cells in humans and other mammals are heterogametic and contain one of two types of sex 
+//chromosomes. They are either X or Y. The female gametes or eggs however, contain only the X sex chromosome and are
+//homogametic. The sperm cell determines the sex of an individual in this case. If a sperm cell containing an X 
+//chromosome fertilizes an egg, the resulting zygote will be XX or female. If the sperm cell contains a Y chromosome, 
+//then the resulting zygote will be XY or male. Determine if the sex of the offspring will be male or female based on 
+//the X or Y chromosome present in the male's sperm. 
+//- If the sperm contains the X chromosome, return "Congratulations! You're going to have a daughter."; 
+//- If the sperm contains the Y chromosome, return "Congratulations! You're going to have a son.";
+function chromosomeCheck(sperm) {
+    if (sperm == "XY") {
+        return 'Congratulations! You\'re going to have a son.';
+    } else {
+        return 'Congratulations! You\'re going to have a daughter.';
+    }
+}
+//Pro solution 1
+function chromosomeCheck(sperm) {
+    return `Congratulations! You're going to have a ${sperm === 'XY' ? 'son' : 'daughter'}.`
+}
+
+//HackerRank - Forming a Magic Square
+//We define a magic square to be an n x n matrix of distinct positive integers from 1 to n^2 where the sum of any 
+//row, column, or diagonal of length n is always equal to the same number: the magic constant.
 */
