@@ -175,7 +175,6 @@ function catAndMouse(x, y, z) {
     return catADistance == catBDistance ? "Mouse C" : (catADistance > catBDistance ? "Cat B" : "Cat A");
 }
 
-/*
 //Codewars - Duplicate Encoder
 //The goal of this exercise is to convert a string to a new string where each character in the new string is "(" if 
 //that character appears only once in the original string, or ")" if that character appears more than once in the 
@@ -243,4 +242,138 @@ function chromosomeCheck(sperm) {
 //HackerRank - Forming a Magic Square
 //We define a magic square to be an n x n matrix of distinct positive integers from 1 to n^2 where the sum of any 
 //row, column, or diagonal of length n is always equal to the same number: the magic constant.
-*/
+
+//Codewars - Directions Reduction
+//Once upon a time, on a way through the old wild mountainous west, a man was given directions to go from one point 
+//to another. The directions were "NORTH", "SOUTH", "WEST", "EAST". Clearly "NORTH" and "SOUTH" are opposite, "WEST" and "EAST" too.
+//Going to one direction and coming back the opposite direction right away is a needless effort. Since this is the 
+//wild west, with dreadful weather and not much water, it's important to save yourself some energy, otherwise you might 
+//die of thirst!
+//How I crossed a mountainous desert the smart way? The directions given to the man are, for example, the following (depending on the language):
+//["NORTH", "SOUTH", "SOUTH", "EAST", "WEST", "NORTH", "WEST"].
+//You can immediately see that going "NORTH" and immediately "SOUTH" is not reasonable, better stay to the same place! 
+//So the task is to give to the man a simplified version of the plan. A better plan in this case is simply:
+//["WEST"]
+//Other examples:
+//In ["NORTH", "SOUTH", "EAST", "WEST"], the direction "NORTH" + "SOUTH" is going north and coming back right away.
+//The path becomes ["EAST", "WEST"], now "EAST" and "WEST" annihilate each other, therefore, the final result is [] (nil in Clojure).
+function dirReduc(arr) {
+    let notYet = true;
+    let oldPlan = arr;
+    let newPlan = [];
+    while (notYet == true) {
+        newPlan = [];
+        for (let i = 0; i < oldPlan.length; i++) {
+            if (i + 1 < oldPlan.length) {
+                let current = oldPlan[i].toLowerCase();
+                let next = oldPlan[i + 1].toLowerCase();
+                if (current == "north") {
+                    if (next == "south") {
+                        i++;
+                    } else {
+                        newPlan.push(oldPlan[i]);
+                    }
+                } else if (current == "south") {
+                    if (next == "north") {
+                        i++;
+                    } else {
+                        newPlan.push(oldPlan[i]);
+                    }
+                } else if (current == "east") {
+                    if (next == "west") {
+                        i++;
+                    } else {
+                        newPlan.push(oldPlan[i]);
+                    }
+                } else if (current == "west") {
+                    if (next == "east") {
+                        i++;
+                    } else {
+                        newPlan.push(oldPlan[i]);
+                    }
+                }
+            } else {
+                newPlan.push(oldPlan[i]);
+            }
+        }
+        if (oldPlan.join('') == newPlan.join('')) {
+            notYet = false;
+        } else {
+            oldPlan = newPlan;
+        }
+    }
+    return newPlan;
+}
+//Pro solution 1
+function dirReduc1(arr) {
+    var str = arr.join(''), pattern = /NORTHSOUTH|EASTWEST|SOUTHNORTH|WESTEAST/; //using regex
+    while (pattern.test(str)) str = str.replace(pattern,'');
+    return str.match(/(NORTH|SOUTH|EAST|WEST)/g)||[];
+}
+//Pro solution 2
+function dirReduc2(arr) {
+	var opposite = { "SOUTH":"NORTH", "NORTH":"SOUTH", "WEST":"EAST", "EAST":"WEST"};
+	return arr.reduce(function (a, b, i) {
+        opposite[a.slice(-1)] === b ? a.pop() : a.push(b);
+        return a;
+    }, []);
+} //ex : [N, S, S, W, W, E, E, S, N, N] => [N] -> [] -> [S] -> [S, W] -> [S, W, W] -> [S, W] -> [S] -> [S, S] -> [S] -> []
+//Pro solution 3
+function dirReduc3(arr) {
+    var count = 0;
+    for (var i = 0; i < arr.length; i++) {
+        if (arr[i] === "WEST" && arr[i+1] === "EAST" ||
+            arr[i] === "EAST" && arr[i+1] === "WEST" ||
+            arr[i] === "NORTH" && arr[i+1] === "SOUTH" ||
+            arr[i] === "SOUTH" && arr[i+1] === "NORTH") {
+            arr.splice(i, 2);
+            count++;
+            i--;
+        }
+    }
+    return count === 0 ? arr : dirReduc(arr);
+}
+
+//Codewars - Surface Area and Volume of a Box
+//Write a function that returns the total surface area and volume of a box. The given input will be three 
+//positive non-zero integers: width, height, and depth.
+function getSize(width, height, depth) {
+    let totalSurfaceArea = 2 * ((width * height) + (width * depth) + (height * depth));
+    let volume = width * height * depth;
+    return [totalSurfaceArea, volume];
+}
+
+//Codewars - Simple Fun #176: Reverse Letter
+//Given a string str, reverse it and omit all non-alphabetic characters. Input & output -> [input] string str & [output] a string. Example:
+//For str = "krishan", the output should be "nahsirk".
+//For str = "ultr53o?n", the output should be "nortlu".
+function reverseLetter(str) {
+    let reverse = "";
+    for (let i = str.length; i > 0; i--) {
+        if (!/^[^a-zA-Z]+$/.test(str[i - 1])) {
+            reverse += str[i-1];
+        }
+    }
+    return reverse;
+}
+
+//Codewars - Number of Decimal Digits
+//Determine the total number of digits in the integer (n>=0) given as input to the function. For example,
+//9 is a single digit, 66 has 2 digits and 128685 has 6 digits. Be careful to avoid overflows/underflows.
+//All inputs will be valid.
+function digits(n) {
+    let nString = n.toString();
+    return nString.length;
+}
+//Pro solution 1
+function digits1(n) {
+    return n.toString().length;
+}
+//Pro solution 2
+function digits2(n) {
+    return String(n).length
+}
+//Pro solution 3
+function digits3(n) {
+    return `${n}`.length;
+}

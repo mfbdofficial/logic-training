@@ -31,7 +31,7 @@ function rpc ($p1, $p2) {
     }
 }
 //Pro solution 1
-function rpc ($p1, $p2) {
+function rpc1 ($p1, $p2) {
     if ($p1 === $p2) {
         return 'Draw!';
     } 
@@ -42,7 +42,7 @@ function rpc ($p1, $p2) {
     }
 }
 //Pro Solution 2
-function rpc ($p1, $p2) {
+function rpc2 ($p1, $p2) {
     $whatDoesItBeat = ['rock' => 'scissors', 'paper' => 'rock', 'scissors' => 'paper']; //array associative
     if ($p1 === $p2) { //opsi yg menang menjadi key, value sebagai opsi yg dikalahkannya
         return 'Draw!';

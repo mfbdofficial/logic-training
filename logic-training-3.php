@@ -18,7 +18,7 @@ function basicOp($op, $val1, $val2) {
     }
 }
 //Pro solution 1
-function basicOp($op, $val1, $val2) {
+function basicOp1($op, $val1, $val2) {
     switch ($op) {
         case '+':
             return $val1 + $val2;
@@ -31,7 +31,7 @@ function basicOp($op, $val1, $val2) {
     }
 }
 //Pro solution 2
-function basicOp($op, $val1, $val2) {
+function basicOp2($op, $val1, $val2) {
   return eval("return {$val1}{$op}{$val2};");
 }
 
@@ -42,11 +42,11 @@ function remove_exclamation_marks($string) {
     return str_replace("!", "", $string);
 }
 //Pro solution 1
-function remove_exclamation_marks($string) {
+function remove_exclamation_marks1($string) {
     return strtr($string, ['!'=>'']);
 }
 //Pro solution 2
-function remove_exclamation_marks($string) {
+function remove_exclamation_marks2($string) {
     return strtr($string, ['!' => '']);
 }
 
@@ -83,13 +83,13 @@ function moveZeros(array $items): array {
     return array_values($items);
 }
 //Pro solution 1
-function moveZeros(array $items): array {
+function moveZeros1(array $items): array {
     return array_pad(array_filter($items, function($x) {
         return $x !== 0 and $x !== 0.0; //filter array khusus yg nilainya bukan 0 dan bukan 0.0
     }), count($items), 0); //array_pad(array, length, value) returns a copy of the array padded to size specified by
 } //length with value value.
 //Pro solution 2
-function moveZeros(array $items): array {
+function moveZeros2(array $items): array {
     $ret = array_diff($items, [0]); //array_diff() function compares the values of two (or more) arrays, and returns
     return array_merge($ret, array_fill(0, count($items) - count($ret), 0)); //the differences.This function compares
 } //the values of two (or more) arrays, and return an array that contains the entries from array1 that are not present
@@ -109,7 +109,7 @@ function createPhoneNumber($numbersArray) {
         $numbersArray[6] . $numbersArray[7] . $numbersArray[8] . $numbersArray[9];
 }
 //My other answer
-function createPhoneNumber($numbersArray) {
+function createPhoneNumber1($numbersArray) {
     $phone = "(";
     for ($i = 0; $i < count($numbersArray); $i++) {
         $phone .= strval($numbersArray[$i]);
@@ -123,11 +123,11 @@ function createPhoneNumber($numbersArray) {
     return $phone;
 }
 //Pro solution 1
-function createPhoneNumber(array $digits): string {
+function createPhoneNumber2(array $digits): string {
     return sprintf("(%d%d%d) %d%d%d-%d%d%d%d", ...$digits);
 }
 //Pro solution 2
-function createPhoneNumber($numbersArray) {
+function createPhoneNumber3($numbersArray) {
     return vsprintf("(%d%d%d) %d%d%d-%d%d%d%d", $numbersArray);
 }
 
@@ -153,20 +153,19 @@ function catAndMouse($x, $y, $z) {
     }
 }
 //Pro solution 1
-function catAndMouse($x, $y, $z) {
+function catAndMouse1($x, $y, $z) {
     if (abs($x - $z) == abs($y - $z)) {
         return "Mouse C";
     }
     return abs($x - $z) < abs($y - $z) ? "Cat A" : "Cat B";
 }
 //Pro solution 2
-function catAndMouse($x, $y, $z) {
+function catAndMouse2($x, $y, $z) {
     $distCatA = abs($z - $x);
     $distCatB = abs($z - $y);
     return $distCatA == $distCatB ? "Mouse C" : ($distCatA > $distCatB ? "Cat B" : "Cat A");
 }
 
-/*
 //Codewars - Duplicate Encoder
 //The goal of this exercise is to convert a string to a new string where each character in the new string is "(" if 
 //that character appears only once in the original string, or ")" if that character appears more than once in the 
@@ -195,7 +194,7 @@ function duplicate_encode($word) {
     return $encoded;
 }
 //Pro solution 1
-function duplicate_encode($word){
+function duplicate_encode1($word){
 	$word = str_split(strtolower($word)); //string dijadikan array terpisah
 	$str = "";
 	foreach($word as $key) { //perulangan untuk setiap array-nya
@@ -204,7 +203,7 @@ function duplicate_encode($word){
 	return $str;			
 }
 //Pro solution 2
-function duplicate_encode(string $word) : string
+function duplicate_encode2(string $word) : string
 {
     $splittedWord = str_split(strtolower($word));
   	$countMap = array_count_values($splittedWord); //returns an array using the values of array (which must be ints 
@@ -232,11 +231,141 @@ function chromosomeCheck(string $sperm): string {
     }
 }
 //Pro solution 1
-function chromosomeCheck($sperm) {
+function chromosomeCheck1($sperm) {
     return 'Congratulations! You\'re going to have a ' . ($sperm == "XY" ? 'son' : 'daughter') . '.';
 }
 
 //HackerRank - Forming a Magic Square
 //We define a magic square to be an n x n matrix of distinct positive integers from 1 to n^2 where the sum of any 
 //row, column, or diagonal of length n is always equal to the same number: the magic constant.
-*/
+
+//Codewars - Directions Reduction
+//Once upon a time, on a way through the old wild mountainous west, a man was given directions to go from one point 
+//to another. The directions were "NORTH", "SOUTH", "WEST", "EAST". Clearly "NORTH" and "SOUTH" are opposite, "WEST" and "EAST" too.
+//Going to one direction and coming back the opposite direction right away is a needless effort. Since this is the 
+//wild west, with dreadful weather and not much water, it's important to save yourself some energy, otherwise you might 
+//die of thirst!
+//How I crossed a mountainous desert the smart way? The directions given to the man are, for example, the following (depending on the language):
+//["NORTH", "SOUTH", "SOUTH", "EAST", "WEST", "NORTH", "WEST"].
+//You can immediately see that going "NORTH" and immediately "SOUTH" is not reasonable, better stay to the same place! 
+//So the task is to give to the man a simplified version of the plan. A better plan in this case is simply:
+//["WEST"]
+//Other examples:
+//In ["NORTH", "SOUTH", "EAST", "WEST"], the direction "NORTH" + "SOUTH" is going north and coming back right away.
+//The path becomes ["EAST", "WEST"], now "EAST" and "WEST" annihilate each other, therefore, the final result is [] (nil in Clojure).
+function dirReduc($arr) {
+    $notYet = true;
+    $oldPlan = $arr;
+    while ($notYet) {
+        $newPlan = [];
+        for ($i = 0; $i < count($oldPlan); $i++) {
+            if ($i + 1 < count($oldPlan)) {
+                $current = strtolower($oldPlan[$i]);
+                $next = strtolower($oldPlan[$i + 1]);
+                if ($current == "north") {
+                    if ($next == "south") {
+                        $i++;
+                    } else {
+                        $newPlan[] = $oldPlan[$i];
+                    }
+                } else if ($current == "south") {
+                    if ($next == "north") {
+                        $i++;
+                    } else {
+                        $newPlan[] = $oldPlan[$i];
+                    }
+                } else if ($current == "east") {
+                    if ($next == "west") {
+                        $i++;
+                    } else {
+                        $newPlan[] = $oldPlan[$i];
+                    }
+                } else if ($current == "west") {
+                    if ($next == "east") {
+                        $i++;
+                    } else {
+                        $newPlan[] = $oldPlan[$i];
+                    }
+                }
+            } else {
+                $newPlan[] = $oldPlan[$i];
+            }
+        }
+        if ($oldPlan == $newPlan) {
+            $notYet = false;
+        } else {
+            $oldPlan = $newPlan;
+        } 
+    }
+    return $newPlan;
+} //ex : [N, S, S, W, W, E, E, S, N, N] => [S, W, E, N] -> [S, N] -> []
+//Pro solution 1
+function dirReduc1($arr) {
+    $ops = ['NORTH'=>'SOUTH', 'SOUTH'=>'NORTH', 'EAST'=>'WEST', 'WEST'=>'EAST'];
+    $stack = [];
+    foreach ($arr as $k => $v) {
+        if (end($stack) == $ops[$v]) {
+            array_pop($stack);
+        } else {
+            $stack[] = $v;
+        }
+    }
+    return $stack;
+} //ex : [N, S, S, W, W, E, E, S, N, N] => [N] -> [] -> [S] -> [S, W] -> [S, W, W] -> [S, W] -> [S] -> [S, S] -> [S] -> []
+//Pro solution 2
+function dirReduc2($arr) {
+    for ($i = 0 ; $i < sizeof($arr) - 1 ; $i++) {
+        if ($arr[$i] == "NORTH" && $arr[$i + 1] == "SOUTH" ||
+            $arr[$i] == "SOUTH" && $arr[$i + 1] == "NORTH" ||
+            $arr[$i] == "WEST" && $arr[$i + 1] == "EAST" ||
+            $arr[$i] == "EAST" && $arr[$i + 1] == "WEST") {
+            array_splice($arr, $i, 2);
+            $arr = dirReduc($arr);
+        }
+    }
+    return $arr;
+}
+
+//Codewars - Surface Area and Volume of a Box
+//Write a function that returns the total surface area and volume of a box. The given input will be three 
+//positive non-zero integers: width, height, and depth.
+function getSize($width, $height, $depth) {
+    $totalSurfaceArea = 2 * (($width * $height) + ($width * $depth) + ($height * $depth));
+    $volume = $width * $height * $depth;
+    return [$totalSurfaceArea, $volume];
+}
+
+//Codewars - Simple Fun #176: Reverse Letter
+//Given a string str, reverse it and omit all non-alphabetic characters. Input & output -> [input] string str & [output] a string. Example:
+//For str = "krishan", the output should be "nahsirk".
+//For str = "ultr53o?n", the output should be "nortlu".
+function reverseLetter(string $str): string{
+    $reverse = "";
+    for ($i = strlen($str); $i > 0; $i--) {
+        if (ctype_alpha($str[$i - 1])) { //ctyoe_alpha to check a string is only contain alphabetic characters
+            $reverse .= $str[$i -1];
+        }
+    }
+    return $reverse;
+}
+
+//Codewars - Number of Decimal Digits
+//Determine the total number of digits in the integer (n>=0) given as input to the function. For example,
+//9 is a single digit, 66 has 2 digits and 128685 has 6 digits. Be careful to avoid overflows/underflows.
+//All inputs will be valid.
+function digits(int $n): int {
+    $nString = strval($n);
+    return strlen($nString);
+}
+//Pro solution 1
+function digits1(int $n): int {
+    return strlen((string) $n);
+}
+//Pro solution 2
+function digits2(int $n): int {
+    return $n ? log10($n) + 1 : 1;
+}
+//Pro solution 3
+function digits3(int $n): int {
+    return $n < 10 ? 1 : 1 + digits3($n / 10);
+} //looping with it's own function untill $n < 10
