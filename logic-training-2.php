@@ -87,7 +87,7 @@ function migratoryBirds($arr) {
     return $idExists[$currentFrequentlyLowest];
 }
 //Pro solution 1
-function migratoryBirds($arr) {
+function migratoryBirds1($arr) {
     $counts = array_count_values($arr); //array_count_values() returns a new array using the values of old array as keys and their frequency in old array as values.
     ksort($counts); //ksort() will sorts array in place by keys in ascending order.
     arsort($counts); //arsort() urutkan array dari yg value paling besar, kalo value sama urutannya tetap
@@ -97,7 +97,7 @@ function migratoryBirds($arr) {
 //correlation with the values they are associated with. This is used mainly when sorting associative arrays 
 //where the actual element order is significant.
 //Pro solution 2
-function migratoryBirds($arr) {
+function migratoryBirds2($arr) {
     $res = array(0, 0, 0, 0, 0); //buat array kosong
     for($i = 0; $i < count($arr); $i++) {
         $res[$arr[$i]]++; //push array key tertentu dan counter up untuk value key tersebut
