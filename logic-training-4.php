@@ -24,4 +24,69 @@ function gimme ($triplet) {
     }
     return $indexBetween;
 }
+
+//Codewars - Moved in Squared Strings (I)
+//You are given a string of n lines, each substring being n characters long: For example:
+//s = "abcd\nefgh\nijkl\nmnop"
+//We will study some transformations of this square of strings.
+//Vertical mirror: vert_mirror (or vertMirror or vert-mirror)
+//vert_mirror(s) => "dcba\nhgfe\nlkji\nponm"
+//Horizontal mirror: hor_mirror (or horMirror or hor-mirror)
+//hor_mirror(s) => "mnop\nijkl\nefgh\nabcd"
+//or printed:
+//vertical 	mirror   |horizontal	mirror
+//abcd --> 	dcba     |abcd --> 		mnop
+//efgh --> 	hgfe     |efgh --> 		ijkl
+//ijkl --> 	lkji     |ijkl -->    	efgh
+//mnop --> 	ponm     |mnop -->    	abcd
+//Task : Write these two functions and high-order function oper(fct, s) where
+//fct is the function of one variable f to apply to the string s (fct will be one of vertMirror, horMirror)
+//Examples:
+//s = "abcd\nefgh\nijkl\nmnop"
+//oper(vert_mirror, s) => "dcba\nhgfe\nlkji\nponm"
+//oper(hor_mirror, s) => "mnop\nijkl\nefgh\nabcd"
+function vertMirror($s) {
+    $parts = explode("\n", $s);
+    $partsReverse = [];
+    for ($i = 0; $i < count($parts); $i++) {
+        $current = $parts[$i];
+        $partReverse = "";
+        for ($j = strlen($current) - 1; $j > -1; $j--) {
+            $partReverse .= $current[$j]; 
+        }
+        array_push($partsReverse, $partReverse);
+    }
+    return implode("\n", $partsReverse);
+}
+function horMirror($s) {
+    $parts = explode("\n", $s);
+    $partsOpposite = [];
+    for ($i = count($parts) - 1; $i > -1; $i--) {
+        array_push($partsOpposite, $parts[$i]);
+    }
+    return implode("\n", $partsOpposite);
+}
+function oper($fct, $s) {
+    return $fct($s);
+}
+//Pro solution 1
+function vertMirror1($s) {
+    return implode("\n", array_map('strrev', explode("\n", $s))); //learn what array_map() with "strrev" parameter mean
+}
+function horMirror1($s) {
+    return implode("\n", array_reverse(explode("\n", $s)));
+}
+function oper1($f, $s) {
+    return $f($s);
+}
+//Pro solution 2
+function vertMirror2($grid) { //why it started already as a grid?
+    return array_map('strrev', $grid); //learn what array_map() with "strrev" parameter mean
+} 
+function horMirror2($grid) { //why it started already as a grid?
+    return array_reverse($grid);
+}
+function oper2($fct, $s) {
+    return implode("\n", $fct(explode("\n", $s)));
+}
 ?>

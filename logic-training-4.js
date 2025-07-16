@@ -47,3 +47,62 @@ var gimme3 = function (inputArray) {
     }
     return index;
 };
+
+//Codewars - Moved in Squared Strings (I)
+//You are given a string of n lines, each substring being n characters long: For example:
+//s = "abcd\nefgh\nijkl\nmnop"
+//We will study some transformations of this square of strings.
+//Vertical mirror: vert_mirror (or vertMirror or vert-mirror)
+//vert_mirror(s) => "dcba\nhgfe\nlkji\nponm"
+//Horizontal mirror: hor_mirror (or horMirror or hor-mirror)
+//hor_mirror(s) => "mnop\nijkl\nefgh\nabcd"
+//or printed:
+//vertical 	mirror   |horizontal	mirror
+//abcd --> 	dcba     |abcd --> 		mnop
+//efgh --> 	hgfe     |efgh --> 		ijkl
+//ijkl --> 	lkji     |ijkl -->    	efgh
+//mnop --> 	ponm     |mnop -->    	abcd
+//Task : Write these two functions and high-order function oper(fct, s) where
+//fct is the function of one variable f to apply to the string s (fct will be one of vertMirror, horMirror)
+//Examples:
+//s = "abcd\nefgh\nijkl\nmnop"
+//oper(vert_mirror, s) => "dcba\nhgfe\nlkji\nponm"
+//oper(hor_mirror, s) => "mnop\nijkl\nefgh\nabcd"
+function vertMirror(strng) {
+    let parts = strng.split("\n");
+    let partsReverse = [];
+    for (let i = 0; i < parts.length; i++) {
+        let current = parts[i];
+        let partReverse = "";
+        for (let j = current.length - 1; j > -1; j--) {
+            partReverse += current[j];
+        }
+        partsReverse.push(partReverse);
+    }
+    return partsReverse.join("\n");
+}
+function horMirror(strng) {
+    let parts = strng.split("\n");
+    let partsOpposite = [];
+    for (let i = parts.length - 1; i > -1; i--) {
+        partsOpposite.push(parts[i]);
+    }
+    return partsOpposite.join("\n");
+}
+function oper(fct, s) {
+    return fct(s);
+}
+//Pro solution 1
+function vertMirror1(str) {
+    return str.split('\n').map(line => line.split('').reverse().join('')).join('\n')
+}
+function horMirror1(str) {
+    return str.split('\n').reverse().join('\n')
+}
+function oper1(fct, s) {
+    return fct(s)
+}
+//Pro solution 2
+const vertMirror2 = s => s.map(s => [...s].reverse().join('')); //do more analysis for this part
+const horMirror2 = s => s.reverse();
+const oper2 = (fct, s) => fct(s.split("\n")).join("\n");
