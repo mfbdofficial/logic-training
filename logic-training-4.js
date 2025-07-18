@@ -106,3 +106,33 @@ function oper1(fct, s) {
 const vertMirror2 = s => s.map(s => [...s].reverse().join('')); //do more analysis for this part
 const horMirror2 = s => s.reverse();
 const oper2 = (fct, s) => fct(s.split("\n")).join("\n");
+
+//Codewars - The Highest Profit Wins
+//Ben has a very simple idea to make some profit: he buys something and sells it again. Of course, this wouldn't
+//give him any profit at all if he was simply to buy and sell it at the same price. Instead, he's going to buy it
+//for the lowest possible price and sell it at the highest.
+//Write a function that returns both the minimum and maximum number of the given list/array.
+//[1,2,3,4,5] -> [1,5]
+//[2334454,5] -> [5,2334454]
+//[1] -> [1,1]
+function minMax(arr){
+    let min = arr[0];
+    let max = arr[0];
+    for (let i = 0; i < arr.length; i++) {
+        if (max < arr[i]) {
+            max = arr[i];
+        } else if (min > arr[i]) {
+            min = arr[i];
+        }
+    }
+    return [min, max]; 
+}
+//Pro solution 1
+function minMax1(arr){
+    return [Math.min(...arr), Math.max(...arr)];
+}
+//Pro solution 2
+function minMax2(arr) {
+	var a = arr.sort(function(a,b) {return a-b});
+	return [a[0], a[a.length - 1]];
+}

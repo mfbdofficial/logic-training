@@ -89,4 +89,33 @@ function horMirror2($grid) { //why it started already as a grid?
 function oper2($fct, $s) {
     return implode("\n", $fct(explode("\n", $s)));
 }
+
+//Codewars - The Highest Profit Wins
+//Ben has a very simple idea to make some profit: he buys something and sells it again. Of course, this wouldn't
+//give him any profit at all if he was simply to buy and sell it at the same price. Instead, he's going to buy it
+//for the lowest possible price and sell it at the highest.
+//Write a function that returns both the minimum and maximum number of the given list/array.
+//[1,2,3,4,5] -> [1,5]
+//[2334454,5] -> [5,2334454]
+//[1] -> [1,1]
+function MinMax($arr) {
+    $min = $arr[0];
+    $max = $arr[0];
+    for ($i = 0; $i < count($arr); $i++) {
+        if ($max < $arr[$i]) {
+            $max = $arr[$i];
+        } else if ($min > $arr[$i]) {
+            $min = $arr[$i];
+        }
+    }
+    return [$min, $max];
+}
+//My other solution 1
+function MinMax1($arr) {
+    $sortedArr = sort($arr);
+    return [$arr[0], $arr[count($arr) - 1]];
+} //just sort it and get the first and last element
+function MinMax2($arr) {
+    return [min($arr), max($arr)];
+} //just return min and max value from that array using built-in function
 ?>

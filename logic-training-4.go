@@ -82,7 +82,7 @@ func Gimme2(array [3]int) int {
 // oper(vert_mirror, s) => "dcba\nhgfe\nlkji\nponm"
 // oper(hor_mirror, s) => "mnop\nijkl\nefgh\nabcd"
 func VertMirror(s string) string {
-	parts := strings.Split(s, "\n")
+	parts := strings.Split(s, "\n") //need to import "strings" package
 	var partsReverse []string
 	for i := 0; i < len(parts); i++ {
 		current := parts[i]
@@ -92,7 +92,7 @@ func VertMirror(s string) string {
 		}
 		partsReverse = append(partsReverse, partReverse)
 	}
-	return strings.Join(partsReverse, "\n")
+	return strings.Join(partsReverse, "\n") //need to import "strings" package
 } //
 func HorMirror(s string) string {
 	parts := strings.Split(s, "\n")
@@ -128,4 +128,42 @@ func HorMirror1(s string) string {
 type FParam1 func(string) string //this part just the same
 func Oper1(f FParam1, x string) string {
 	return f(x)
+}
+
+// Codewars - The Highest Profit Wins
+// Ben has a very simple idea to make some profit: he buys something and sells it again. Of course, this wouldn't
+// give him any profit at all if he was simply to buy and sell it at the same price. Instead, he's going to buy it
+// for the lowest possible price and sell it at the highest.
+// Write a function that returns both the minimum and maximum number of the given list/array.
+// [1,2,3,4,5] -> [1,5]
+// [2334454,5] -> [5,2334454]
+// [1] -> [1,1]
+func MinMax(arr []int) [2]int {
+	min := arr[0]
+	max := arr[0]
+	for i := 0; i < len(arr); i++ {
+		if max < arr[i] {
+			max = arr[i]
+		} else if min > arr[i] {
+			min = arr[i]
+		}
+	}
+	return [2]int{min, max}
+} // this is the manual way
+// Pro solution 1
+func MinMax1(arr []int) [2]int {
+	sort.Ints(arr) //need to import "sort" package
+	return [2]int{arr[0], arr[len(arr)-1]}
+} //just sort the slice (array) ancending, and get the first and last element
+// Pro solution 2
+func MinMax2(arr []int) [2]int {
+	min, max := arr[0], arr[0]
+	for _, num := range arr {
+		if num < min {
+			min = num
+		} else if num > max {
+			max = num
+		}
+	}
+	return [2]int{min, max}
 }
