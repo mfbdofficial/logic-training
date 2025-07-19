@@ -136,3 +136,25 @@ function minMax2(arr) {
 	var a = arr.sort(function(a,b) {return a-b});
 	return [a[0], a[a.length - 1]];
 }
+
+//Codewars - Factorial
+//Your task is to write function factorial
+//5 -> 120 (5 x 4 x 3 x 2 x 1)
+function factorial(n) {
+    let result = 1;
+    for (let i = n; i > 0; i--) {
+        result *= i;
+    }
+    return result;
+}
+//Pro solution 1
+const factorial1 = n => n ? factorial1(n - 1) * n : 1; //using recursive function method
+//Pro solution 2
+function factorial(n) {
+    let answer = 1;
+    while (n > 0) {
+        answer *= n;
+        n--;
+    }
+    return answer;
+} //do while statement as long as n value more that 0 (untill n = 1), decrease n value for every loop

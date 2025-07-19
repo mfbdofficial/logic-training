@@ -167,3 +167,29 @@ func MinMax2(arr []int) [2]int {
 	}
 	return [2]int{min, max}
 }
+
+// Codewars - Factorial
+// Your task is to write function factorial
+// 5 -> 120 (5 x 4 x 3 x 2 x 1)
+func Factorial(n int) int {
+	result := 1
+	for i := n; i > 0; i-- {
+		result = result * i
+	}
+	return result
+} //just do looping and multiple every current valuse
+// Pro solution 1
+func Factorial1(n int) int {
+	var result = 1
+	for i := 1; i <= n; i++ {
+		result *= i
+	}
+	return result
+} //same, just do looping (but with more simple multiple syntax)
+// Pro solution 2
+func Factorial2(n int) int {
+	if n < 2 {
+		return 1
+	}
+	return n * Factorial2(n-1)
+} //using recursive function method (function that called itself)

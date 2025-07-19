@@ -118,4 +118,31 @@ function MinMax1($arr) {
 function MinMax2($arr) {
     return [min($arr), max($arr)];
 } //just return min and max value from that array using built-in function
+
+//Codewars - Factorial
+//Your task is to write function factorial
+//5 -> 120 (5 x 4 x 3 x 2 x 1)
+function factorial($n) {
+    $result = 1;
+    for ($i = $n; $i > 0; $i--) {
+        $result *= $i;
+    }
+    return $result;
+}
+//My other solution 1
+function factorial1($n) {
+    if ($n < 2) {
+        return 1;
+    }
+    return $n * factorial1($n - 1);
+} //using recursive function method
+//My other solution 2
+function factorial2($n) {
+    $result = 1;
+    while ($n > 0) {
+        $result *= $n;
+        $n--;
+    }
+    return $result;
+} //do while statement as long as n value more that 0 (untill n = 1), decrease n value for every loop
 ?>
