@@ -193,3 +193,13 @@ func Factorial2(n int) int {
 	}
 	return n * Factorial2(n-1)
 } //using recursive function method (function that called itself)
+
+// Codewars - Simple Multiplication with 8 and 9
+// multiplying a given number by eight (8) if it is an even number and by nine (9) otherwise.
+func SimpleMultiplication(n int) int {
+	if n%2 == 0 {
+		return n * 8
+	} else {
+		return n * 9
+	}
+}

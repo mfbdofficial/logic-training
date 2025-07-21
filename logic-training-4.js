@@ -158,3 +158,13 @@ function factorial(n) {
     }
     return answer;
 } //do while statement as long as n value more that 0 (untill n = 1), decrease n value for every loop
+
+//Codewars - Simple Multiplication with 8 and 9
+//multiplying a given number by eight (8) if it is an even number and by nine (9) otherwise.
+function simpleMultiplication(number) {
+    if (number % 2 == 0) {
+        return number * 8;
+    } else {
+        return number * 9;
+    }
+}
