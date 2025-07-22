@@ -168,3 +168,54 @@ function simpleMultiplication(number) {
         return number * 9;
     }
 }
+
+//Codewars - Strong Number
+//Strong number is a number with the sum of the factorial of its digits is equal to the number itself.
+//For example, 145 is strong, because 1! + 4! + 5! = 1 + 24 + 120 = 145. Given a positive number, find if it
+//is strong or not, and return either "STRONG!!!!" or "Not Strong !!".
+//123 -> "Not Strong !!" (123 is not a strong number, because 1! + 2! + 3! = 9 is not equal to 123)
+//145 -> "STRONG!!!!" (145 is a strong number, because 1! + 4! + 5! = 1 + 24 + 120 = 145)
+function strong(n) {
+    let nProcess = n;
+    /*
+    let slc = [];
+    while (nProcess > 0) {
+        slc.push(nProcess % 10);
+        nProcess = nProcess / 10;
+    } //slc result would be 1, 0.1, 0.01, 0.001
+    */
+    let arr = nProcess.toString().split("").map(Number);
+    let result = 0;
+    for (let i = 0; i < arr.length; i++) {
+        let factorial = 1;
+        for (let j = arr[i]; j > 0; j--) {
+            factorial *= j;
+        }
+        result += factorial;
+    }
+    if (n == result) {
+        return "STRONG!!!!";
+    } else {
+        return "Not Strong !!";
+    }
+}
+//Pro solution 1
+function strong(n) {
+    let arr = String(n).split("");
+    let sum = 0;
+    function factorial(fnNum){
+        if (fnNum <= 1) {
+            return 1;
+        } else {
+            return fnNum * factorial(fnNum - 1);
+        }
+    }
+    for (let i = 0; i < arr.length; i++) {
+        sum += factorial(arr[i]);
+    }
+    return n == sum ? "STRONG!!!!" : "Not Strong !!"; 
+}
+//Pro solution 2
+function strong(n) {
+    return [1, 2, 145, 40585].includes(n) ? 'STRONG!!!!' : 'Not Strong !!';
+} //just check if n is included in strong number list or not

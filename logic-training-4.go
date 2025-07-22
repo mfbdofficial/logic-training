@@ -2,6 +2,7 @@ package main
 
 import (
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -203,3 +204,67 @@ func SimpleMultiplication(n int) int {
 		return n * 9
 	}
 }
+
+// Codewars - Strong Number
+// Strong number is a number with the sum of the factorial of its digits is equal to the number itself.
+// For example, 145 is strong, because 1! + 4! + 5! = 1 + 24 + 120 = 145. Given a positive number, find if it
+// is strong or not, and return either "STRONG!!!!" or "Not Strong !!".
+// 123 -> "Not Strong !!" (123 is not a strong number, because 1! + 2! + 3! = 9 is not equal to 123)
+// 145 -> "STRONG!!!!" (145 is a strong number, because 1! + 4! + 5! = 1 + 24 + 120 = 145)
+func Strong(n int) string {
+	nProcess := n
+	slc := []int{}
+	for nProcess > 0 {
+		slc = append(slc, nProcess%10)
+		nProcess = nProcess / 10
+	} //if n = 123, now the slc = [3, 2, 1]
+	slcOrdered := []int{}
+	for i := len(slc); i > 0; i-- {
+		slcOrdered = append(slcOrdered, slc[i-1])
+	} //now if n = 123, the slcOrdered = [1, 2, 3]
+	result := 0
+	for i := 0; i < len(slcOrdered); i++ {
+		current := slcOrdered[i]
+		currentFactorial := 1
+		for j := current; j > 0; j-- {
+			currentFactorial *= j
+		}
+		result += currentFactorial
+	}
+	if n == result {
+		return "STRONG!!!!"
+	} else {
+		return "Not Strong !!"
+	}
+} //make the n integer into slice of integer (digit), order the position, loop for every splice to do factorial, sum it
+// Pro solution 1
+func Strong1(n int) string {
+	sum := 0
+	for _, c := range strconv.Itoa(n) {
+		i, _ := strconv.Atoi(string(c)) //need to import "strconv" package
+		sum += Factorial(i)
+	}
+	if sum == n {
+		return "STRONG!!!!"
+	}
+	return "Not Strong !!"
+}
+func FactorialForStrong1(n int) int {
+	if n > 0 {
+		return n * Factorial(n-1)
+	}
+	return 1
+} //make separated factorial function, do looping based from range
+// Pro solution 2
+func Strong2(n int) string {
+	t := map[int]int{0: 1, 1: 1, 2: 2, 3: 6, 4: 24, 5: 120, 6: 720, 7: 5040, 8: 40320, 9: 362880}
+	res := 0
+	for v := n; v > 0; v /= 10 {
+		res += t[v%10] //the moment when the map is used
+	}
+	if res == n {
+		return "STRONG!!!!"
+	} else {
+		return "Not Strong !!"
+	}
+} //do mapping for factorial from digit 1 untill 9, i use it when needed haha

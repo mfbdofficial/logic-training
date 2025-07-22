@@ -155,4 +155,45 @@ function simpleMultiplication($number) {
         return $number * 9;
     }
 }
+
+//Codewars - Strong Number
+//Strong number is a number with the sum of the factorial of its digits is equal to the number itself.
+//For example, 145 is strong, because 1! + 4! + 5! = 1 + 24 + 120 = 145. Given a positive number, find if it
+//is strong or not, and return either "STRONG!!!!" or "Not Strong !!".
+//123 -> "Not Strong !!" (123 is not a strong number, because 1! + 2! + 3! = 9 is not equal to 123)
+//145 -> "STRONG!!!!" (145 is a strong number, because 1! + 4! + 5! = 1 + 24 + 120 = 145)
+function toNumberCustom($num) {
+    return intval($num);
+} 
+function strong($n) {
+    $arr = array_map('toNumberCustom', str_split(strval($n))); //when we do array_map, it means we do
+    $result = 0; //declaration again for our call back, that's why the toNumberCustom need to be outside
+    for ($i = 0; $i < count($arr); $i++) {
+        $factorial = 1;
+        for ($j = $arr[$i]; $j > 0; $j--) {
+            $factorial *= $j;
+        }
+        $result += $factorial;
+    }
+    if ($n == $result) {
+        return "STRONG!!!!";
+    } else {
+        return "Not Strong !!";
+    }
+}
+//Pro solution 1
+function strong1($n) : string {
+    $sum = 0;
+    foreach(str_split($n) as $v) {
+        $sum += $v == 0 ? 1 : array_product(range(1, $v)); //just in case if $v = 0, because if we do
+    } //range(1, 0) it would be error, beside of that 0! is 1 anyway
+    return $sum == $n ? 'STRONG!!!!' : 'Not Strong !!';
+}
+//Pro solution 2
+function strong2($n) {
+    $sum = array_sum(array_map(function ($x) { 
+        return ($x == 0) ? 1 : array_product(range(1, (int)$x));
+    }, str_split(strval($n))));
+    return ($sum == $n) ? "STRONG!!!!" : "Not Strong !!";
+} //do it straigt making $sum varibale, do mapping (array_product) for integer splitted $n, then sum it with array_sum
 ?>
