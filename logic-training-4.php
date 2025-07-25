@@ -196,4 +196,55 @@ function strong2($n) {
     }, str_split(strval($n))));
     return ($sum == $n) ? "STRONG!!!!" : "Not Strong !!";
 } //do it straigt making $sum varibale, do mapping (array_product) for integer splitted $n, then sum it with array_sum
+
+//Codewars - Rotate for a Max
+//Take a number: 56789. Rotate left, you get 67895.
+//Keep the first digit in place and rotate left the other digits: 68957.
+//Keep the first two digits in place and rotate the other ones: 68579.
+//Keep the first three digits and rotate left the rest: 68597.
+//Now it is over since keeping the first four it remains only one digit which rotated is itself.
+//You have the following sequence of numbers:
+//56789 -> 67895 -> 68957 -> 68579 -> 68597
+//and you must return the greatest: 68957.
+function maxRot($n) {
+    $nString = strval($n);
+    $nArray = str_split($nString);
+    $max = $n;
+    for ($i = 0; $i < count($nArray); $i++) {
+        array_push($nArray, $nArray[$i]);
+        array_splice($nArray, $i, 1); //remove item on index i for 1 element length
+        $currentRotate = intval(join('', $nArray));
+        if ($max < $currentRotate) {
+            $max = $currentRotate;
+        }
+    }
+    return $max;
+}
+//Pro solution 1
+function maxRot1($n) : int {
+    $max = $n;
+    $rotations = strlen($n) - 1;
+    for ($i = 0; $i < $rotations; $i++) {
+        $n = substr($n, 0, $i) . rotate(substr($n, $i));
+        $max = max($max, $n);
+    }
+    return $max;
+}
+function rotate1($s) {
+    return substr($s, 1) . substr($s, 0, 1);
+}
+//Pro solution 2
+function maxRot2($n) {
+    $max = $n;
+    $val = strval($n);
+    $limit = strlen($val);
+    for ($i = 0; $i <= $limit; $i++) {
+        $main = substr($val, 0, $i);
+        $sub = str_split(substr($val, $i));
+        $temp = array_shift($sub);
+        $val = $main.implode($sub).$temp;
+        if ($max<intval($val)) $max = intval($val);
+    }
+    return $max;
+}
 ?>

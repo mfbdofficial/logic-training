@@ -219,3 +219,50 @@ function strong(n) {
 function strong(n) {
     return [1, 2, 145, 40585].includes(n) ? 'STRONG!!!!' : 'Not Strong !!';
 } //just check if n is included in strong number list or not
+
+//Codewars - Rotate for a Max
+//Take a number: 56789. Rotate left, you get 67895.
+//Keep the first digit in place and rotate left the other digits: 68957.
+//Keep the first two digits in place and rotate the other ones: 68579.
+//Keep the first three digits and rotate left the rest: 68597.
+//Now it is over since keeping the first four it remains only one digit which rotated is itself.
+//You have the following sequence of numbers:
+//56789 -> 67895 -> 68957 -> 68579 -> 68597
+//and you must return the greatest: 68957.
+function maxRot(n) {
+    let nString = n.toString();
+    let nArray = nString.split('');
+    let max = n;
+    for (let i = 0; i < nArray.length; i++) {
+        nArray.push(nArray[i]);
+        nArray.splice(i, 1); //remove item on index i for 1 element length
+        let currentRotate = parseInt(nArray.join(''));
+        if (max < currentRotate) {
+            max = currentRotate;
+        }
+    }
+    return max;
+}
+//Pro solution 1
+function maxRot1(n) {
+    var str = n.toString();
+    var arr = [str];
+    for (var i = 0; i <= str.length - 1; i++) {
+        str = str.slice(0, i) + str.slice(i + 1) + str[i]; //slice(start, end) get string from index start to the end (end not included)
+        arr.push(str.split().join()); //this part should be arr.push(str), simplified by ChatGPT
+    } //slice(i) get string from i (included) until the last
+    return Math.max.apply(null, arr);
+}
+//Pro solution 2
+function maxRot2(n){
+    let max = n;
+    let arr = String(n).split('');
+    for(let i = 0; i < arr.length; i++) {
+        arr.push(arr.splice(i, 1));
+        const num = Number(arr.join(''));
+        if(num > max) {
+            max = num
+        }
+    }
+    return max
+} //need more research

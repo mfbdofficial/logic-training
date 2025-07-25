@@ -268,3 +268,63 @@ func Strong2(n int) string {
 		return "Not Strong !!"
 	}
 } //do mapping for factorial from digit 1 untill 9, i use it when needed haha
+
+// Codewars - Rotate for a Max
+// Take a number: 56789. Rotate left, you get 67895.
+// Keep the first digit in place and rotate left the other digits: 68957.
+// Keep the first two digits in place and rotate the other ones: 68579.
+// Keep the first three digits and rotate left the rest: 68597.
+// Now it is over since keeping the first four it remains only one digit which rotated is itself.
+// You have the following sequence of numbers:
+// 56789 -> 67895 -> 68957 -> 68579 -> 68597
+// and you must return the greatest: 68957.
+func MaxRot(n int64) int64 {
+	nInt := int(n)
+	slc := []int{}
+	for nInt > 0 {
+		slc = append(slc, nInt%10)
+		nInt = nInt / 10
+	}
+	slcOrdered := []int{}
+	for i := len(slc); i > 0; i-- {
+		slcOrdered = append(slcOrdered, slc[i-1])
+	}
+	max := int(n)
+	for i := 0; i < len(slcOrdered); i++ {
+		slcOrdered = append(slcOrdered, slcOrdered[i])
+		slcOrdered = append(slcOrdered[:i], slcOrdered[i+1:]...)
+		currentRotate := 0
+		for _, digit := range slcOrdered {
+			currentRotate = currentRotate*10 + digit
+		}
+		if max < currentRotate {
+			max = currentRotate
+		}
+	}
+	return int64(max)
+} //explode the n first into array (then sort it), do step by step rotate (while comparing with max value)
+// Pro solution 1
+func MaxRot1(n int64) int64 {
+	str := strconv.FormatInt(n, 10) //need to import "strconv" package, we change n into string
+	max := n                        //make max variable with original number n for first
+	for i := 0; i < len(str)-1; i++ {
+		str = str[:i] + str[i+1:] + string(str[i]) //this is where the rotation begin str[:i] means take all the string before str[i] (str[i] not included)
+		num, _ := strconv.ParseInt(str, 10, 64)    //convert string back to integer
+		if max < num {
+			max = num
+		}
+	}
+	return max
+} //talk more about that rotate, str[i+1:] means take all the string after str[i+1] (str[i+1] included)
+// Pro solution 2
+func MaxRot2(n int64) int64 {
+	s, max := strconv.FormatInt(n, 10), n //need to import "strconv" package
+	for i := 0; i < len(s); i++ {
+		s = s[:i] + s[i:][1:] + s[i:][:1]
+		v, _ := strconv.ParseInt(s, 10, 64)
+		if max < v {
+			max = v
+		}
+	}
+	return max
+} //need more research
