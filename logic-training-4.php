@@ -247,4 +247,26 @@ function maxRot2($n) {
     }
     return $max;
 }
+
+//Codewars - Powers of 2
+//Complete the function that takes a non-negative integer n as input, and returns a list of all the powers
+//of 2 with the exponent ranging from 0 to n (inclusive).
+//n = 0 -> [1] because [2^0]
+//n = 1 -> [1, 2] because [2^0, 2^1]
+//n = 2 -> [1, 2, 4] because [2^0, 2^1, 2^2]
+function powersOfTwo(int $n): array{
+    $list = [];
+    for ($i = 0; $i <= $n; $i++) {
+        array_push($list, 2 ** $i);
+    }
+    return $list;
+}
+//Pro solution 1
+function powersOfTwo1(int $n): array{
+    return array_map(fn($num) => 2 ** $num, range(0, $n)); //create array with this range(0, $n) means 0 until n
+} //fn($num) => 2 ** $num, function for mapping (return the exponential 2 of $num)
+//Pro solution 2
+function powersOfTwo2(int $n): array{
+    return array_map(fn($v) => $v = pow(2, $v), range(0, $n));
+} //same as Pro solution 1, but we use pow() built in function in our function for mapping
 ?>

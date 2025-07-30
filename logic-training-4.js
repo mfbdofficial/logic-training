@@ -266,3 +266,33 @@ function maxRot2(n){
     }
     return max
 } //need more research
+
+//Codewars - Powers of 2
+//Complete the function that takes a non-negative integer n as input, and returns a list of all the powers
+//of 2 with the exponent ranging from 0 to n (inclusive).
+//n = 0 -> [1] because [2^0]
+//n = 1 -> [1, 2] because [2^0, 2^1]
+//n = 2 -> [1, 2, 4] because [2^0, 2^1, 2^2]
+function powersOfTwo(n){
+    let list = [];
+    for (let i = 0; i <= n; i++) {
+        list.push(2 ** i);
+    }
+    return list;
+}
+//My other solution
+function powersOfTwo0(n){
+    let list = [];
+    for (let i = 0; i <= n; i++) {
+        list.push(Math.pow(2, i));
+    }
+    return list;
+}
+//Pro solution 1
+function powersOfTwo1(n) {
+    return Array.from({length: n + 1}, (v, k) => 2 ** k); //crete array of undefined with length n + 1
+} //then (v, k) => 2 ** k is mapping function, v = value, k = index
+//Pro solution 2
+function powersOfTwo(n) {
+    return [...Array(n + 1)].map((_, i) => 2 ** i) 
+} //create array, and then do mapping for that array

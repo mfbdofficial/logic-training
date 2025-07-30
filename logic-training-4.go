@@ -1,6 +1,7 @@
 package main
 
 import (
+	"math"
 	"sort"
 	"strconv"
 	"strings"
@@ -328,3 +329,47 @@ func MaxRot2(n int64) int64 {
 	}
 	return max
 } //need more research
+
+// Codewars - Powers of 2
+// Complete the function that takes a non-negative integer n as input, and returns a list of all the powers
+// of 2 with the exponent ranging from 0 to n (inclusive).
+// n = 0 -> [1] because [2^0]
+// n = 1 -> [1, 2] because [2^0, 2^1]
+// n = 2 -> [1, 2, 4] because [2^0, 2^1, 2^2]
+func PowersOfTwo(n int) []uint64 {
+	list := []uint64{}
+	for i := 0; i <= n; i++ {
+		list = append(list, 1<<i) //what is this 1<<i mean? It's bit-shift (pergeseran angka binary)
+	} //this bit-shift solution only work for the powers of 2
+	return list
+} //more explanation about bit-shift
+// how to read binary number?
+// 00001001 -> 2^3 + 2^0 = 8 + 1 = 9
+// 01001100 -> 2^6 + 2^3 + 2^2 = 64 + 8 + 4 = 76
+// the what is 1<<i work?
+// 1<<0 -> shift 0 times for 1 in binary -> 00000001 -> 2^0 -> 1
+// 1<<4 -> shift 4 times for 1 in binary -> 00010000 -> 2^4 -> 16
+// My other solution
+func PowersOfTwo0(n int) []uint64 {
+	list := []uint64{}
+	for i := 0; i <= n; i++ {
+		list = append(list, uint64(math.Pow(2, float64(i)))) //need to import "math" package
+	}
+	return list
+} //using built in function to di exponential
+// Pro solution 1
+func PowersOfTwo1(n int) (arr []uint64) {
+	for i := 0; i <= n; i++ {
+		arr = append(arr, 1<<i)
+	}
+	return
+} //initialize the arr in the result type
+// Pro solution 2
+func PowersOfTwo2(n int) []uint64 {
+	result := make([]uint64, n+1)
+	result[0] = 1
+	for i := 1; i <= n; i++ {
+		result[i] = result[i-1] * 2
+	}
+	return result
+} //do multiple 2 with the element before current for every loop
