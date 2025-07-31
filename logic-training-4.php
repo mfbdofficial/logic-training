@@ -269,4 +269,60 @@ function powersOfTwo1(int $n): array{
 function powersOfTwo2(int $n): array{
     return array_map(fn($v) => $v = pow(2, $v), range(0, $n));
 } //same as Pro solution 1, but we use pow() built in function in our function for mapping
+
+//Codewars - Wilson Primes
+//Wilson primes satisfy this condition (P is a prime number)
+//(P - 1)! + 1 divided by P * P
+//So it would be ((P - 1)! + 1) / (P * P)
+//This should give a whole number, where P! is the factorial of P
+//Your task is to create a function that returns true if the given number is a Wilson prime and false otherwise.
+//in this Wilson Prime, P is only maded by Prime number. What is Prime number itself?
+//it's the number that greater than 1 & it must be divisible only by 1 and itself (not by any other number).
+function amIWilsonLogic($p) {
+    if ($p < 2) {
+        return false;
+    }
+    $nMin1Factorial = 1;
+    for ($i = 1; $i < $p; $i++) {
+        $nMin1Factorial *= $i;
+    }
+    $result = ($nMin1Factorial + 1) % ($p * $p);
+    if ($result == 0) {
+        return true ;
+    } else {
+        return false;
+    }
+} //base logic, it's actually correct, but this will error for 563 why?
+//When you do (563 - 1)! = 562! is a huge number (~10^1290). JavaScript numbers (Number type) can’t handle that 
+//without precision loss after ~15-17 digits. So the modulo (nMin1Factorial + 1) % (p * p) becomes inaccurate, 
+//and you get a wrong result.
+function amIWilson($p) {
+    if ($p < 2) return false;
+    $fact = gmp_init(1);
+    for ($i = 1; $i < $p; $i++) {
+        $fact = gmp_mul($fact, $i);
+    }
+    $numerator = gmp_add($fact, 1);
+    $denominator = gmp_mul($p, $p);
+    return gmp_cmp(gmp_mod($numerator, $denominator), 0) === 0;
+} //You’ll also need to make sure the gmp extension is enabled in your PHP setup. Just check by running: phpinfo();
+//GMP stands for GNU Multiple Precision arithmetic library. It is a powerful math extension in PHP that allows you 
+//to do high-precision arithmetic, including:
+//- very large integers (like factorials of 500+), 
+//- large fractions and modular operations, 
+//- precise arithmetic beyond what normal int or float can handle
+//How to enable GMP in Linux : run -> sudo apt install php-gmp, restart ur web server, then run -> sudo service apache2 restart
+//How to enable GMP in Windows : open -> php.ini, uncomment this line -> extension=php_gmp.dll, then restart XAMPP
+//If you can't use GMP, I can show you a version using bcmath (slower but available more often).
+function amIWilsonBCMath($p) {
+    if ($p < 2) return false;
+    $factorial = '1';
+    for ($i = 1; $i < $p; $i++) { //calculate (p - 1)!
+        $factorial = bcmul($factorial, (string)$i);
+    }
+    $numerator = bcadd($factorial, '1'); //(p - 1)! + 1
+    $denominator = bcmul((string)$p, (string)$p); //p^2
+    $mod = bcmod($numerator, $denominator); //numerator % denominator
+    return $mod === '0';
+}
 ?>

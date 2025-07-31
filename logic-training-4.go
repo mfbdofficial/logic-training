@@ -2,6 +2,7 @@ package main
 
 import (
 	"math"
+	"math/big"
 	"sort"
 	"strconv"
 	"strings"
@@ -373,3 +374,71 @@ func PowersOfTwo2(n int) []uint64 {
 	}
 	return result
 } //do multiple 2 with the element before current for every loop
+
+// Codewars - Wilson Primes
+// Wilson primes satisfy this condition (P is a prime number)
+// (P - 1)! + 1 divided by P * P
+// So it would be ((P - 1)! + 1) / (P * P)
+// This should give a whole number, where P! is the factorial of P
+// Your task is to create a function that returns true if the given number is a Wilson prime and false otherwise.
+// in this Wilson Prime, P is only maded by Prime number. What is Prime number itself?
+// it's the number that greater than 1 & it must be divisible only by 1 and itself (not by any other number).
+func AmIWilsonLogic(n int) bool {
+	if n < 2 {
+		return false
+	}
+	nMin1Factorial := 1
+	for i := 1; i < n; i++ {
+		nMin1Factorial *= i
+	}
+	result := (nMin1Factorial + 1) % (n * n)
+	if result == 0 {
+		return true
+	} else {
+		return false
+	}
+} //this is the base logic, it's actually correct but got error in go when the n is 563
+// why? because we need to calculate (563-1)! which is 562!, the result is too large, tt overflows int or even int64,
+// and your result becomes invalid, Go doesn't raise an error for int overflow — it silently gives the wrong result.
+// so we need to use big.NewInt() to play with bigint data type, we need to "import math/big" first, we can't use *,
+// +, %, etc. directly on *big.Int types. You must use methods like .Mul(), .Add(), .Mod(), etc., and also be careful
+// with data types like int vs int64
+func AmIWilson(n int) bool {
+	if n < 2 {
+		return false
+	}
+	nMin1Factorial := big.NewInt(1)
+	for i := 1; i < n; i++ {
+		nMin1Factorial.Mul(nMin1Factorial, big.NewInt(int64(i)))
+	}
+	numerator := nMin1Factorial.Add(nMin1Factorial, big.NewInt(1))
+	denominator := big.NewInt(int64(n))
+	denominator.Mul(denominator, big.NewInt(int64(n)))
+	result := new(big.Int)
+	result.Mod(numerator, denominator)
+	if result.Cmp(big.NewInt(0)) == 0 {
+		return true
+	} else {
+		return false
+	}
+}
+
+// Pro solution 1
+func AmIWilson1(n int) bool {
+	return n == 5 || n == 13 || n == 563
+} //just hardcode the Wilson Primes number
+// Pro solution 2
+func AmIWilson2(n int) bool {
+	if n <= 1 {
+		return false
+	}
+	factorial := big.NewInt(1)
+	for i := 2; i < n; i++ {
+		factorial.Mul(factorial, big.NewInt(int64(i)))
+	}
+	factorial.Add(factorial, big.NewInt(1))
+	nBig := big.NewInt(int64(n))
+	nSquared := new(big.Int).Mul(nBig, nBig)
+	remainder := new(big.Int).Mod(factorial, nSquared)
+	return remainder.Cmp(big.NewInt(0)) == 0
+}

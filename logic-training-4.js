@@ -296,3 +296,61 @@ function powersOfTwo1(n) {
 function powersOfTwo(n) {
     return [...Array(n + 1)].map((_, i) => 2 ** i) 
 } //create array, and then do mapping for that array
+
+//Codewars - Wilson Primes
+//Wilson primes satisfy this condition (P is a prime number)
+//(P - 1)! + 1 divided by P * P
+//So it would be ((P - 1)! + 1) / (P * P)
+//This should give a whole number, where P! is the factorial of P
+//Your task is to create a function that returns true if the given number is a Wilson prime and false otherwise.
+//in this Wilson Prime, P is only maded by Prime number. What is Prime number itself?
+//it's the number that greater than 1 & it must be divisible only by 1 and itself (not by any other number).
+function amIWilsonLogic(p) {
+    if (p < 2) {
+        return false;
+    }
+    let nMin1Factorial = 1;
+    for (let i = 1; i < p; i++) {
+        nMin1Factorial *= i;
+    }
+    let result = (nMin1Factorial + 1) % (p * p);
+    if (result == 0) {
+        return true ;
+    } else {
+        return false;
+    }
+} //base logic, it's actually correct, but this will error for 563 why?
+//When you do (563 - 1)! = 562! is a huge number (~10^1290). JavaScript numbers (Number type) can’t handle that 
+//without precision loss after ~15-17 digits. So the modulo (nMin1Factorial + 1) % (p * p) becomes inaccurate, 
+//and you get a wrong result.
+function amIWilsonc(p) {
+    if (p < 2) {
+        return false;
+    }
+    let bigP = BigInt(p);
+    let nMin1Factorial = 1n;
+    for (let i = 1n; i < bigP; i++) {
+        nMin1Factorial *= i;
+    }
+    let result = (nMin1Factorial + 1n) % (bigP * bigP);
+    if (result == 0) {
+        return true ;
+    } else {
+        return false;
+    }
+}//the logic is the same, but I convert p into bigint type, 1n means 1 in bigint and 2n means 2 in bigint
+//Pro solution 1
+function amIWilson1(p) {
+    p = BigInt(p);
+    const fac = n => n ? n * fac(n - 1n) : 1n; //this is the factorial process
+    const d = (fac(p - 1n) + 1n); //p in here is already a bigint
+    return !(d % (p * p)); //if d % (p * p) = 0 then it's false, but since we use NOT logical operator (!) so it
+} //become true and yes, that's Wilson Primes
+//Pro solution 2
+const amIWilson2 = p => [5, 13, 563].indexOf(p) > -1 //hardcode make the Wilson Primes number as array and check it
+//.indexOf() is returning the index, could be 0 or 1 or 2 etc, but if it didn't finded then return -1 thats why we
+//use "> -1" not "> 0" as comparation
+//Pro solution 3
+function amIWilson3(p) {
+    return p==5 || p==13 || p==563 //the only known Wilson primes are 5, 13 and 563
+} //same, just hardcode it and check it one by one
