@@ -325,4 +325,49 @@ function amIWilsonBCMath($p) {
     $mod = bcmod($numerator, $denominator); //numerator % denominator
     return $mod === '0';
 }
+
+//Codewars - Mumbling
+//"abcd" -> "A-Bb-Ccc-Dddd"
+//"RqaEzty" -> "R-Qq-Aaa-Eeee-Zzzzz-Tttttt-Yyyyyyy"
+//"cwAt" -> "C-Ww-Aaa-Tttt"
+function accum($s) {
+    $group = [];
+    for ($i = 0; $i < strlen($s); $i++) {
+        $current = "";
+        for ($j = 0; $j < $i + 1; $j++) {
+            if ($j == 0) {
+                $current .= strtoupper($s[$i]);
+            } else {
+                $current .= strtolower($s[$i]);
+            }
+        }
+        array_push($group, $current);
+    }
+    return implode("-", $group);
+}
+//Pro solution 1
+function accum1($s) {
+    $parts = [];
+    foreach (str_split($s) as $index => $part) {
+        $parts[] = strtoupper($part) . str_repeat(strtolower($part), $index);
+    }
+    return implode('-', $parts);
+} //split the string $s, do foreach, concat between uppercase part and lowercase part
+//for lowercase part, str_repeat(strtolower($part), $index) means get string $part and repeat it for $index times
+//Pro solution 2
+function accum2($s) {
+    foreach (str_split($s) as $position => $char) {
+        $words[] = ucwords(str_repeat(strtolower($char), $position + 1));
+    } //the ucwords() function converts the first character of each word in a string to uppercase.
+    return implode('-', $words);
+}//split the string $s, do foreach, repeat lowercase for $index or $position + 1 times, change it to camelcase, implode
+//Pro solution 3
+function accum3($s) {
+    $result = "";
+    for($i = 0; $i < strlen($s); $i++){
+        $letter = $s[$i];
+        $result .= strtoupper($letter) . str_repeat(strtolower($letter), $i) . "-";
+    } //instead making an array and implode it, we just do concat directly with "-" included
+    return trim($result, "-"); //cut the last "-" founded
+}
 ?>

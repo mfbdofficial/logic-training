@@ -421,8 +421,7 @@ func AmIWilson(n int) bool {
 	} else {
 		return false
 	}
-}
-
+} //same logic, but now we implement for bigint data type
 // Pro solution 1
 func AmIWilson1(n int) bool {
 	return n == 5 || n == 13 || n == 563
@@ -442,3 +441,40 @@ func AmIWilson2(n int) bool {
 	remainder := new(big.Int).Mod(factorial, nSquared)
 	return remainder.Cmp(big.NewInt(0)) == 0
 }
+
+// Codewars - Mumbling
+// "abcd" -> "A-Bb-Ccc-Dddd"
+// "RqaEzty" -> "R-Qq-Aaa-Eeee-Zzzzz-Tttttt-Yyyyyyy"
+// "cwAt" -> "C-Ww-Aaa-Tttt"
+func Accum(s string) string {
+	group := []string{}
+	for i := 0; i < len(s); i++ {
+		current := ""
+		for j := 0; j < i+1; j++ {
+			if j == 0 {
+				current = current + strings.ToUpper(string(s[i])) //need to import "strings" package
+			} else {
+				current = current + strings.ToLower(string(s[i])) //need to import "strings" package
+			}
+		}
+		group = append(group, current)
+	}
+	return strings.Join(group, "-") //need to import "strings" package
+} //create loop for insert to slice of string,and create loop again inside it to determine the "Xxxx" shape element
+// Pro solution 1
+func Accum1(s string) string {
+	parts := make([]string, len(s))
+	for i := 0; i < len(s); i++ {
+		parts[i] = strings.ToUpper(string(s[i])) + strings.Repeat(strings.ToLower(string(s[i])), i)
+	}
+	return strings.Join(parts, "-") //need to import "strings" package
+} //strings.Repeat(s, count) returns a new string consisting of count copies of the string s concatenated together.
+// for example strings.Repeat("a", 5) will return "aaaaa"
+// Pro solution 2
+func Accum2(s string) string {
+	words := make([]string, len(s))
+	for i, c := range s { //loops through each character c in string s, while also getting the index i, c is a rune (Go's version of a Unicode character)
+		words[i] = strings.Title(strings.Repeat(strings.ToLower(string(c)), i+1)) //string(c) is to converts rune `c` to a string
+	} //strings.Repeat(..., i+1), use `i+1` instead of `i` because on the first character (i = 0), you still want it to appear once.
+	return strings.Join(words, "-")
+} //btw strings.Title(...) before is to capitalizes the first letter of the string, the rest stay lowercase.

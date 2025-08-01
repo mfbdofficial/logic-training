@@ -354,3 +354,45 @@ const amIWilson2 = p => [5, 13, 563].indexOf(p) > -1 //hardcode make the Wilson 
 function amIWilson3(p) {
     return p==5 || p==13 || p==563 //the only known Wilson primes are 5, 13 and 563
 } //same, just hardcode it and check it one by one
+
+//Codewars - Mumbling
+//"abcd" -> "A-Bb-Ccc-Dddd"
+//"RqaEzty" -> "R-Qq-Aaa-Eeee-Zzzzz-Tttttt-Yyyyyyy"
+//"cwAt" -> "C-Ww-Aaa-Tttt"
+function accum(s) {
+    let group = [];
+    for (let i = 0; i < s.length; i++) {
+        let current = "";
+        for (let j = 0; j < i + 1; j++) {
+            if (j == 0) {
+                current += s[i].toUpperCase();
+            } else {
+                current += s[i].toLowerCase();
+            }
+        }
+        group.push(current);
+    }
+    return group.join("-");
+}
+//Pro solution 1
+function accum1(s) {
+    return s.split('').map((c, i) => (c.toUpperCase() + c.toLowerCase().repeat(i))).join('-');
+} //need to analyze more
+//Pro solution 2
+function accum2(s) {
+	return s.split('').map((x,index) => x.toUpperCase() + Array(index + 1).join(x.toLowerCase())).join('-');
+} //first os we split the string into array with .split('')
+//second is we do mapping with .map((x,index) => x.toUpperCase() + Array(index + 1).join(x.toLowerCase()))
+//all of that element gonna do process for x.toUpperCase() + Array(index + 1).join(x.toLowerCase())
+//Array(index + 1),why x + 1? we need more than 1 because we will enter the letter x as delimiters
+//example Array(3).join("z") : 
+//- Array(3) makes array of undefined with length 3 [ , , ]
+//- then we join it with join("z"), "z" as delimiter so the result would be "zz"
+//Pro solution 3
+function accum3(s) {
+	return [...s].map((element, index) => {
+        return element.toUpperCase() + element.toLowerCase().repeat(index);
+    }).join('-');
+} //[...s] is spread operator for s, so we'll getan array of each letter s, same as doing s.split("")
+//then we doing mapping like before 
+//btw this process element.toLowerCase().repeat(index) -> is to repeat the same letter in lowercase index times
