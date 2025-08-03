@@ -370,4 +370,51 @@ function accum3($s) {
     } //instead making an array and implode it, we just do concat directly with "-" included
     return trim($result, "-"); //cut the last "-" founded
 }
-?>
+
+// Codewars - Remove First and Last Character
+// Your goal is to write a function that removes the first and last characters of a string. You're given one
+// parameter, the original string. Your function should handle strings of any length ≥ 2 characters. For strings
+// with exactly 2 characters, return an empty string.
+function remove_char(string $s): string {
+    if (strlen($s) < 2) {
+        return "";
+    }
+    $s = substr($s, 1);
+    $s = substr($s, 0, -1);
+    return $s;
+}
+//My other solution
+function remove_char0(string $s): string {
+    if (strlen($s) < 2) {
+        return "";
+    }
+    $s = substr($s, 1, -1);
+    return $s;
+}
+//Pro solution 1
+function remove_char1(string $s): string {
+    return substr($s,1,-1);
+} //return it directly
+//Pro solution 2
+function remove_char2(string $s): string {
+    $x = str_split($s);
+    array_pop($x);
+    array_shift($x);
+    $imp = implode("", $x);
+    return $imp;
+} //make it into an array by split it, array_pop() to remove last element, array_shift() to remove first element
+//Pro solution 3
+function remove_char3(string $s): string {
+    return substr($s, 1, strlen($s) - 2); //strlen($s) - 2, to get second-to-last index
+}
+//Pro solution 4
+function remove_char4(string $s): string {
+    $tmp = "";
+    for($i = 0; $i < strlen($s); $i++) {
+        if($i != 0 && $i != strlen($s) - 1) {
+            $tmp .= $s[$i];
+        }
+    }
+    return $tmp;
+}//do looping and do concatination, except for index 0 (for first string character) and index string length - 1 (for 
+//last string character)

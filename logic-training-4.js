@@ -396,3 +396,40 @@ function accum3(s) {
 } //[...s] is spread operator for s, so we'll getan array of each letter s, same as doing s.split("")
 //then we doing mapping like before 
 //btw this process element.toLowerCase().repeat(index) -> is to repeat the same letter in lowercase index times
+
+// Codewars - Remove First and Last Character
+// Your goal is to write a function that removes the first and last characters of a string. You're given one
+// parameter, the original string. Your function should handle strings of any length ≥ 2 characters. For strings
+// with exactly 2 characters, return an empty string.
+function removeChar(str) {
+    if (str.length < 2) {
+        return "";
+    }
+    str = str.slice(1, str.length - 1);
+    return str;
+}; //check for string with only 0 or 1 or 2 length (return ""), slice string from index 1 to index second-to-last
+//Pro solution 1
+function removeChar1(str) {
+    return str.slice(1, -1);
+} //slice the last of string directly with -1
+//Pro solution 2
+function removeChar(str){
+    return str.substring(1, str.length-1);
+}; //same but with substing() function 
+//what is the difference between slice() and substring() in JavaScript?
+//Handling of Negative Indices:
+//- substring(): Treats any negative argument or NaN as 0.
+//- slice(): Interprets negative arguments as an offset from the end of the string. For example, slice(-3) extracts 
+//  the last three characters.
+//Handling of start and end Index Order:
+//- substring(): If the start index is greater than the end index, substring() automatically swaps the two arguments
+//  before extracting the substring. This ensures a valid substring is always returned if valid indices are provided. 
+//- slice(): If the start index is greater than the end index, slice() returns an empty string (""). It does not swap 
+//  the arguments. 
+//Pro solution 3
+function removeChar3(str){
+    let str1 = str.split('');
+    str1.shift();
+    str1.pop();
+    return str1.join('');
+}; //make it into an array, remove first element with shift(), remove last element with pop(), then join it

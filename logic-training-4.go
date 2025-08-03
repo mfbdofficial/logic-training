@@ -478,3 +478,31 @@ func Accum2(s string) string {
 	} //strings.Repeat(..., i+1), use `i+1` instead of `i` because on the first character (i = 0), you still want it to appear once.
 	return strings.Join(words, "-")
 } //btw strings.Title(...) before is to capitalizes the first letter of the string, the rest stay lowercase.
+
+// Codewars - Remove First and Last Character
+// Your goal is to write a function that removes the first and last characters of a string. You're given one
+// parameter, the original string. Your function should handle strings of any length ≥ 2 characters. For strings
+// with exactly 2 characters, return an empty string.
+func RemoveChar(word string) string {
+	word = word[:len(word)-1] //slice the string from the beginning up to the second-to-last character (one before the last character included)
+	word = word[1:]           //create a new string starting from the second character (index 1)
+	return word
+} //get rid the last character, then get rid the first character
+// Pro solution 1
+func RemoveChar1(word string) string {
+	return word[1 : len(word)-1]
+} //just do both process at the same time, slice the string from index 1 (second character) into second-to-last
+// Pro solution 2
+func RemoveChar2(word string) string {
+	var newWord = []rune(word)
+	return string(newWord[1 : len(newWord)-1])
+} //the proper way of Go, a simple return word[1:len(word)-1] will not work as expected for non-ASCII strings.
+// this shows a proper understanding of strings and runes in Go
+// Pro solution 3
+func RemoveChar3(word string) string {
+	var str string
+	for i := 1; i < len(word)-1; i++ {
+		str += string(word[i])
+	}
+	return str
+} //manual looping way
