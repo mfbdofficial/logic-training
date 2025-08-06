@@ -418,3 +418,120 @@ function remove_char4(string $s): string {
     return $tmp;
 }//do looping and do concatination, except for index 0 (for first string character) and index string length - 1 (for 
 //last string character)
+
+//Codewars - Speed Control
+//In John's car the GPS records every s seconds the distance travelled from an origin (distances are measured in an
+//arbitrary but consistent unit). For ex, below is part of a record with s = 15 (s is interval second for every recorded) :
+//x = [0.0, 0.19, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25]
+//The sections are:
+//0.0-0.19, 0.19-0.5, 0.5-0.75, 0.75-1.0, 1.0-1.25, 1.25-1.50, 1.5-1.75, 1.75-2.0, 2.0-2.25
+//With floats it can happen that results depends on the operations order. To calculate hourly speed you can use:
+//(3600 * delta_distance) / s.
+//Calculate John's average hourly speed on every section: [45.6, 74.4, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0]
+//Given s and x the task is to return as an integer the *floor* of the maximum average speed per hour obtained on
+//the sections of x. If x length is less than or equal to 1 return 0 since the car didn't move.
+//Example: With the above data your function gps(s, x) should return 74
+function gps($s, $x) {
+    if (count($x) < 2) {
+        return 0;
+    }
+    $distances = [];
+    for ($i = 0; $i < count($x) - 1; $i++) {
+        array_push($distances, $x[$i + 1] - $x[$i]); 
+    }
+    $averageSpeeds = [];
+    foreach ($distances as $distance) {
+        array_push($averageSpeeds, 3600 * $distance / $s);
+    }
+    $max = $averageSpeeds[0];
+    for ($i = 1; $i < count($averageSpeeds); $i++) {
+        if ($max < $averageSpeeds[$i]) {
+            $max = $averageSpeeds[$i];
+        }
+    }
+    return floor($max);
+}
+//Pro solution 1
+function gps1($interval, $array) {
+    $maximum = 0;
+    $counter = 1;
+    while ($counter  < count($array)) {
+        $distance = $array[$counter ] - $array[$counter -1];
+        $speed = ($distance / ($interval / 3600));
+        if ($speed > $maximum) {
+            $maximum = $speed;
+        }
+        $counter++;
+    }
+    return floor($maximum);
+} //do distance, average speed per-hour calculation then compare it to find max value directly in one while loop
+//Pro solution 2
+function gps2($s, $x) {
+    for ($i = 1; $i < count($x); $i++) {
+        $x[$i - 1] = 3600 * abs($x[$i] - $x[$i - 1]) / $s;
+    }
+    return floor(max($x));
+} //do looping, change every $x value element with average speed per-hour, then return the max floored value of that $x
+//Pro solution 3
+function gps3($s, $x): int {
+    for ($n = 0; $n < count($x) - 1; $n++) {
+        $arr[] = 3600 * ($x[$n + 1] - $x[$n]) / $s;
+    }
+    return floor(max($arr));
+} //same as before (pro solution 2), but more proper way (creating a new array $arr and do push)
+
+//Codewars - Shortest Word
+//Simple, given a string of words, return the length of the shortest word(s).
+//String will never be empty and you do not need to account for different data types.
+function findShort(string $str): int{
+    $words = explode(" ", $str);
+    $min = strlen($words[0]);
+    foreach ($words as $word) {
+        if ($min > strlen($word)) {
+            $min = strlen($word);
+        }
+    }
+    return $min;
+} //split (with explode) the string, compare the min length one by one with foreach
+//Pro solution 1
+function findShort1($str) {
+   return min(array_map('strlen', (explode(' ', $str))));
+} //explode, then do mapping into using strlen built-in function for every element of string, then find the minimum
+//Pro solution 2
+function findShort2($str) {
+    $wordsArray = preg_split('/\s+/', $str);
+    $minLength = strlen($wordsArray[0]);
+    foreach ($wordsArray as $word) {
+        if (strlen($word) < $minLength) {
+            $minLength = strlen($word);
+        }
+    }
+    return $minLength;
+} //same as my solution, but using preg_split('/\s+/', $str) to split the atring instead
+//Pro solution 3
+function findShort3($str) {
+    $split = explode(" ",$str);
+    foreach($split as $key => $item){
+        $word[$key] = strlen($item);
+    }
+    return min($word);
+} //explode, make an array of string length, then return the minimum value in the last
+//Pro solution 4
+function findShort4($str){
+   return min(array_map('strlen', str_word_count($str, 1)));
+} //str_word_count($str, 1) is a function call that counts the words in a string and returns them as an array,
+//this is a built-in PHP function designed to return information about words in a string, then 1 is the format 
+//parameter, when set to 1 the function returns an indexed array containing all the words found in the string, 
+//each word will be an element in the array.
+//Pro solution 5
+function findShort5($str) {
+    $str = explode(" ",$str);
+	array_multisort(array_map('strlen', $str), $str);
+    return strlen($str[0]);
+} //explode, do mapping to make array of lengthm then do array_multisort() what is this for?
+//array_multisort() is used to sort multiple arrays together, here it sorts $str based on the lengths of 
+//the words (provided by array_map('strlen', $str)) :
+//Original words:      ["I", "love", "learning", "PHP"]
+//Word lengths:        [1, 4, 8, 3]
+//Sorted by length →   ["I", "PHP", "love", "learning"]
+//finally just return the length of the first element from sorted array of string

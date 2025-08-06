@@ -433,3 +433,112 @@ function removeChar3(str){
     str1.pop();
     return str1.join('');
 }; //make it into an array, remove first element with shift(), remove last element with pop(), then join it
+
+//Codewars - Speed Control
+//In John's car the GPS records every s seconds the distance travelled from an origin (distances are measured in an
+//arbitrary but consistent unit). For ex, below is part of a record with s = 15 (s is interval second for every recorded) :
+//x = [0.0, 0.19, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25]
+//The sections are:
+//0.0-0.19, 0.19-0.5, 0.5-0.75, 0.75-1.0, 1.0-1.25, 1.25-1.50, 1.5-1.75, 1.75-2.0, 2.0-2.25
+//With floats it can happen that results depends on the operations order. To calculate hourly speed you can use:
+//(3600 * delta_distance) / s.
+//Calculate John's average hourly speed on every section: [45.6, 74.4, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0]
+//Given s and x the task is to return as an integer the *floor* of the maximum average speed per hour obtained on
+//the sections of x. If x length is less than or equal to 1 return 0 since the car didn't move.
+//Example: With the above data your function gps(s, x) should return 74
+function gps(s, x) {
+    if (x.length < 2) {
+        return 0;
+    }
+    let distances = [];
+    for (let i = 0; i < x.length - 1; i++) {
+        distances.push(x[i + 1] - x[i]);
+    }
+    let averageSpeeds = [];
+    distances.forEach(distance => averageSpeeds.push(3600 * distance / s));
+    maxSpeed = averageSpeeds[0];
+    for (let i = 1; i < averageSpeeds.length; i++) {
+        if (maxSpeed < averageSpeeds[i]) {
+            maxSpeed = averageSpeeds[i];
+        }
+    }
+    return Math.floor(maxSpeed);
+} //check fo stationary object, calculate slice of distances (looping method), calculate slice of average speed
+//(forEach method), then find the max average speed by compare every element of slice (of average speeds)
+//Pro solution 1
+const gps1 = (s, x) => {
+    if (x.length <= 1) {
+        return 0;
+    } //check fo stationary object
+    let output = [];
+    for (let i = 0; i < x.length-1; i++) { 
+        output.push((x[i + 1] - x[i]) * 3600 / s);
+    }
+    return Math.max(...output); //get the max value of average speeds
+} //just do 1 looping and calculate average speeds directly
+//Pro solution 2
+const getSpeed = (a, b, s) => Math.floor((b - a) / s * 60 * 60);
+const reduceRecords = (s, x) => x.reduce((p, c, i, a) => i === 0 ? p : p.concat(getSpeed(a[i - 1], c, s)), []); //[] is initial value for accumulator
+const gps2 = (s, x) => x.length < 2 ? 0 : Math.max(...(reduceRecords(s, x)));
+//a = full array same as x, i = current index, c = current element, p = accumulator (in this case p = [] for first)
+//.concat() is to merge the array (it's almost the as we doing .push()), for ex:
+//const arr1 = [1, 2];
+//const arr2 = arr1.concat(3);
+//console.log(arr2); //return [1, 2, 3]
+//console.log(arr1); //return [1, 2]
+//so the whole process is find a max value from average speeds per-hour array
+//how to get average speeds per-hour array? by reduce the segments adding average speed per-hour from every element
+//how to get average speeds per-hour for an alement? by calculate it with getSpeed (custom function, doing math manually)
+//Pro solution 3
+const gps3 = (s, x) => Math.floor(3600 * x.slice(1).reduce((m, d, i) => Math.max(m, d - x[i]), 0) / s);
+//x.slice(1) will creates a new array without the first element, done this because we’ll compare each element to 
+//the previous one (and x[0] has no previous value), in the .reduce() part :
+//m = accumulator (in this case m = 0 for first), d = current element, i = index of current element
+//Pro solution 4
+function gps4(s, x) {
+	return Math.max(...x.slice(1).map((a, i) => (a - x[i]) / s * 3600)) | 0
+} //what is this | 0? This is a bitwise OR with 0. It's a trick in JavaScript to force the value into a 32-bit 
+//signed integer, which: 
+//- removes any decimal/fraction
+//- is faster than Math.floor(...) (but not always recommended for clarity)
+//- similar to ~~value, which also truncates toward zero
+
+//Codewars - Shortest Word
+//Simple, given a string of words, return the length of the shortest word(s).
+//String will never be empty and you do not need to account for different data types.
+function findShort(s) {
+    let words = s.split(" ");
+    let min = words[0].length;
+    for (let i = 1; i < words.length; i++) {
+        if (min > words[i].length) {
+            min = words[i].length;
+        }
+    }
+    return min;
+} //split the string, compare the min length one by one with looping
+//Pro solution 1
+function findShort1(s) {
+    return Math.min(...s.split(" ").map(s => s.length));
+} //split, then map it into it's length, then find the minimum length
+//Pro solution 2
+function findShort2(s) {
+    return Math.min.apply(null, s.split(" ").map(w => w.length));
+} //what is Math.min.apply() do?
+//we need to understand this Math.min() first, this built-in function expects individual numbers, like:
+//Math.min(3, 1, 5, 2) //the result is 1
+//we can't just do :
+//Math.min([3, 1, 5, 2]) //the result is NaN ❌
+//Then we need .apply, so what is .apply doing?
+//func.apply(thisArg, [arg1, arg2, ...])
+//thisArg is the value of "this" inside the function (not used by Math.min, so null is fine), the second argument is
+//an array that gets spread into arguments.
+//Pro solution 3
+const findShort3 = (s) => s.split(" ").sort((a, b) => b.length - a.length).pop().length;
+//.sort((a, b) => b.length - a.length) is sorts the array by word length, descending.
+//then .pop() is takes the last item from the sorted array, then take the length by .length
+//Pro solution 4
+function findShort4(s) {
+    return s.split(" ").reduce((min, word) => Math.min(min, word.length), Infinity);
+} //.reduce() tt loops through each word in the array, also keeps track of the shortest word length found so far.
+//min = the current minimum length found, word = the current word being looked at. Our initial value is Infinity, 
+//used as the starting min value, so any word length will be smaller.

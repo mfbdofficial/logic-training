@@ -506,3 +506,126 @@ func RemoveChar3(word string) string {
 	}
 	return str
 } //manual looping way
+
+// Codewars - Speed Control
+// In John's car the GPS records every s seconds the distance travelled from an origin (distances are measured in an
+// arbitrary but consistent unit). For ex, below is part of a record with s = 15 (s is interval second for every recorded) :
+// x = [0.0, 0.19, 0.5, 0.75, 1.0, 1.25, 1.5, 1.75, 2.0, 2.25]
+// The sections are:
+// 0.0-0.19, 0.19-0.5, 0.5-0.75, 0.75-1.0, 1.0-1.25, 1.25-1.50, 1.5-1.75, 1.75-2.0, 2.0-2.25
+// With floats it can happen that results depends on the operations order. To calculate hourly speed you can use:
+// (3600 * delta_distance) / s.
+// Calculate John's average hourly speed on every section: [45.6, 74.4, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0, 60.0]
+// Given s and x the task is to return as an integer the *floor* of the maximum average speed per hour obtained on
+// the sections of x. If x length is less than or equal to 1 return 0 since the car didn't move.
+// Example: With the above data your function gps(s, x) should return 74
+func Gps(s int, x []float64) int {
+	if len(x) < 2 { //filter for only one distance data, that means John isn't moving, so average speed is 0
+		return 0
+	}
+	distances := []float64{}
+	for i := 0; i < len(x)-1; i++ {
+		distances = append(distances, x[i+1]-x[i])
+	}
+	averageSpeeds := []float64{}
+	for _, distance := range distances {
+		averageSpeeds = append(averageSpeeds, 3600*distance/float64(s))
+	}
+	maxSpeed := averageSpeeds[0]
+	for i := 1; i < len(averageSpeeds); i++ {
+		if maxSpeed < averageSpeeds[i] {
+			maxSpeed = averageSpeeds[i]
+		}
+	}
+	return int(math.Floor(maxSpeed)) //need to import "math" package
+} //check fo stationary object, calculate slice of distances (looping method), calculate slice of average speed
+// (foreach method), then find the max average speed by compare every element of slice (of average speeds)
+// Pro solution 1
+func Gps1(s int, segments []float64) int {
+	var maxSpeed float64
+	for index := 1; index < len(segments); index++ { //looping start from second element (index = 1)
+		startSegment, endSegment := segments[index-1], segments[index] //init new variable startSegment & endSegment
+		kmPerHour := 3600.0 * (endSegment - startSegment) / float64(s) //get current speed per-hour
+		maxSpeed = math.Max(maxSpeed, kmPerHour)                       //compare it to every current speed per-hour
+	}
+	return int(maxSpeed) //return the max speed per-hour as an int
+} //very simple with just do one looping and calculate it all to get current speed per-hour
+// Pro solution 2
+func Gps2(s int, x []float64) int {
+	var maxSpeed = 0.0
+	for i := 0; i < len(x)-1; i++ {
+		deltaDistance := x[i+1] - x[i]
+		avSpeed := (3600 * deltaDistance) / float64(s)
+		if maxSpeed < avSpeed {
+			maxSpeed = avSpeed
+		}
+	}
+	return int(maxSpeed)
+} //almost the same like before but looping start from first element (index = 0), and make index + 1 as endSegment
+// but we calculate deltaDistance directly
+// Pro solution 3
+func Gps3(s int, x []float64) int {
+	max := 0.0
+	for i := 1; i < len(x); i++ {
+		if av := x[i] - x[i-1]; av > max { //we can initialize also calculate a variable, then compare it in the same line in Go
+			max = av
+		}
+	}
+	return int(max * 3600 / float64(s))
+} //ind max value of distance first, then calculate average speed per-hour in the end
+
+// Codewars - Shortest Word
+// Simple, given a string of words, return the length of the shortest word(s).
+// String will never be empty and you do not need to account for different data types.
+func FindShort(s string) int {
+	words := strings.Split(s, " ") //need to import "strings" package
+	min := len(words[0])
+	for i := 1; i < len(words); i++ {
+		if min > len(words[i]) {
+			min = len(words[i])
+		}
+	}
+	return min
+} //split the string, compare the min length one by one with looping
+// Pro solution 1
+func FindShort1(s string) int {
+	shortest := len(s)
+	for _, word := range strings.Split(s, " ") {
+		if len(word) < shortest {
+			shortest = len(word)
+		}
+	}
+	return shortest
+} //same, but using range for do the looping
+// Pro solution 2
+func FindShort2(s string) int {
+	var t int
+	for i, s := range strings.Fields(s) {
+		if len(s) < t || i == 0 {
+			t = len(s)
+		}
+	}
+	return t
+} //set the min value (t) for the first time if i === 0 when doing comparison at the same time
+// Pro solution 3
+func FindShort3(s string) int {
+	ss := strings.Split(s, " ")
+	sort.Slice(ss, func(i, j int) bool { //need to import "sort" package
+		return len(ss[i]) < len(ss[j])
+	})
+	return len(ss[0])
+} //sort.Slice(slice, less func(i, j int) bool) is a function from Go's sort package. It sorts a slice based on the
+//logic you give it in the less function. Then this anonymous function
+//func(i, j int) bool {
+//	return len(ss[i]) < len(ss[j])
+//}
+//defines the sorting logic:
+//- It compares the lengths of two words in the ss slice.
+//- It returns true if the word at index i is shorter than the word at index j.
+//So: 👉 The sort puts shorter words first and longer words later.
+//basically we just give the sort.Slice() to handle the sort by comparing 2 words with it's each len without know
+//how the algorithms work, we're telling Go You're telling Go: “Hey, I don’t care how you sort this — just make sure
+//each element i comes before j if the length of word i is less than the length of word j.”
+//Go's sort.Slice uses the introsort algorithm, which is a hybrid of: quicksort, heapsort, insertion sort
+//It chooses the most efficient one based on the data size and structure. You don’t need to implement the algorithm
+//you just supply the comparison logic.
