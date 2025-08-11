@@ -44,3 +44,59 @@ function containAllRots3(strng, arr) {
     return strng.split('').every((_, i) => arr.includes(strng.slice(i) + strng.slice(0, i)));
 } //same as before, but we check it and do rotation at the same time (when in the Pro solution 2, we do ratation first,
 //then check if it's included later)
+
+//Codewars - Help Suzuki Rake His Garden!
+//the monastery has a magnificent Zen garden made of white gravel and rocks and it is raked diligently everyday by
+//the monks. Suzuki having a keen eye is always on the lookout for anything creeping into the garden that must be
+//removed during the daily raking such as insects or moss.
+//you will be given a string representing the garden such as:
+//rake out any items that are not a rock or gravel and replace them with gravel such that:
+//"slug spider rock gravel gravel gravel gravel gravel gravel gravel"
+//returns a string with all items except a rock or gravel replaced with gravel:
+//"gravel gravel rock gravel gravel gravel gravel gravel gravel gravel"
+function rakeGarden(garden) {
+    let gardenStuff = garden.split(" ");
+    for (let i = 0; i < gardenStuff.length; i++) {
+        if (gardenStuff[i] != "gravel" && gardenStuff[i] != "rock") {
+            gardenStuff[i] = "gravel";
+        }
+    }
+    return gardenStuff.join(" ");
+}
+//Pro solution 1
+const rakeGarden1 = garden => garden.split(' ').map(item => item === 'rock' ? 'rock' : 'gravel').join(' ');
+//split the garden string, map it to check every item if it's rock? if yes then make it rock, if not then make it
+//gravel (gravel and other stuff isn't rock, it will change into gravel anyway), then the last just join it
+//Pro solution 2
+function rakeGarden2(garden) {
+    return garden.replace(/\b((?!\b(gravel|rock)\b)\w+)\b/g, 'gravel')
+} //lets talk about the regex:
+//\b → Word boundary, ensures we match whole words (not part of a bigger word).
+//- (?! ... ) → Negative lookahead, meaning “the next thing must not match this pattern.”
+//- \b(gravel|rock)\b → matches the exact words "gravel" or "rock".
+//- \w+ → matches a sequence of letters/numbers/underscores (a word).
+//the whole ((?!\b(gravel|rock)\b)\w+) means:
+//- match a word only if it is not "gravel" or "rock".
+//- the final \b ensures the match stops at the word's end.
+//- the /g flag → global search, so it replaces all matches in the string.
+//Pro solution 3
+const rakeGarden3 = garden => garden.replace(/(?!rock\b)\b\w+/g,'gravel');
+//what is /.../g do?
+//- /.../ → Marks the start and end of the regular expression. 
+//- g (global flag) → Means “don’t stop after the first match — find all matches in the string.”
+//what is (?!rock\b) do? → negative lookahead
+//- (? ... ) → a lookahead — checks ahead without consuming characters.
+//- ?! → negative lookahead — match only if the pattern inside does not occur.
+//- rock → Literal text “rock”.
+//- \b → Word boundary (position between a word character \w and a non-word character \W or string edges).
+//so: (?!rock\b) says: “From here, make sure the upcoming word is not exactly rock.”
+//whats \b do? → word boundary
+//- this ensures the match starts at the boundary of a word.
+//- without this, it could match inside words like bedrock.
+//what is \w+ do? → word characters
+//- \w → Any word character [A-Za-z0-9_] (in JavaScript regex, it does not include accented letters unless using Unicode mode /u).
+//- + → One or more of the preceding token.
+//so: \w+ matches a whole word like apple, car, stone.
+//how it works together? the pattern / (?!rock\b) \b \w+ /g says: (Look ahead to see if the next word is rock. If it 
+//is rock, do not match here. If it is anything else, proceed. Ensure we start at a word boundary (\b). Match the 
+//whole word (\w+). Replace it with "gravel").
