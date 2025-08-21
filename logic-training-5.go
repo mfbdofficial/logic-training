@@ -191,3 +191,63 @@ func RakeGarden3(garden string) string {
 	}) //calls your callback function with each match as s, then replaces the match in the string with the return value from your function
 } //need to import "regexp" package.
 //the final form is actually like this <regexCompiled>.ReplaceAllStringFunc(<string>, <callback>)
+
+// Codewars - Grasshopper (Grade Book)
+// Complete the function so that it finds the average of the three scores passed to it and returns the letter value
+// associated with that grade.
+// Numerical Score			Letter Grade
+//
+//	90 	<= score <= 100			'A'
+//	80 	<= score < 90			'B'
+//	70 	<= score < 80			'C'
+//	60 	<= score < 70			'D'
+//	 0 	<= score < 60			'F'
+//
+// Tested values are all between 0 and 100. Theres is no need to check for negative values or values greater than 100.
+func GetGrade(a, b, c int) rune {
+	avg := (a + b + c) / 3
+	if avg >= 90 {
+		return 'A'
+	} else if avg >= 80 {
+		return 'B'
+	} else if avg >= 70 {
+		return 'C'
+	} else if avg >= 60 {
+		return 'D'
+	} else {
+		return 'F'
+	}
+} //in Go, a rune is an alias for int32, tt represents a Unicode code point (basically a number that corresponds to
+// a character), for example like this code :
+// var r rune = 'A'  		//single quotes → rune literal
+// fmt.Println(r)    		//65 (Unicode code point for 'A')
+// fmt.Printf("%c\n", r) 	//A
+// rune is not a string, string is sequence of characters (like "Hello") and rune is a single Unicode character
+// Pro solution 1
+func GetGrade1(a, b, c int) rune {
+	switch (a + b + c) / 30 { //calculate the average immediately in the switch condition
+	case 10:
+		return 'A'
+	case 9:
+		return 'A'
+	case 8:
+		return 'B'
+	case 7:
+		return 'C'
+	case 6:
+		return 'D'
+	default:
+		return 'F'
+	}
+} //using switch case to heck the average value
+// Pro solution 2
+func GetGrade2(a, b, c int) rune {
+	return rune("FFFFFFDCBAA"[(a+b+c)/30])
+} //in This case, "FFFFFFDCBAA" is a string literal, strings in Go can be indexed like arrays → "ABCDEFG"[0] gives
+// you the byte (ASCII value) of 'A'. So "FFFFFFDCBAA"[index] → returns the byte at position index.
+// so in the "FFFFFFDCBAA" there's 10 length, so we just gonna se the front digit, if (a+b+c)/30 is 8,6666 then we
+// gonna focus just on 8 (this would be the index)
+// Pro solution 3
+func GetGrade3(a, b, c int) rune {
+	return []rune{'F', 'F', 'F', 'F', 'F', 'F', 'D', 'C', 'B', 'A', 'A'}[(a+b+c)/30]
+} //same as before, but he declare the rune in the first place (not change a string into a rune)

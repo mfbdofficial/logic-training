@@ -100,3 +100,45 @@ const rakeGarden3 = garden => garden.replace(/(?!rock\b)\b\w+/g,'gravel');
 //how it works together? the pattern / (?!rock\b) \b \w+ /g says: (Look ahead to see if the next word is rock. If it 
 //is rock, do not match here. If it is anything else, proceed. Ensure we start at a word boundary (\b). Match the 
 //whole word (\w+). Replace it with "gravel").
+
+//Codewars - Grasshopper (Grade Book)
+//Complete the function so that it finds the average of the three scores passed to it and returns the letter value
+//associated with that grade.
+//Numerical Score			Letter Grade
+//  90 	<= score <= 100			'A'
+//  80 	<= score < 90			'B'
+//	70 	<= score < 80			'C'
+//	60 	<= score < 70			'D'
+//	 0 	<= score < 60			'F'
+//Tested values are all between 0 and 100. Theres is no need to check for negative values or values greater than 100.
+function getGrade (s1, s2, s3) {
+    let avg = (s1 + s2 + s3) / 3;
+    if (avg >= 90) {
+        return "A";
+    } else if (avg >= 80) {
+        return "B";
+    } else if (avg >= 70) {
+        return "C";
+    } else if (avg >= 60) {
+        return "D";
+    } else {
+        return "F";
+    }
+}
+//Pro solution 1
+function getGrade1 (s1, s2, s3) {
+    var s = (s1 + s2 + s3) / 3
+    return s >= 90 ? "A" : s >= 80 ? "B" : s >= 70 ? "C" : s >= 60 ? "D" : "F"
+}
+//Pro solution 2
+function getGrade2(...scores) { 
+    let average = scores.reduce((a, b) => a + b) / scores.length //need more research how thi reduce work
+    if (average >= 90) return 'A'
+    else if (average >= 80) return 'B'
+    else if (average >= 70) return 'C'
+    else if (average >= 60) return 'D'
+    else return 'F'
+} //good if the length is unknown, this code not using semicolon (;), is this work? how?
+//Pro solution 3
+var getGrade3 = (a, b, c) => 'FFFFFFDCBAA'.charAt((a + b + c) /3 / 10);
+//need more research

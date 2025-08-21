@@ -103,4 +103,88 @@ $rakeGarden00 = fn($garden) => preg_replace("/(?!rock\b)\b\w+/", "gravel", $gard
 //- \w → Any word character [A-Za-z0-9_] (in JavaScript regex, it does not include accented letters unless using Unicode mode /u).
 //- + → One or more of the preceding token.
 //so: \w+ matches a whole word like apple, car, stone.
+
+//Codewars - Grasshopper (Grade Book)
+//Complete the function so that it finds the average of the three scores passed to it and returns the letter value
+//associated with that grade.
+//Numerical Score			Letter Grade
+//  90 	<= score <= 100			'A'
+//  80 	<= score < 90			'B'
+//	70 	<= score < 80			'C'
+//	60 	<= score < 70			'D'
+//	 0 	<= score < 60			'F'
+//Tested values are all between 0 and 100. Theres is no need to check for negative values or values greater than 100.
+function getGrade($a, $b, $c) {
+    $avg = ($a + $b + $c) / 3;
+    if ($avg >= 90) {
+        return "A";
+    } else if ($avg >= 80) {
+        return "B";
+    } else if ($avg >= 70) {
+        return "C";
+    } else if ($avg >= 60) {
+        return "D";
+    } else {
+        return "F";
+    }
+}
+//Pro solution 1
+function getGrade1($a, $b, $c) {
+    $tmp = ($a + $b + $c) / 3;
+    if ($tmp >= 90) return 'A';
+    if ($tmp >= 80) return 'B';
+    if ($tmp >= 70) return 'C';
+    if( $tmp >= 60) return 'D'; 
+    return 'F';
+} //more simplified if conditional statement syntax
+//Pro solution 2
+function getGrade2($a, $b, $c) {
+    $score = ($a + $b + $c) / 3;
+    return match(true) {
+        $score >= 90 => 'A',
+        $score >= 80 => 'B',
+        $score >= 70 => 'C',
+        $score >= 60 => 'D',
+        default => 'F',
+    };
+} //match expression is a powerful feature introduced in PHP 8.0. It is often presented as a modern, 
+//superior alternative to the switch statement, but it's more accurate to think of it as a more powerful 
+//and strict "expression" version of switch, this is the key features of match syntax L
+//- it returns a value: unlike switch, which is a control structure, match is an expression, this allows 
+//  for more concise code as you don't need a break statement for each case. The entire expression returns
+//  a single value.
+//- strict comparison (===): match performs strict comparison by default, this means it checks both the 
+//  value and the type, which helps prevent unexpected behavior that can sometimes occur with switch's 
+//  loose comparison (==).
+//- no fall-through: the match expression does not "fall through" from one case to the next. The first 
+//  matching case is executed, and then the expression immediately returns. This eliminates the need for 
+//  break statements.
+//- required default clause: you must include a default case to handle all possibilities, if no default is 
+//  provided and none of the cases match, PHP will throw an UncaughtValueError.
+//- match(true): in this example, the expression being matched is true, this is a common pattern that 
+//  makes the match expression behave like a series of if/else if statements, it evaluates each condition 
+//  on the left side of => ($score >= 90, etc.) in order until one evaluates to true, and then returns the 
+//  corresponding value on the right.
+//Pro solution 3
+function getGrade3($a, $b, $c) {
+    $avg = ($a + $b + $c) / 3;
+    switch (true) {
+        case $avg < 60:
+            return "F";
+        case $avg < 70:
+            return "D";
+        case $avg < 80:
+            return "C";
+        case $avg < 90:
+            return "B";
+    }
+    return "A";
+} //using switch instead of doing if statement repeatedly
+//Pro solution 4
+function getGrade4($a, $b, $c) {
+    $mean = (int)(($a + $b + $c) / 3); 
+    $grade = str_split('ABCDF'); 
+    $result = (ceil((100 - $mean) / 10)) > 5 ? 5 : (ceil((100 - $mean) / 10)); 
+    return  $result == 0 ? $grade[$result] : $grade[$result - 1]; 
+}
 ?>
