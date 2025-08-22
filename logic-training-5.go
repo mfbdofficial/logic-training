@@ -251,3 +251,47 @@ func GetGrade2(a, b, c int) rune {
 func GetGrade3(a, b, c int) rune {
 	return []rune{'F', 'F', 'F', 'F', 'F', 'F', 'D', 'C', 'B', 'A', 'A'}[(a+b+c)/30]
 } //same as before, but he declare the rune in the first place (not change a string into a rune)
+
+// Codewars - Count the Divisors of a Number
+// Count the number of divisors of a positive integer n. Random tests go up to n = 500000, but fixed tests
+// go higher. Input output example :
+// 4 -> 3 (we have 3 divisors - 1, 2 and 4)
+// 5 -> 2 (we have 2 divisors - 1 and 5)
+// 12 -> 6 (we have 6 divisors - 1, 2, 3, 4, 6 and 12)
+// 30 -> 8 (we have 8 divisors - 1, 2, 3, 5, 6, 10, 15 and 30)
+func Divisors(n int) int {
+	count := 0
+	for i := n; i > 0; i-- {
+		if n%i == 0 {
+			count++
+		}
+	}
+	return count
+} //do looping as many as n, everytime n % current loop value is 0, do counter up
+// Pro solution 1
+func Divisors1(n int) int {
+	nDiv := 1
+	for i := 1; i <= n/2; i++ {
+		if n%i == 0 {
+			nDiv++
+		}
+	}
+	return nDiv
+} //same using looping, but count start from 1 (consider the n itself element)
+// and do looping just until n / 2 because there's no way gonna be result of the division with a remainder
+// of 0 on current value of i is between half n and n itself (makes the calculation faster)
+// Pro solution 2
+func Divisors2(n int) int {
+	if n == 1 {
+		return 1
+	} else if n == 0 {
+		return 0
+	}
+	count := 2
+	for i := 2; i <= n/2; i++ {
+		if n%i == 0 {
+			count++
+		}
+	}
+	return count
+} //same, but check it first to secure the functional from special case like 1 and 0

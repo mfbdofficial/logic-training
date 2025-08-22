@@ -142,3 +142,79 @@ function getGrade2(...scores) {
 //Pro solution 3
 var getGrade3 = (a, b, c) => 'FFFFFFDCBAA'.charAt((a + b + c) /3 / 10);
 //need more research
+
+//Codewars - Count the Divisors of a Number
+//Count the number of divisors of a positive integer n. Random tests go up to n = 500000, but fixed tests
+//go higher. Input output example :
+//4 -> 3 (we have 3 divisors - 1, 2 and 4)
+//5 -> 2 (we have 2 divisors - 1 and 5)
+//12 -> 6 (we have 6 divisors - 1, 2, 3, 4, 6 and 12)
+//30 -> 8 (we have 8 divisors - 1, 2, 3, 5, 6, 10, 15 and 30)
+function getDivisorsCnt(n) {
+    let count = 1;
+    for (let i = 1; i <= n / 2; i++) {
+        if (n % i == 0) {
+            count++;
+        }
+    }
+    return count;
+} //is not logically wrong, but it’s too slow (inefficient) when n is large — that’s why you got 
+//Execution Timed Out (12000 ms).
+//My other solution 1
+function getDivisorsCnt0(n) {
+    let count = 0;
+    for (let i = n; i > 0; i--) {
+        if (n % i == 0) {
+            count++;
+        }
+    }
+    return count;
+} //is not logically wrong, but it’s too slow (inefficient) when n is large — that’s why you got 
+//Execution Timed Out (12000 ms).
+//My other solution 2
+function getDivisorsCnt00(n) {
+    let count = 0;
+    for (let i = 1; i <= Math.sqrt(n); i++) {
+        if (n % i == 0) {
+            if (i == n / i) {
+                count++
+            } else {
+                count += 2;
+            }
+        }
+    }
+    return count;
+} //this is the fast way divisors always come in pairs, if i is a divisor of n, then n / i is also a 
+//divisor, for n = 100, the divisor pairs are: (1, 100), (2, 50), (4, 25), (5, 20), (10, 10).
+//notice that after we reach the square root (10), the pairs start to repeat, we only need to find one 
+//divisor in each pair, and we can find the other by simple division, 
+//so basically we decrease the looping, we do loop just untill the root of the number (root number 
+//included), when i = that root number then count +1 (for that root number), but when i isn't that root 
+//number and n % i == 0, then we do count +2 (for that i and it's pair)
+//Pro solution 1
+function getDivisorsCnt1(n) {
+    var num = 0;
+    if (n == 1) return 1;
+    if (n % Math.sqrt(n) == 0) num++; //check root number is pass (no comma, no float)? then counter num +1
+    for(var i = 1; i < Math.sqrt(n); i++) {
+        if( n % i == 0) {
+            num += 2;
+        }
+    }
+    return num;
+} //same, do looping only untill the root of the number, but this time the root of n isn't included, but
+//this part if (n == 1) return 1; we actually don't need it, cause n == 1 will already handled correctly
+//Pro solution 2
+function getDivisorsCnt2(n) {
+    let counter = 0;
+    if (n % Math.sqrt(n) == 0) {
+        counter++;
+    }
+    for (let i = 1; i < Math.sqrt(n); i++) {
+        if (n % i == 0) {
+            counter += 2;
+        }
+    }
+    return counter;
+} //same, do looping only untill the root of the  (root of n isn't included), but don't need to check if 
+//n = 1 (cause it still works anyway, we don't do loop if i < 1, cause i start from 1, so 1 < 1 is wrong)

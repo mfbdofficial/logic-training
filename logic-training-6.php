@@ -187,4 +187,67 @@ function getGrade4($a, $b, $c) {
     $result = (ceil((100 - $mean) / 10)) > 5 ? 5 : (ceil((100 - $mean) / 10)); 
     return  $result == 0 ? $grade[$result] : $grade[$result - 1]; 
 }
+
+//Codewars - Count the Divisors of a Number
+//Count the number of divisors of a positive integer n. Random tests go up to n = 500000, but fixed tests
+//go higher. Input output example :
+//4 -> 3 (we have 3 divisors - 1, 2 and 4)
+//5 -> 2 (we have 2 divisors - 1 and 5)
+//12 -> 6 (we have 6 divisors - 1, 2, 3, 4, 6 and 12)
+//30 -> 8 (we have 8 divisors - 1, 2, 3, 5, 6, 10, 15 and 30)
+function divisors(int $n): int {
+    $count = 0;
+    for ($i = $n; $i > 0; $i--) {
+        if ($n % $i == 0) {
+            $count++;
+        }
+    }
+    return $count;
+}
+//My other solution 
+function divisors0(int $n): int {
+    $count = 1;
+    for ($i = 1; $i <= $n / 2; $i++) {
+        if ($n % $i == 0) {
+            $count++;
+        }
+    }
+    return $count;
+}
+//Pro solution 1
+function divisors1(int $n): int {
+    $count = 0;
+    for ($i = 1; $i <= sqrt($n); $i++) {
+        if ($n % $i == 0) {
+            if ($i == $n / $i) {
+                $count++;
+            } else {
+                $count += 2;
+            }
+        }
+    }
+    return $count;
+} //this is the fast way divisors always come in pairs, if $i is a divisor of $n, then $n / $i is also a 
+//divisor, for $n = 100, the divisor pairs are: (1, 100), (2, 50), (4, 25), (5, 20), (10, 10).
+//notice that after we reach the square root (10), the pairs start to repeat, we only need to find one 
+//divisor in each pair, and we can find the other by simple division, 
+//so basically we decrease the looping, we do loop just untill the root of the number (root number 
+//included), when $i = that root number then $count +1 (for that root number), but when $i isn't that root 
+//number and $n % $i == 0, then we do $count +2 (for that $i and it's pair)
+//Pro solution 2
+function divisors2($n) {
+    for ($i = 1; $i <= $n / 2; $i++) {
+        if ($n % $i == 0) $div++;
+    }
+    return $div + 1; 
+} //same as my other solution but do +1 for the result in the last (for $n % $n itself)
+//Pro solution 3
+function divisors3($n) {
+    return count(array_filter(range(1, $n), function($d)use($n) {return $n % $d == 0;}));
+} //do filter for array in range 1 untill $n, the if eaach element match the closure function rules, it
+//would be included in the new array (this is array_filter's result), then just count it how much we got
+//let's understand more about this syntax function($d)use($n) {return $n % $d == 0;}
+//- function($d) → defines an anonymous function (a closure).
+//- use ($n) → tells PHP: “this closure should also capture $n from the outer scope.”
+//- inside, you can use $n even though it’s not defined inside the function.
 ?>
