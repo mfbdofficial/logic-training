@@ -218,3 +218,53 @@ function getDivisorsCnt2(n) {
     return counter;
 } //same, do looping only untill the root of the  (root of n isn't included), but don't need to check if 
 //n = 1 (cause it still works anyway, we don't do loop if i < 1, cause i start from 1, so 1 < 1 is wrong)
+
+//Codewars - Complementary DNA
+//Deoxyribonucleic acid (DNA) is a chemical found in the nucleus of cells and carries the "instructions"
+//for the development and functioning of living organisms. To know more: http://en.wikipedia.org/wiki/DNA
+//In DNA strings, symbols "A" and "T" are complements of each other, as "C" and "G". Your function
+//receives one side of the DNA (string, except for Haskell); you need to return the other complementary
+//side. DNA strand is never empty or there is no DNA at all (again, except for Haskell).
+//More similar exercise are found here: http://rosalind.info/problems/list-view/ (source)
+//"ATTGC" -> "TAACG"
+//"GTAT" -> "CATA"
+//Meaning in science : In DNA, "complementary" means that the two strands of the double helix have a
+//specific pairing rule where Adenine (A) always pairs with Thymine (T) and Cytosine (C) always pairs with
+//Guanine (G). These specific pairings are held together by hydrogen bonds, forming the rungs of the DNA
+//ladder and allowing the two strands to fit together perfectly, like a lock and key, ensuring accurate
+//replication and information transfer.
+//What does it mean for DNA to be complementary?
+//Specific Pairing -> The chemical structures of the nitrogenous bases dictate that A can only form bonds
+//with T, and C can only form bonds with G.
+function dnaStrand(dna) {
+    for (let i = 0; i < dna.length; i++) {
+        if (dna[i] == "A") {
+            dna = dna.substr(0, i) + "T" + dna.substr(i + 1);
+        } else if (dna[i] == "T") {
+            dna = dna.substr(0, i) + "A" + dna.substr(i + 1);
+        } else if (dna[i] == "C") {
+            dna = dna.substr(0, i) + "G" + dna.substr(i + 1);
+        } else {
+            dna = dna.substr(0, i) + "C" + dna.substr(i + 1);
+        }
+    }
+    return dna;
+} //substr(start) means: “return substring starting at start until the end.”, so ff start is greater than or equal to 
+//the string length, it just returns an empty string "" (no error)
+//My other solution
+function dnaStrand0(dna) {
+    const dnaReverser = {A: "T", T: "A", C: "G", G: "C"}; //create an object dnaReverser as mapping data
+    return dna.split("").map(ch => dnaReverser[ch]).join(""); //split, do mapping to change the old value (as our
+} //property name in our object mapping data), then get the new value (from the object's value)
+//Pro solution 1
+function DNAStrand1(dna) {
+    return dna.replace(/./g, function(c) { //this /./g is regex matches every single character globally
+        return DNAStrand1.pairs[c] //we access a property in our function to replace every single character with 
+    }) //return from callback function c is current character
+} 
+DNAStrand1.pairs = {A: 'T', T: 'A', C: 'G', G: 'C'} //this pairs data will be returned based from property name called
+//function in JavaScript is also object, so we can assign property into it
+//Pro solution 2
+let pairs = {A:'T',T:'A',C:'G',G:'C'};
+const DNAStrand2 = dna => dna.replace(/./g, c => pairs[c]); 
+//same as before but we don't make property in our function, but just simply make a new variable instead

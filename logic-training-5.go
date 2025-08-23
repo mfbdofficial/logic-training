@@ -295,3 +295,63 @@ func Divisors2(n int) int {
 	}
 	return count
 } //same, but check it first to secure the functional from special case like 1 and 0
+
+// Codewars - Complementary DNA
+// Deoxyribonucleic acid (DNA) is a chemical found in the nucleus of cells and carries the "instructions"
+// for the development and functioning of living organisms. To know more: http://en.wikipedia.org/wiki/DNA
+// In DNA strings, symbols "A" and "T" are complements of each other, as "C" and "G". Your function
+// receives one side of the DNA (string, except for Haskell); you need to return the other complementary
+// side. DNA strand is never empty or there is no DNA at all (again, except for Haskell).
+// More similar exercise are found here: http://rosalind.info/problems/list-view/ (source)
+// Meaning in science : In DNA, "complementary" means that the two strands of the double helix have a
+// specific pairing rule where Adenine (A) always pairs with Thymine (T) and Cytosine (C) always pairs with
+// Guanine (G). These specific pairings are held together by hydrogen bonds, forming the rungs of the DNA
+// ladder and allowing the two strands to fit together perfectly, like a lock and key, ensuring accurate
+// replication and information transfer.
+// What does it mean for DNA to be complementary?
+// Specific Pairing -> The chemical structures of the nitrogenous bases dictate that A can only form bonds
+// with T, and C can only form bonds with G.
+func DNAStrand(dna string) string {
+	for i := 0; i < len(dna); i++ {
+		dnaRunes := []rune(dna)
+		if dnaRunes[i] == 'A' {
+			dnaRunes[i] = 'T'
+		} else if dnaRunes[i] == 'T' {
+			dnaRunes[i] = 'A'
+		} else if dnaRunes[i] == 'C' {
+			dnaRunes[i] = 'G'
+		} else if dnaRunes[i] == 'G' {
+			dnaRunes[i] = 'C'
+		}
+		dna = string(dnaRunes)
+	}
+	return dna
+} //"T" is different with 'T' in Go? string and runes?
+// Pro solution 1
+var dnaReplacer *strings.Replacer = strings.NewReplacer( //need to import "strings" package
+	"A", "T",
+	"T", "A",
+	"C", "G",
+	"G", "C",
+) //this is another something that we gonna use in the main function DNAStrand1
+func DNAStrand1(dna string) string {
+	return dnaReplacer.Replace(dna)
+} //how is this work?
+// Pro solution 2
+func DNAStrand2(dna string) string {
+	replacer := strings.NewReplacer("A", "T", "T", "A", "G", "C", "C", "G") //need to import "strings" package
+	return (replacer.Replace(dna))
+} //same as before, but we don't make the functionality into another function (straight in main function)
+// Pro solution 3
+func DNAStrand3(dna string) string {
+	return strings.NewReplacer("A", "T", "T", "A", "G", "C", "C", "G").Replace(dna)
+} //same as before, but do it in one line (not making variable for strings.NewReplacer() part)
+// Pro solution 4
+func DNAStrand4(dna string) string {
+	var complements = map[string]string{"A": "T", "C": "G", "G": "C", "T": "A"}
+	var and string
+	for _, char := range dna {
+		and += complements[string(char)]
+	}
+	return and
+} //use mapping way

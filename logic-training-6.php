@@ -250,4 +250,66 @@ function divisors3($n) {
 //- function($d) → defines an anonymous function (a closure).
 //- use ($n) → tells PHP: “this closure should also capture $n from the outer scope.”
 //- inside, you can use $n even though it’s not defined inside the function.
+
+//Codewars - Complementary DNA
+//Deoxyribonucleic acid (DNA) is a chemical found in the nucleus of cells and carries the "instructions"
+//for the development and functioning of living organisms. To know more: http://en.wikipedia.org/wiki/DNA
+//In DNA strings, symbols "A" and "T" are complements of each other, as "C" and "G". Your function
+//receives one side of the DNA (string, except for Haskell); you need to return the other complementary
+//side. DNA strand is never empty or there is no DNA at all (again, except for Haskell).
+//More similar exercise are found here: http://rosalind.info/problems/list-view/ (source)
+//"ATTGC" -> "TAACG"
+//"GTAT" -> "CATA"
+//Meaning in science : In DNA, "complementary" means that the two strands of the double helix have a
+//specific pairing rule where Adenine (A) always pairs with Thymine (T) and Cytosine (C) always pairs with
+//Guanine (G). These specific pairings are held together by hydrogen bonds, forming the rungs of the DNA
+//ladder and allowing the two strands to fit together perfectly, like a lock and key, ensuring accurate
+//replication and information transfer.
+//What does it mean for DNA to be complementary?
+//Specific Pairing -> The chemical structures of the nitrogenous bases dictate that A can only form bonds
+//with T, and C can only form bonds with G.
+function DNA_strand(string $s): string {
+    for ($i = 0; $i < strlen($s); $i++) {
+        if ($s[$i] == "A") {
+            $s[$i] = "T";
+        } else if ($s[$i] == "T") {
+            $s[$i] = "A";
+        } else if ($s[$i] == "G") {
+            $s[$i] = "C";
+        } else {
+            $s[$i] = "G";
+        }
+    }
+    return $s;
+}
+//Pro solution 1
+function DNA_strand1($dna) {
+    return strtr($dna, 'ACGT', 'TGCA'); //this is strtr() character-by-character translation (three arguments)
+} //strtr() function in PHP is used for character translation or substring replacement within a string. It can be 
+//used in two main ways: 
+//- Character-by-character translation (three arguments).
+//  string strtr (string $string , string $from , string $to)
+//  In this form, strtr() replaces every occurrence of each character found in the $from string with the 
+//  corresponding character in the $to string. If $from and $to have different lengths, the extra characters in the 
+//  longer string are ignored. 
+//- Substring replacement using an associative array (two arguments):
+//  string strtr (string $string , array $replace_pairs)
+//  In this form, $replace_pairs is an associative array where the keys are the substrings to be replaced, and the 
+//  values are their corresponding replacements. strtr() will look for the longest possible match first and will not 
+//  attempt to replace content within parts of the string that have already been replaced by a previous operation 
+//  within the same strtr() call. This behavior distinguishes it from str_replace(), which can replace within replacements. 
+//Pro solution 2
+function DNA_strand2($dna) {
+    return strtr($dna, ['A'=>'T', 'T'=>'A', 'C'=>'G', 'G'=>'C']);
+} //this is strtr() substring replacement using an associative array (two arguments)
+//Pro solution 3
+function DNA_strand3($dna) {
+    $conversion = ["A"=>"T","T"=>"A","G"=>"C", "C"=>"G"]; //create associative array as data for mapping
+    $dna = str_split($dna) ;
+    $res = "" ; 
+    foreach($dna as $el){
+        $res .= $conversion[$el] ;  
+    }
+    return $res ; 
+} //split into array of string, then do concatenation at the end based associative array (we maded as data for mapping)
 ?>
