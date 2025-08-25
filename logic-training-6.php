@@ -312,4 +312,53 @@ function DNA_strand3($dna) {
     }
     return $res ; 
 } //split into array of string, then do concatenation at the end based associative array (we maded as data for mapping)
+
+//Codewars - Sum of the First N-th Term of Series
+//Your task is to write a function which returns the n-th term of the following series, which is the sum of the
+//first n terms of the sequence (n is the input parameter).
+//Series : 1 + 1/4 + 1/7 + 1/10 + 1/13 + 1/16 + ...
+//You will need to figure out the rule of the series to complete this. The rules is you need to round the answer to
+//2 decimal places and return it as String. If the given value is 0 then it should return "0.00". You will only be
+//given Natural Numbers as arguments.
+//n = 1 -> 1.00
+//n = 2 -> 1.25
+//n = 3 -> 1.57
+function series_sum(int $n): string {
+    $denominator = 1;
+    $sum = 0;
+    for ($i = $n; $i > 0; $i--) {
+        $sum = $sum + (1 / $denominator);
+        $denominator += 3;
+    }
+    return strval(number_format($sum, 2));
+} //number_format(<integer_or_float>, 2) to change the float to have 2 decimal places, strval() is to change int or
+//float into string 
+//Pro solution 1
+function series_sum1($n) {
+    $sum = 0;
+    for ($i = 0; $i <= ($n - 1); $i++) { //if $n = 3 then $i will be 0, 1, 2 (do 3 looping)
+        $sum += (1 / (1 + (3 * $i))); //in the first looping $i = 0, so 1 / (1 + (3 * 0)) = 1 / 1 = 1
+    } 
+    return number_format($sum, 2, '.', '');
+}
+//Pro solution 2
+function series_sum2($n) {
+    return $n <= 0 ? '0.00' : sprintf('%.2f', array_sum(array_map(function ($c) {return 1 / ($c * 3 + 1);}, range(0, $n - 1))));
+} //range(0, $n - 1), range is 0 untill $n - 1 (let's say if $n = 3, then range will be in 0 untill 2 -> 0, 1, 2)
+//array_map(), doing (have return value) a callback function for every rage, $c is the current element from range
+//function ($c) {return 1 / ($c * 3 + 1);}, this is the callback function do calculaton for $c -> 0, 1, 2 then the 
+//result would be 1, 1/4, 1/7
+//array_sum(), is sum all the element that you got (ex in our case is 1 + 1/4 +1/7)
+//sprintf('%.2f', <int_or_float>), then change the int or float into string (%.2f means include 2 decimal places)
+//Pro solution 3
+function series_sum3($n) {
+    $result = (float)0;
+    while ($n > 0) {
+        $result += (1 / (1 + (--$n * 3)));
+    }
+    return number_format($result, 2);
+} //--$n is pre-decrement → it decreases $n first, then uses the new value.
+//$n-- is post-decrement → it uses $n first, then decreases afterward.
+//so this means if $n = 3; then decreses it first before calculation, in in while loop the $n still will be 3, 2, 1
+//but in calculation $n becoma 2, 1, 0 (we decrease it first before the calculation)
 ?>

@@ -268,3 +268,54 @@ DNAStrand1.pairs = {A: 'T', T: 'A', C: 'G', G: 'C'} //this pairs data will be re
 let pairs = {A:'T',T:'A',C:'G',G:'C'};
 const DNAStrand2 = dna => dna.replace(/./g, c => pairs[c]); 
 //same as before but we don't make property in our function, but just simply make a new variable instead
+
+//Codewars - Sum of the First N-th Term of Series
+//Your task is to write a function which returns the n-th term of the following series, which is the sum of the
+//first n terms of the sequence (n is the input parameter).
+//Series : 1 + 1/4 + 1/7 + 1/10 + 1/13 + 1/16 + ...
+//You will need to figure out the rule of the series to complete this. The rules is you need to round the answer to
+//2 decimal places and return it as String. If the given value is 0 then it should return "0.00". You will only be
+//given Natural Numbers as arguments.
+//n = 1 -> 1.00
+//n = 2 -> 1.25
+//n = 3 -> 1.57
+function SeriesSum(n) {
+    let denominator = 1; 
+    let sum = 0;
+    for (let i = n; i > 0; i--) {
+        sum = sum + (1 / denominator);
+        denominator += 3;
+    }
+    return sum.toFixed(2).toString();
+} //.toFixed(2) to change the float to have 2 decimal places, toString() is to change int or float into string 
+//Pro solution 1
+function SeriesSum1(n) {
+    for (var s = 0, i = 0; i < n; i++) { //we can initialize more that 1 variable in the for loop
+        s += 1 / (1 + i * 3)
+    }
+    return s.toFixed(2)
+} //as we knew that .toFixed(2) is to change the float to have 2 decimal places, but it also change it into string
+//too, so we actually don't need to do toString() again after it like my solution before
+//Pro solution 2
+function SeriesSum2(n, s = 0) { //initialize variable sum s = 0 in the function's parameter (only for the first time)
+    return n ? SeriesSum(n - 1, s + 1 / (3 * n - 2)) : s.toFixed(2) //check is n true (not 0)? if yes then call
+} //SeriesSum() function (this is recursion function), this will calculate the sum s from the back. For ex n = 3 :
+//1st called -> n = 3   s = 0
+//2nd called -> n = 2   s = 0 + 1 / (3 * 3 - 2) -> 1/7
+//3rd called -> n = 1   s = 1/7 + 1 / (3 * 2 - 2) -> 1/7 + 1/2
+//4th called -> n = 0   s = 1/7 + 1/2 + 1 / (3 * 1 - 2) -> 1/7 + 1/2 + 1/1
+//n finally is 0, so do s.toFixed(2), when s itself is already 1/7 + 1/4 + 1
+//Pro solution 3
+function SeriesSum3(n) {
+    for (a = 0, i = 1; i <= n * 3; i += 3) a += 1 / i; //if n = 3 then do loop until i <= 9 (3 * 3), when is always
+    return a.toFixed(2); //do +3 in every loop, so i will be (1, 4, 7)
+}
+//Pro solution 4
+function SeriesSum4(n) {
+    return Array(n).fill(0).map((e, i) => 3 * i + 1).reduce((s, e) => s + 1 / e, 0).toFixed(2);
+} //Array(n), creates an empty array of length n
+//.fill(0), fills every slot with 0, for ex : Array(4).fill(0) → [0, 0, 0, 0]
+//.map((e, i) => 3 * i + 1), loops over each element & replacing it with formula 3 * i + 1, i as index (0, 1, 2, …).
+//.reduce((s, e) => s + 1/e, 0), accumulates (reduce) into a sum s, starts with s = 0, for each element e in 
+//[1, 4, 7, 10], adds with 1/e, so it become 0 + 1/1 + 1/4 + 1/7 + 1/10
+//.toFixed(2), formats the number with 2 decimals in string output, 1.4928 → "1.49"

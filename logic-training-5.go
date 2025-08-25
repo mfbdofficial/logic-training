@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"regexp"
 	"slices"
 	"strings"
@@ -355,3 +356,52 @@ func DNAStrand4(dna string) string {
 	}
 	return and
 } //use mapping way
+
+// Codewars - Sum of the First N-th Term of Series
+// Your task is to write a function which returns the n-th term of the following series, which is the sum of the
+// first n terms of the sequence (n is the input parameter).
+// Series : 1 + 1/4 + 1/7 + 1/10 + 1/13 + 1/16 + ...
+// You will need to figure out the rule of the series to complete this. The rules is you need to round the answer to
+// 2 decimal places and return it as String. If the given value is 0 then it should return "0.00". You will only be
+// given Natural Numbers as arguments.
+// n = 1 -> 1.00
+// n = 2 -> 1.25
+// n = 3 -> 1.57
+func SeriesSum(n int) string {
+	denominator := 1.0
+	sum := 0.0
+	for i := n; i > 0; i-- {
+		sum = sum + (1.0 / denominator)
+		denominator += 3.0
+	}
+	return fmt.Sprintf("%.2f", sum) //need to import "fmt" package
+} //fmt.Sprintf() is to convert a float into a string, use "%.2f" means round that float to 2 decimal places, but
+// if you use "%v" means you just convert it into string directly (with float's initial value)
+// Pro solution 1
+func SeriesSum1(n int) string {
+	var sum float64 = 0
+	for i := 0; i <= n-1; i++ {
+		sum += float64(1) / float64(1+(i*3)) //for ex n = 3, when looping in i = 2, so 1 / (1 + (2 * 3)) = 1 / 7
+	}
+	return fmt.Sprintf("%.2f", sum)
+} //if n = 1, then do 1 looping 1 / (1 + (0 * 3)) = 1 / 1 = 0
+// even if n = 0, then do 0 looping, so sum = 0 (it still work fine)
+// the loop start from 0, so i (current) when n = 3 is 0, 1, 2
+// Pro solution 2
+func SeriesSum2(n int) string {
+	sum := 0.0
+	for nth := 1; nth <= n; nth++ {
+		sum += 1.0 / (3.0*float64(nth) - 2.0) //for ex n = 3, when looping in nth = 3, so 1 / ((3 * 3) - 2) = 1 / 7
+	}
+	return fmt.Sprintf("%.2f", sum)
+} //different from before the loop start from 1, so nth (current) when n = 3 is 1, 2, 3
+// Pro solution 3
+func SeriesSum3(n int) string {
+	sum := 0.0
+	for f := 1.0; n > 0; f += 3.0 {
+		n--
+		sum += 1.0 / f
+	}
+	return fmt.Sprintf("%.2f", sum)
+} //same as my solution, but the loop is based from n (and n value will be decreased), he initialize the denominator
+//as f in the for loop syntax instead (also do denominator +3 in for loop syntax)
