@@ -405,3 +405,35 @@ func SeriesSum3(n int) string {
 	return fmt.Sprintf("%.2f", sum)
 } //same as my solution, but the loop is based from n (and n value will be decreased), he initialize the denominator
 //as f in the for loop syntax instead (also do denominator +3 in for loop syntax)
+
+// Codewars - Functional Addition
+// Create a function add(n)/Add(n) which returns a function that always adds n to any number
+// Note for Java: the return type and methods have not been provided to make it a bit more challenging.
+// var addOne = Add(1)
+// addOne(3) -> 4
+func Add(n int) func(int) int { //Add takes an integer n and returns a function that adds n to its argument
+	return func(m int) int {
+		return n + m
+	}
+} //addOne := Add(1) //the test is doing this process first, n = 1, store that n value and return a function that
+// addOne(3)  -> 4 //would calculate n + addOne argument later
+// addFive := Add(5) //this kind of thing (funtion return another function) is called closure
+// addFive(10) -> 15
+// Pro solution 1
+func Add1(x int) func(int) int {
+	return func(n int) int { return x + n }
+} //same as before, but we make the function result  in one line
+// Pro solution 2
+func Add2(num int) func(int) int {
+	return func(arg int) int {
+		return arg + num //clean naming, nice
+	}
+} //makes it easy to read
+// Pro solution 3
+func Add3(a int) func(int) int {
+	f := func(b int) int {
+		b = b + a
+		return b
+	}
+	return f //create the function initialize first (the function not placed in one line after keyword return)
+}

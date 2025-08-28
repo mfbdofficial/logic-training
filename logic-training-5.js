@@ -319,3 +319,24 @@ function SeriesSum4(n) {
 //.reduce((s, e) => s + 1/e, 0), accumulates (reduce) into a sum s, starts with s = 0, for each element e in 
 //[1, 4, 7, 10], adds with 1/e, so it become 0 + 1/1 + 1/4 + 1/7 + 1/10
 //.toFixed(2), formats the number with 2 decimals in string output, 1.4928 → "1.49"
+
+//Codewars - Functional Addition
+//Create a function add(n)/Add(n) which returns a function that always adds n to any number
+//Note for Java: the return type and methods have not been provided to make it a bit more challenging.
+//var addOne = Add(1)
+//addOne(3) -> 4
+function add(n) {
+    return function (m) {
+        return n + m;
+    }
+}
+//Pro solution 1
+var add1 = n => m => n + m; //using arrow funtion syntax
+//Pro solution 2
+var add2 = n => function (m) {
+    return n + m;
+} //hybrid, using arrow function syntax first, then return with usual function
+//Pro solution 3
+function add3(n) {
+    return m => n + m;
+} //hybrid, using usual function syntax first, then return with arrow function

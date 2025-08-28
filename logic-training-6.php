@@ -361,4 +361,31 @@ function series_sum3($n) {
 //$n-- is post-decrement → it uses $n first, then decreases afterward.
 //so this means if $n = 3; then decreses it first before calculation, in in while loop the $n still will be 3, 2, 1
 //but in calculation $n becoma 2, 1, 0 (we decrease it first before the calculation)
+
+//Codewars - Functional Addition
+//Create a function add(n)/Add(n) which returns a function that always adds n to any number
+//Note for Java: the return type and methods have not been provided to make it a bit more challenging.
+//$addOne = add(1);
+//echo $addOne(3); -> 4
+function add($n) {
+    return function ($m) use ($n) {
+        return $n + $m;
+    };
+}
+//Pro solution 1
+$add1 = fn($n) => fn($m) => $n + $m; //using arrow funtion syntax
+//arrow functions fn automatically close over variables from the parent scope, so you don’t need to use ($n). And 
+//you've to call that $add1 function like this 
+//$addOne = $add(1);
+//echo $addOne(3); -> 4
+//Pro solution 2
+$add2 = fn($n) => function ($m) use ($n) {
+    return $n + $m;
+}; //hybrid, using arrow function syntax first, then return with usual function, run it like this too
+//$addOne = $add(1);
+//echo $addOne(3); -> 4
+//Pro solution 3
+function add3($n) {
+    return fn($m) => $n + $m;
+} //hybrid, using usual function syntax first, then return with arrow function
 ?>
