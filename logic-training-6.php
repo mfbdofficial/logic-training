@@ -388,4 +388,93 @@ $add2 = fn($n) => function ($m) use ($n) {
 function add3($n) {
     return fn($m) => $n + $m;
 } //hybrid, using usual function syntax first, then return with arrow function
+
+//Codewars - A Rule of Divisibility by 13
+//A divisibility rule is a shorthand way of determining whether a given integer is divisible by a fixed divisor
+//without performing the division, usually by examining its digits. When you divide the successive powers of 10 by
+//13 you get the following remainders of the integer divisions:
+//1, 10, 9, 12, 3, 4
+//because:
+//10 ^ 0 ->  1 (mod 13)
+//10 ^ 1 -> 10 (mod 13)
+//10 ^ 2 ->  9 (mod 13)
+//10 ^ 3 -> 12 (mod 13)
+//10 ^ 4 ->  3 (mod 13)
+//10 ^ 5 ->  4 (mod 13)
+//why we only do this untill 10 ^ 5? because if we keep going the result would be repeated, for divisor = 13 the
+//pattern is 1, 10, 9, 12, 3, 4 then it would be repeat again if we do 10 ^ 6, 10, ^ 7, 10 ^ 8, 10 ^ 9, 10 ^ 10,
+//10 ^ 11 again, the result will be 1, 10, 9, 12, 3, 4 again (and continues so on), this pattern would be different
+//based the divisor we're using, it this case. the rule is using 13.
+//Then the whole pattern repeats. Hence the following method:
+//Multiply
+//- the right most digit of the number with the left most number in the sequence shown above,
+//- the rsecond right most digit with the second left most digit of the number in the sequence.
+//The cycle goes on and you sum all these products. Repeat this process until the sequence of sums is stationary.
+//(stasioner = keadaan tetap, tidak bergerak, atau tidak berubah seiring waktu pada suatu sistem, objek, atau nilai)
+//Example:
+//What is the remainder when 1234567 is divided by 13?
+//7      6     5      4     3     2     1  (digits of 1234567 from the right)
+//×      ×     ×      ×     ×     ×     ×  (multiplication)
+//1     10     9     12     3     4     1  (the repeating sequence)
+//Therefore following the method we get:
+//7×1 + 6×10 + 5×9 + 4×12 + 3×3 + 2×4 + 1×1 = 178
+//We repeat the process with the number 178:
+//8x1 + 7x10 + 1x9 = 87
+//and again with 87:
+//7x1 + 8x10 = 87
+//From now on the sequence is stationary (we always get 87) and the remainder of 1234567 by 13 is the same as the
+//remainder of 87 by 13 ( i.e 9).
+//Task:
+//Call thirt the function which processes this sequence of operations on an integer n (>=0). thirt will return the
+//stationary number.
+//thirt(1234567) calculates 178, then 87, then 87 and returns 87.
+//thirt(321) calculates 48, 48 and returns 48
+function thirt($n) {
+    $prev = 0;
+    while ($prev != $n) {
+        $prev = $n;
+        $sum = 0;
+        for ($i = 0; $n > 0; $i++) {
+            $lastDigit = $n % 10;
+            $sum += $lastDigit * ((10 ** $i) % 13);
+            $n = floor($n / 10);
+        }
+        $n = $sum;
+    }
+    return $n;
+}
+//Pro solution 1
+function thirt1($n) {
+    $sequence = [1, 10, 9, 12, 3, 4];
+    $sum = 0;
+    $index = 0;
+    foreach (array_reverse(str_split($n)) as $char) {      
+      $sum += (int)$char * $sequence[$index % 6];
+      $index++;
+    }
+    return ($n === $sum) ? $n : thirt($sum);
+} //need more research
+//Pro solution 2
+function thirt2($n) {
+    $sum = 0;
+    $s = strval($n);
+    for($i = 0; $i < strlen($s); $i++){
+      $sum += $s[strlen($s) - ($i+1)] * ((10 ** $i) % 13);
+    }
+    if($n == $sum){
+      return $sum;
+    }
+    return thirt($sum);
+} //need more research
+//Pro solution 3
+function thirt3($n) {
+    $digits = str_split(strrev($n));
+    $total = 0;
+    foreach ($digits as $i => $digit) {
+        $total += $digit * (10 ** $i % 13);
+    }
+    if ($total === $n)
+        return $total;
+    return thirt($total);
+} //need more research
 ?>

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"math"
 	"regexp"
 	"slices"
 	"strings"
@@ -437,3 +438,83 @@ func Add3(a int) func(int) int {
 	}
 	return f //create the function initialize first (the function not placed in one line after keyword return)
 }
+
+// Codewars - A Rule of Divisibility by 13
+// A divisibility rule is a shorthand way of determining whether a given integer is divisible by a fixed divisor
+// without performing the division, usually by examining its digits. When you divide the successive powers of 10 by
+// 13 you get the following remainders of the integer divisions:
+// 1, 10, 9, 12, 3, 4
+// because:
+// 10 ^ 0 ->  1 (mod 13)
+// 10 ^ 1 -> 10 (mod 13)
+// 10 ^ 2 ->  9 (mod 13)
+// 10 ^ 3 -> 12 (mod 13)
+// 10 ^ 4 ->  3 (mod 13)
+// 10 ^ 5 ->  4 (mod 13)
+// why we only do this untill 10 ^ 5? because if we keep going the result would be repeated, for divisor = 13 the
+// pattern is 1, 10, 9, 12, 3, 4 then it would be repeat again if we do 10 ^ 6, 10, ^ 7, 10 ^ 8, 10 ^ 9, 10 ^ 10,
+// 10 ^ 11 again, the result will be 1, 10, 9, 12, 3, 4 again (and continues so on), this pattern would be different
+// based the divisor we're using, it this case. the rule is using 13.
+// Then the whole pattern repeats. Hence the following method:
+// Multiply
+// - the right most digit of the number with the left most number in the sequence shown above,
+// - the rsecond right most digit with the second left most digit of the number in the sequence.
+// The cycle goes on and you sum all these products. Repeat this process until the sequence of sums is stationary.
+// (stasioner = keadaan tetap, tidak bergerak, atau tidak berubah seiring waktu pada suatu sistem, objek, atau nilai)
+// Example:
+// What is the remainder when 1234567 is divided by 13?
+// 7      6     5      4     3     2     1  (digits of 1234567 from the right)
+// ×      ×     ×      ×     ×     ×     ×  (multiplication)
+// 1     10     9     12     3     4     1  (the repeating sequence)
+// Therefore following the method we get:
+// 7×1 + 6×10 + 5×9 + 4×12 + 3×3 + 2×4 + 1×1 = 178
+// We repeat the process with the number 178:
+// 8x1 + 7x10 + 1x9 = 87
+// and again with 87:
+// 7x1 + 8x10 = 87
+// From now on the sequence is stationary (we always get 87) and the remainder of 1234567 by 13 is the same as the
+// remainder of 87 by 13 ( i.e 9).
+// Task:
+// Call thirt the function which processes this sequence of operations on an integer n (>=0). thirt will return the
+// stationary number.
+// thirt(1234567) calculates 178, then 87, then 87 and returns 87.
+// thirt(321) calculates 48, 48 and returns 48
+func Thirt(n int) int {
+	var prev int
+	for prev != n {
+		prev = n //set n as preveseprevious calculation value (prev), then do the calculation for new value afterward
+		sum := 0
+		for i := 0; n > 0; i++ {
+			lastDigit := n % 10
+			sum += lastDigit * (int(math.Pow(10, float64(i))) % 13) //need to import "math" pakage
+			n = n / 10                                              //remove last digit
+		}
+		n = sum //we treat n as a current calculation value
+	}
+	return n
+} //return when the looping is over, means now n value will always be the same as previous value
+// Pro solution 1
+func Thirt1(n int) int {
+	var t = []int{1, 10, 9, 12, 3, 4}
+	var i, j, k int
+	for ; n != k; n = j {
+		for k, i, j = n, 0, 0; n > 0; i++ {
+			j += (n % 10) * t[i%6] //access it with mod, makes it repeat when the index more than 5 (start at 6)
+			n /= 10                //0 % 6 = 0 (access index 0), if 6 % 6 = 0 (access index 0 again, it's repeated)
+		}
+	}
+	return n
+} //hard code the remainders of the integer divisions as variable t
+// Pro solution 2
+func Thirt2(n int) int {
+	return walk(n, 0, 1, n)
+} //need more explanation later
+func walk(n int, s int, r int, m int) int {
+	if m == 0 && s == n {
+		return s
+	}
+	if m == 0 {
+		return walk(s, 0, 1, s)
+	}
+	return walk(n, s+r*(m%10), (r*10)%13, m/10)
+} //need more explanation later
