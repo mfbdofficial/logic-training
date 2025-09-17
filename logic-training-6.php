@@ -477,4 +477,34 @@ function thirt3($n) {
         return $total;
     return thirt($total);
 } //need more research
+
+//Codewars - Multiplication Table
+//Your task, is to create N×N multiplication table, of size provided in parameter. For example, when given size is 3:
+//1 2 3
+//2 4 6
+//3 6 9
+//For the given example, the return value should be: [[1,2,3],[2,4,6],[3,6,9]]
+function multiplicationTable($size) {
+    $matrix = [];
+    for ($i = 1; $i <= $size; $i++) {
+        $matrix[$i - 1] = [];
+        $current = $i;
+        for ($j = 1; $j <= $size; $j++) {
+            $matrix[$i - 1][$j - 1] = $current;
+            $current += $i;
+        }
+    }
+    return $matrix;
+}
+//My other solution
+function multiplicationTable0($size) {
+    $matrix = [];
+    for ($i = 0; $i < $size; $i++) {
+        $matrix[$i] = [];
+        for ($j = 0; $j < $size; $j++) {
+            $matrix[$i][$j] = ($i + 1) * ($j + 1);
+        }
+    }
+    return $matrix;
+}
 ?>

@@ -518,3 +518,60 @@ func walk(n int, s int, r int, m int) int {
 	}
 	return walk(n, s+r*(m%10), (r*10)%13, m/10)
 } //need more explanation later
+
+// Codewars - Multiplication Table
+// Your task, is to create N×N multiplication table, of size provided in parameter. For example, when given size is 3:
+// 1 2 3
+// 2 4 6
+// 3 6 9
+// For the given example, the return value should be: [[1,2,3],[2,4,6],[3,6,9]]
+func MultiplicationTable(size int) [][]int {
+	matrix := make([][]int, size) //create the outer slice with size's length (this is will be the lines)
+	for i := 1; i <= size; i++ {  //looping for the lines
+		matrix[i-1] = make([]int, 0, size) //if you do this part with make([]int, size) it would be error, why?
+		current := i
+		for j := 1; j <= size; j++ { //looping for the columns
+			matrix[i-1] = append(matrix[i-1], current) //insert data to every columns in the line
+			current += i                               //usi current i as an operan
+		}
+	}
+	return matrix //matrix shape -> slice of slices (or lines)
+} //what is the difference between make([]int, size) and make([]int, 0, size)?
+// - make([]int, size) → length = size, already filled with 0s.
+// - make([]int, 0, size) → length = 0, capacity = size, empty but ready to grow.
+// My other solution
+func MultiplicationTable0(size int) [][]int {
+	matrix := make([][]int, size)
+	for i := 1; i <= size; i++ {
+		matrix[i-1] = make([]int, size)
+		current := i
+		for j := 1; j <= size; j++ {
+			matrix[i-1][j-1] = current
+			current += i
+		}
+	}
+	return matrix
+} //the looping logic is same as before but we just override the value in inner slice (in [j-1] part), so it will
+// change that 0 value generated before
+// Pro solution 1
+func MultiplicationTable1(size int) [][]int {
+	res := make([][]int, size)
+	for i := 0; i < size; i++ { //looping for the lines
+		for x := 1; x < size+1; x++ { //looping for the columns
+			res[i] = append(res[i], (i+1)*x) //for example current i = 0 in x loop, so it would be (0 + 1) * 1 = 1,
+		} //then (0 + 1) * 2 = 2, then (0 + 1) * 3 = 3,...
+	}
+	return res
+} //same, doing 2 loop (for lines and columns) but start with i = 0 for the lines looping, and the calculation is
+// also different, we use current line first value and multiple it with current column value
+// Pro solution 2
+func MultiplicationTable2(size int) [][]int {
+	matrix := make([][]int, size) //initialize outer slice (just template)
+	for i := 0; i < size; i++ {   //looping for the lines
+		matrix[i] = make([]int, size) //initialize inner slice (just template)
+		for y := 0; y < size; y++ {   //looping for the columns
+			matrix[i][y] = (i + 1) * (y + 1) //the calculation and insert it to certain position
+		}
+	}
+	return matrix
+} //both looping start from 0 (i and y), then insert the calculation (i + 1) * (y + 1), the result will match

@@ -410,3 +410,56 @@ function thirt2(n) {
 //Pro solution 3
 const thirt3 = n => (r => n === r ? n : thirt(r))([...String(n)].reverse().reduce((acc, v, i) => acc + v * (10 ** i % 13), 0));
 //need more explanation
+
+//Codewars - Multiplication Table
+//Your task, is to create N×N multiplication table, of size provided in parameter. For example, when given size is 3:
+//1 2 3
+//2 4 6
+//3 6 9
+//For the given example, the return value should be: [[1,2,3],[2,4,6],[3,6,9]]
+function multiplicationTable(size) {
+    let matrix = [];
+    for (let i = 1; i <= size; i++) {
+        matrix[i - 1] = [];
+        let current = i;
+        for (let j = 1; j <= size; j++) {
+            matrix[i - 1][j - 1] = current;
+            current += i;
+        }
+    }
+    return matrix;
+}
+//My other solution
+function multiplicationTable0(size) {
+    let matrix = [];
+    for (let i = 0; i < size; i++) {
+        matrix[i] = [];
+        for (let j = 0; j < size; j++) {
+            matrix[i][j] = (i + 1) * (j + 1);
+        }
+    }
+    return matrix;
+}
+//Pro solution 1
+const multiplicationTable1 = n => {
+    const res = [];
+    for (let i = 1; i <= n; i++) {
+        const row = []; 
+        for (let j = 1; j <= n; j++) //if there's only one statement inside the loop, you allowed not using {} syntax
+            row.push(i * j); //push values into row
+        res.push(row); //push the finished row into res
+    }
+    return res;
+} //create separated row array instead, the push it into the line res later 
+//Pro solution 2
+const multiplicationTable2 = function(size) {
+    return Array.apply(null, new Array(size)).map(function(val, i) {
+        return Array.apply(null, new Array(size)).map(function(val, j) {
+            return (i + 1) * (j + 1);
+        });
+    });
+} //need more explanation
+//Pro solution 3
+const multiplicationTable3 = function(n) {
+    return Array.from({length:n}, (_, i) => Array.from({length:n}, (_, j) => (i + 1) * (j + 1)));
+} //need more explanation
