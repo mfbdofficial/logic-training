@@ -463,3 +463,107 @@ const multiplicationTable2 = function(size) {
 const multiplicationTable3 = function(n) {
     return Array.from({length:n}, (_, i) => Array.from({length:n}, (_, j) => (i + 1) * (j + 1)));
 } //need more explanation
+
+//Codewars - Moves in Squared Strings (II)
+//You are given a string of n lines, each substring being n characters long: For example:
+//s = "abcd\nefgh\nijkl\nmnop"
+//We will study some transformations of this square of strings.
+//  - rot(s):
+//    clock rotation 180 degrees.
+//    rot(s) => "ponm\nlkji\nhgfe\ndcba"
+//  - selfie_and_rot(s) (or selfieAndRot or selfie-and-rot):
+//    It is an initial string combined with its 180-degree clock-rotated version, interspersed with dots proportional
+//    to the length of the segments, to better illustrate the rotation when printed.
+//    SelfieAndRot(s) => "abcd....\nefgh....\nijkl....\nmnop....\n....ponm\n....lkji\n....hgfe\n....dcba"
+//
+//|rot             |selfie_and_rot
+//|abcd --> ponm   |abcd --> abcd....
+//|efgh     lkji   |efgh     efgh....
+//|ijkl     hgfe   |ijkl     ijkl....
+//|mnop     dcba   |mnop     mnop....
+//                           ....ponm
+//                           ....lkji
+//                           ....hgfe
+//                           ....dcba
+// Note : notice that the number of dots is the common length of "abcd", "efgh", "ijkl", "mnop".
+// task: write these two functions rot and selfie_and_rot and also high-order function oper(fct, s) where fct is the
+// function of one variable f to apply to the string s (fct will be one of rot, selfie_and_rot)
+function rot(strng) {
+    let sArray = strng.split("\n");
+    for (let i = 0; i < sArray.length; i++) {
+        let current = sArray[i].split("");
+        for (let j = 0, k = current.length-1; j < k; j++, k--) {
+            //current[j], current[k] = current[k], current[j]; //this kind of syntax don't work in JavaScript
+            let temp = current[j];
+            current[j] = current[k];
+            current[k] = temp;
+        }
+        sArray[i] = current.join("");
+    }
+    for (let l = 0, m = sArray.length-1; l < m; l++, m--) {
+        let temp = sArray[l];
+        sArray[l] = sArray[m];
+        sArray[m] = temp;
+    }
+    return sArray.join("\n");
+}
+function selfieAndRot(strng) {
+    let sArray = strng.split("\n");
+    for (let i = 0; i < sArray.length; i++) {
+        let currentLength = sArray[i].length;
+        for (let j = 0; j < currentLength; j++) {
+            sArray[i] = sArray[i] + ".";
+        }
+    }
+    return sArray.join("\n") + "\n" + rot(sArray.join("\n"));
+}
+function oper(fct, s) {
+    return fct(s);
+}
+//My other solution
+function rot(strng) {
+    let sArray = strng.split("\n");
+    for (let i = 0; i < sArray.length; i++) {
+        let current = sArray[i].split("");
+        sArray[i] = current.reverse().join(""); //just using reverse() built-in function (not manually using loop)
+    }
+    return sArray.reverse().join("\n"); //just using reverse() built-in function (not manually using loop)
+}
+function selfieAndRot(strng) {
+    let sArray = strng.split("\n");
+    for (let i = 0; i < sArray.length; i++) {
+        let currentLength = sArray[i].length;
+        for (let j = 0; j < currentLength; j++) {
+            sArray[i] = sArray[i] + ".";
+        }
+    }
+    return sArray.join("\n") + "\n" + rot(sArray.join("\n"));
+}
+function oper(fct, s) {
+    return fct(s);
+}
+//Pro solution 1
+function rot(s) {
+    return s.split("").reverse().join(""); //just reverse it and it's done, why? when we do split "\n" become 1 element
+} //the reason is in JavaScript (and most languages), "\n" is not two characters (it’s one single character)
+function selfieAndRot(s) {
+    return (s = s.replace(/.+/g, t => t + t.replace(/./g, "."))) + "\n" + rot(s); //using regex :
+} //first /.+/g  -> we will match 3 data ("abc", "def", "ghi")
+//- . will match any character except newline 
+//- + means “one or more of the previous”, so it matches a whole line (everything up until the newline).
+//- /g is global flag, so it applies the replacement for every line in the string s.
+//for every data matched, then we do t => t + t.replace(/./g, ".") (we do the value itself + regex again)
+//that second regex is /./g 
+//- . will match any character except newline matches every character in that line.
+//- /g is also global flag
+//then replace it with ".", so ("a", "b", "c") becomes (".", ".", "."), so "abc" change into "..."
+function oper(fn, s) {
+    return fn(s);
+}
+//Pro solution 2
+const rot = strng => [...strng].reverse().join(``); //just reverse the string
+const selfieAndRot = strng => (strng = strng.replace(/.+/g, val => val + `.`.repeat(val.length))) + `\n` + rot(strng);
+//matched it with regex like before, but for step 2 isn't using regex again, but juga replace the value matched with
+//value itself + ".", when this "." part is repeated for value matched's length times, so let's say "abc" has 
+//length = 3, so repeat the "." 3 times, and it will become "..."
+const oper = (fct, s) => fct(s);

@@ -575,3 +575,136 @@ func MultiplicationTable2(size int) [][]int {
 	}
 	return matrix
 } //both looping start from 0 (i and y), then insert the calculation (i + 1) * (y + 1), the result will match
+
+// Codewars - Moves in Squared Strings (II)
+// You are given a string of n lines, each substring being n characters long: For example:
+// s = "abcd\nefgh\nijkl\nmnop"
+// We will study some transformations of this square of strings.
+//   - rot(s):
+//     clock rotation 180 degrees.
+//     rot(s) => "ponm\nlkji\nhgfe\ndcba"
+//   - selfie_and_rot(s) (or selfieAndRot or selfie-and-rot):
+//     It is an initial string combined with its 180-degree clock-rotated version, interspersed with dots proportional
+//     to the length of the segments, to better illustrate the rotation when printed.
+//     SelfieAndRot(s) => "abcd....\nefgh....\nijkl....\nmnop....\n....ponm\n....lkji\n....hgfe\n....dcba"
+//
+// |rot             |selfie_and_rot
+// |abcd --> ponm   |abcd --> abcd....
+// |efgh     lkji   |efgh     efgh....
+// |ijkl     hgfe   |ijkl     ijkl....
+// |mnop     dcba   |mnop     mnop....
+//
+//	....ponm
+//	....lkji
+//	....hgfe
+//	....dcba
+//
+// Note : notice that the number of dots is the common length of "abcd", "efgh", "ijkl", "mnop".
+// task: write these two functions rot and selfie_and_rot and also high-order function oper(fct, s) where fct is the
+// function of one variable f to apply to the string s (fct will be one of rot, selfie_and_rot)
+func Rot(s string) string {
+	sSlice := strings.Split(s, "\n")
+	for index, value := range sSlice {
+		current := []rune(value)
+		for i, j := 0, len(current)-1; i < j; i, j = i+1, j-1 {
+			current[i], current[j] = current[j], current[i]
+		}
+		sSlice[index] = string(current)
+	}
+	slices.Reverse(sSlice)            //this is just a process, not returning a value
+	return strings.Join(sSlice, "\n") //so we can't do it oneline return strings.Join(slices.Reverse(sSlice), "\n")
+} //cause slices.Reverse(sSlice) have no return value, but we used it as value
+func SelfieAndRot(s string) string {
+	sSlice := strings.Split(s, "\n")   //make slice of string from s
+	for index, value := range sSlice { //looping for every element
+		for i := 0; i < len(value); i++ { //looping for every string in the element
+			sSlice[index] = sSlice[index] + "." //concat "." for that string
+		}
+	}
+	return strings.Join(sSlice, "\n") + "\n" + Rot(strings.Join(sSlice, "\n")) //join the slice of string concated
+}                                  //with ".", then concat it with the reverse version using Rot() function that we created before (to do reverse)
+type FParamNew func(string) string //defines FParamNew as a function that takes one parameter of type string and
+// returns one value of type string, it’s basically an alias for a function signature, so you can pass functions
+// around as values more cleanly.
+func OperNew(f FParamNew, x string) string {
+	return f(x)
+} //not yet
+// My other solution
+func Rot0(s string) string {
+	sSlice := strings.Split(s, "\n")
+	for index, value := range sSlice {
+		current := []rune(value)
+		for i, j := 0, len(current)-1; i < j; i, j = i+1, j-1 {
+			current[i], current[j] = current[j], current[i]
+		}
+		sSlice[index] = string(current)
+	}
+	for i, j := 0, len(sSlice)-1; i < j; i, j = i+1, j-1 {
+		sSlice[i], sSlice[j] = sSlice[j], sSlice[i]
+	}
+	return strings.Join(sSlice, "\n")
+} //using manual way to do slice reverse process (Codewars avoid me to use slices.Reverse), if there's no "slices"
+// package, because slices is not a standard package in the root GOROOT. It comes from the Go standard library
+// extensions starting in Go 1.21
+func SelfieAndRot0(s string) string {
+	sSlice := strings.Split(s, "\n")   //make slice of string from s
+	for index, value := range sSlice { //looping for every element
+		for i := 0; i < len(value); i++ { //looping for every string in the element
+			sSlice[index] = sSlice[index] + "." //concat "." for that string
+		}
+	}
+	return strings.Join(sSlice, "\n") + "\n" + Rot0(strings.Join(sSlice, "\n")) //join the slice of string concated
+} //with ".", then concat it with the reverse version using Rot() function that we created before (to do reverse)
+type FParamNew0 func(string) string
+
+func OperNew0(f FParamNew0, x string) string {
+	return f(x)
+} //return function that choosen to be run with x parameter
+// Pro solution 1
+func Rot1(s string) string {
+	return reverse1(s) //just do reverse for the string then this function is actually done
+}
+func SelfieAndRot1(s string) string { //strings.Index(s, "\n") is to searches for the first occurrence of a newline
+	dots := strings.Repeat(".", strings.Index(s, "\n")) //("\n") in the string s, give us the position (for ex: 4)
+	selfie := strings.ReplaceAll(s, "\n", dots+"\n")    //strings.Repeat(".", n) to makes a string consisting of "."
+	rot := strings.ReplaceAll(Rot1(s), "\n", "\n"+dots) //repeated n times, so n = 4 results is "...."
+	return fmt.Sprintf("%s%s\n%s%s", selfie, dots, dots, rot)
+} //selfie := strings.ReplaceAll(s, "\n", dots + "\n") means Everywhere we see a newline (\n) in s, replace it with
+// "....\n" (dots plus newline), this basically adds dots to the right side of every line in s
+// rot := strings.ReplaceAll(Rot(s), "\n", "\n" + dots), for every newline inside that rotated version, insert dots
+// before the next line starts
+// return fmt.Sprintf("%s%s\n%s%s", selfie, dots, dots, rot), this constructs the final string with formatting.
+// %s%s\n%s%s means insert 4 values in order (selfie, dots, dots, rot), then between the second and third substitution,
+// it adds a newline (\n). For example s is "abc\ndef\nghi"
+// selfie = "abc...\ndef...\nghi"
+// rot = "ihg\n...fed\n...cab"
+// so [selfie][dots]\n[dots][rot] = "abc...\ndef...\nghi...\n...ihg\n...fed\n...cab"
+func OperX1(f func(string) string, x string) string {
+	return f(x)
+}
+func reverse1(s string) string {
+	runes := []rune(s)                                    //change the string into slice of runes
+	for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 { //looping manually to do reverse (2 pointer concept)
+		runes[i], runes[j] = runes[j], runes[i]
+	}
+	return string(runes)
+} //additional custom function to do reverse process
+// Pro solution 2
+func Rot2(s string) string {
+	var result string
+	for i := len(s) - 1; i >= 0; i-- {
+		result += string(s[i])
+	}
+	return result
+} //do reverse to the string
+func SelfieAndRot2(s string) string {
+	matrix := strings.Split(s, "\n") //split it first
+	for i, m := range matrix {
+		matrix[i] += strings.Repeat(".", len(m)) //len(m) is length of string element inside the slice
+	}
+	selfie := strings.Join(matrix, "\n")
+	return selfie + "\n" + Rot2(selfie)
+} //using strings.Repeat() to concat the dots "."
+func Oper2(f func(string) string, x string) string {
+	return f(x)
+}

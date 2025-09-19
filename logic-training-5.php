@@ -507,4 +507,110 @@ function multiplicationTable0($size) {
     }
     return $matrix;
 }
+
+//Codewars - Moves in Squared Strings (II)
+//You are given a string of n lines, each substring being n characters long: For example:
+//s = "abcd\nefgh\nijkl\nmnop"
+//We will study some transformations of this square of strings.
+//  - rot(s):
+//    clock rotation 180 degrees.
+//    rot(s) => "ponm\nlkji\nhgfe\ndcba"
+//  - selfie_and_rot(s) (or selfieAndRot or selfie-and-rot):
+//    It is an initial string combined with its 180-degree clock-rotated version, interspersed with dots proportional
+//    to the length of the segments, to better illustrate the rotation when printed.
+//    SelfieAndRot(s) => "abcd....\nefgh....\nijkl....\nmnop....\n....ponm\n....lkji\n....hgfe\n....dcba"
+//
+//|rot             |selfie_and_rot
+//|abcd --> ponm   |abcd --> abcd....
+//|efgh     lkji   |efgh     efgh....
+//|ijkl     hgfe   |ijkl     ijkl....
+//|mnop     dcba   |mnop     mnop....
+//                           ....ponm
+//                           ....lkji
+//                           ....hgfe
+//                           ....dcba
+// Note : notice that the number of dots is the common length of "abcd", "efgh", "ijkl", "mnop".
+// task: write these two functions rot and selfie_and_rot and also high-order function oper(fct, s) where fct is the
+// function of one variable f to apply to the string s (fct will be one of rot, selfie_and_rot)
+function rot($strng) {
+    $sArray = explode("\n", $strng);
+    for ($i = 0; $i < count($sArray); $i++) {
+        $current = str_split($sArray[$i]);
+        for ($j = 0, $k = count($current)-1; $j < $k; $j++, $k--) {
+            $temp = $current[$j];
+            $current[$j] = $current[$k];
+            $current[$k] = $temp;
+        }
+        $sArray[$i] = implode("", $current);
+    }
+    for ($l = 0, $m = count($sArray)-1; $l < $m; $l++, $m--) {
+        $temp = $sArray[$l];
+        $sArray[$l] = $sArray[$m];
+        $sArray[$m] = $temp;
+    }
+    return implode("\n", $sArray);
+}
+function selfieAndRot($strng) {
+    $sArray = explode("\n", $strng);
+    for ($i = 0; $i < count($sArray); $i++) {
+        $currentLength = strlen($sArray[$i]);
+        for ($j = 0; $j < $currentLength; $j++) {
+            $sArray[$i] = $sArray[$i] . ".";
+        }
+    }
+    return implode("\n", $sArray) . "\n" . rot(implode("\n", $sArray));
+}
+function oper($fct, $s) {
+    return $fct($s);
+}
+//My other solution
+function rot0($strng) {
+    $sArray = explode("\n", $strng);
+    for ($i = 0; $i < count($sArray); $i++) {
+        $current = str_split($sArray[$i]);
+        $sArray[$i] = implode("", array_reverse($current));
+    }
+    return implode("\n", array_reverse($sArray));
+}
+function selfieAndRot0($strng) {
+    $sArray = explode("\n", $strng);
+    for ($i = 0; $i < count($sArray); $i++) {
+        $currentLength = strlen($sArray[$i]);
+        for ($j = 0; $j < $currentLength; $j++) {
+            $sArray[$i] = $sArray[$i] . ".";
+        }
+    }
+    return implode("\n", $sArray) . "\n" . rot0(implode("\n", $sArray));
+}
+function oper0($fct, $s) {
+    return $fct($s);
+}
+//Pro solution 1
+function rot1($s) {
+  return strrev($s); //strrev() means string reverse, to reverse a string
+}
+function selfieAndRot1($s) {
+    $arr1 = explode("\n", $s); //buat array calon data yang bentuk pertama [ab, cd]
+    $arr2 = explode("\n", rot1($s)); //buat array calon data yang bentuk kedua [dc, ba]
+    $arr = [];
+    foreach($arr1 as $str) $arr[] = $str . str_repeat('.', strlen($str)); //[ab.., cd..]
+    foreach($arr2 as $str) $arr[] = str_repeat('.', strlen($str)) . $str; //[ab.., cd.., ..dc, ..ba]
+    return implode("\n", $arr); //"ab..\ncd.\n..dc\n..ba"
+}
+function oper1($fct, $s) {
+    return $fct($s);
+}
+//Pro solution 2
+function rot2($s) {
+    return implode("\n", array_reverse(array_map('strrev', preg_split('/\n/', $s)))); //split using regex, then do
+} //mapping to use strrev() for every split matched (every string as an element), then reverse the array of strings
+function selfieAndRot2($s) {
+	$sr = implode("\n", array_map(function($str) { 
+        return $str.str_repeat('.', strlen($str)); 
+    }, preg_split('/\n/', $s)));
+	return $sr."\n".rot($sr);
+}
+function oper2($fct, $s) {
+	return $fct($s);
+}
 ?>
