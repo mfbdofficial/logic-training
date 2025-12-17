@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"math"
 	"strings"
 )
 
@@ -108,3 +109,51 @@ func Scale3(s string, k, n int) string {
 	}
 	return strings.Join(ret, "\n")
 } //not yet
+
+// Codewars - Deodorant Evaporator
+// This program tests the life of an evaporator containing a gas. We know the content of the evaporator (content in
+// ml), the percentage of foam or gas lost every day (evap_per_day) and the threshold (threshold) in percentage
+// beyond which the evaporator is no longer useful. All numbers are strictly positive. The program reports the nth
+// day (as an integer) on which the evaporator will be out of use.
+// evaporator(10, 10, 5) -> 29
+// Mathematical explanation :
+// you have: content = 10 ml, evap_per_day = 10% lost per day, threshold = 5% of the original content
+// the evaporator becomes “out of use” when the current content < 5% of the initial content.
+// 5% of 10 ml = 0.5 ml, so the evaporator stops when the remaining content is < 0.5 ml.
+// day-by-day explanation : each day, the content loses 10% (so it keeps 90%).
+// let’s calculate the case manually:
+//
+//	Day 0: 10.000 ml
+//	Day 1: 10 × 0.9 = 9.000
+//	Day 2: 9 × 0.9 = 8.100
+//	Day 3: 8.1 × 0.9 = 7.290
+//	.....
+//	continue until the amount < 0.5 ml
+//
+// the formula after n days: remaining = 10 × (0.9)^n
+// we want: 10 × (0.9)^n < 0.5
+// divide both sides by 10: (0.9)^n < 0.05
+// now we solve using logs: n > ln(0.05) / ln(0.9)
+// calculate: ln(0.05) ≈ -2.9957 and ln(0.9) ≈ -0.1053
+// n > −2.9957 / −0.1053 ≈ 28.45
+// Since days must be integers, we round up → 29 days.
+func Evaporator(content float64, evapPerDay int, threshold int) int {
+	eligbilityLimits := (content * float64(threshold)) / 100 //calculate limit when evaporator considered out of use
+	dayCount := 0                                            //make a counter (as a days spent)
+	for content > eligbilityLimits {                         //do looping as long as evaporator still useable
+		content = content - (content*float64(evapPerDay))/100
+		dayCount++
+	}
+	return dayCount
+} //the logic is just decrease the evaporator's content day-by-day, and stop looping when it's out of use
+// Pro solution 1
+func Evaporator1(content float64, evapPerDay int, threshold int) int {
+	base := 1.0 - float64(evapPerDay)/100.0 //calculate base evaporator's gas contained
+	top := float64(threshold) / 100.0       //calculate limit when evaporator considered out of use
+	N := math.Log(top) / math.Log(base)     //calculate it using log equation (need to import "math" package)
+	return int(math.Ceil(N))
+} //using math log equation
+// Pro solution 2
+func Evaporator2(_ float64, evapPerDay int, threshold int) int {
+	return int(math.Ceil(math.Log(float64(threshold)/100) / math.Log(1-float64(evapPerDay)/100))) //need to import "math" package
+} //same as pro solution 1, calculate it using log equation, but make it into 1 line

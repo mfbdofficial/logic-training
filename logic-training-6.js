@@ -78,3 +78,55 @@ const scale = (strng, k, n) => strng.replace(/./g, `$&`.repeat(k)).replace(/.+/g
 //before, then do .repeat() like before.
 //in the second .replace(), /.+/g matches each line (because . excludes \n, but with + it grabs until \n), 
 //$&\n.repeat(n) repeats the whole line with a newline n times. Then cut the whitespace with trim() like before.
+
+//Codewars - Deodorant Evaporator
+//This program tests the life of an evaporator containing a gas. We know the content of the evaporator (content in
+//ml), the percentage of foam or gas lost every day (evap_per_day) and the threshold (threshold) in percentage
+//beyond which the evaporator is no longer useful. All numbers are strictly positive. The program reports the nth
+//day (as an integer) on which the evaporator will be out of use.
+//evaporator(10, 10, 5) -> 29
+//Mathematical explanation :
+//you have: content = 10 ml, evap_per_day = 10% lost per day, threshold = 5% of the original content
+//the evaporator becomes “out of use” when the current content < 5% of the initial content.
+//5% of 10 ml = 0.5 ml, so the evaporator stops when the remaining content is < 0.5 ml.
+//day-by-day explanation : each day, the content loses 10% (so it keeps 90%).
+//let’s calculate the case manually:
+//	Day 0: 10.000 ml
+//	Day 1: 10 × 0.9 = 9.000
+//	Day 2: 9 × 0.9 = 8.100
+//	Day 3: 8.1 × 0.9 = 7.290
+//	.....
+//  continue until the amount < 0.5 ml
+//the formula after n days: remaining = 10 × (0.9)^n
+//we want: 10 × (0.9)^n < 0.5
+//divide both sides by 10: (0.9)^n < 0.05
+//now we solve using logs: n > ln(0.05) / ln(0.9)
+//calculate: ln(0.05) ≈ -2.9957 and ln(0.9) ≈ -0.1053
+//n > −2.9957 / −0.1053 ≈ 28.45
+//Since days must be integers, we round up → 29 days.
+function evaporator(content, evapPerDay, threshold) {
+    let eligbilityLimits = (content * threshold) / 100; //calculate limit when evaporator considered out of use
+    let dayCount = 0; //make a counter (as a days spent)
+    while (content > eligbilityLimits) { //do looping as long as evaporator still useable
+        content = content - (content * evapPerDay) / 100;
+        dayCount++;
+    }
+    return dayCount;
+} //the logic is just decrease the evaporator's content day-by-day, and stop looping when it's out of use
+//Pro solution 1
+function evaporator1 (content, evap_per_day, threshold) { 
+    threshold = threshold / 100 //calculate limit when evaporator considered out of use
+    evap_per_day = evap_per_day / 100 //calculate how much % value that gas in the evaporator deccrease everyday
+    return Math.ceil(Math.log(threshold) / Math.log(1 - evap_per_day))
+} //using math log equation
+//Pro solution 2
+function evaporator2(content, evap_per_day, threshold) {
+    function recurse(pctLeft = 100, counter = 0) {
+        if (pctLeft <= threshold) { 
+            return counter; 
+        } else { 
+            return recurse(pctLeft * (1 - evap_per_day / 100), ++counter); //run recursive func while do counter up
+        } //in the next recursive func, the value of content will always decrease cause we multiple it with 1 - %
+    }; //value of gas that gone everyday
+    return recurse();
+} //do it with recursive way
