@@ -134,4 +134,56 @@ function evaporator1($content, $evap_per_day, $threshold) {
 function evaporator2($content, $evap_per_day, $threshold): int {
     return 1 + floor(log($threshold / 100) / log((100 - $evap_per_day) / 100 ));
 } //using math log equation
+
+//Codewars - A Rule of Divisibility by 7
+//A number m of the form 10x + y is divisible by 7 if and only if x − 2y is divisible by 7. 
+//In other words, subtract twice the last digit from the number formed by the remaining digits. 
+//Continue to do this until a number known to be divisible by 7 is obtained; you can stop when this 
+//number has at most 2 digits because you are supposed to know if a number of at most 2 digits is 
+//divisible by 7 or not. The original number is divisible by 7 if and only if the last number
+//obtained using this procedure is divisible by 7.
+//Examples:
+//1. m = 371 -> 37 − (2×1) -> 37 − 2 = 35 ; thus, since 35 is divisible by 7, 371 is divisible by 7,
+//  the number of steps to get the result is 1.
+//2. m = 1603 -> 160 - (2 x 3) -> 154 -> 15 - 8 = 7 and 7 is divisible by 7.
+//3. m = 372 -> 37 − (2×2) -> 37 − 4 = 33 ; thus, since 33 is not divisible by 7, 372 is not 
+//  divisible by 7.
+//4. m = 477557101->47755708->4775554->477547->47740->4774->469->28 and 28 is divisible by 7, so is 
+//  477557101. The number of steps is 7.
+//Task:
+//Your task is to return to the function seven(m) (m integer >= 0) an array (or a pair, depending on 
+//the language) of numbers, the first being the last number m with at most 2 digits obtained by your 
+//function (this last m will be divisible or not by 7), the second one being the number of steps to 
+//get the result. Return on the stack [last-number-m-with-at-most-2-digits, number-of-steps]. 
+//Unit test examples : 
+//seven(371) should return [35, 1]
+//seven(1603) should return [7, 2]
+//seven(477557101) should return [28, 7]
+function seven(int $m): array {
+    $step = 0;
+    while ($m >= 100) {
+        $step++;
+        $m = floor($m / 10) - 2 * ($m % 10);
+    }
+    return [intval($m), $step];
+}
+//Pro solution 1
+function seven1($m) {
+    $s = 0;
+    while(strlen($m) > 2) { //you can use strlen() on a number in PHP. PHP is a dynamically typed language, so it 
+        $s++; //will automatically convert the number 114 to a string "114" before calculating its length.  
+        $m = (int)substr($m, 0, -1) - (2 * (int)substr($m, -1)); //we can also use substr() on a number in PHP
+    } //substr($m, 0, -1) take numbers from the start into one before last, substr($m, -1) just take last number
+    return [$m, $s];
+}
+//Pro solution 2
+function seven2(int $m): array {
+    $steps = 0;
+    while ($m > 99 && ++$steps) { 
+        $m = intdiv($m, 10) - 2 * ($m % 10); //intdiv() performs integer division and returns the integer portion 
+    } //of the quotient, rounding the result towards zero
+    return [$m, $steps];
+} //the ++$steps (pre-increment) syntax is for increases the variable's value before 
+//it's used in an expression, while $steps++ (post-increment) uses the variable's current value in the expression and 
+//then increases it
 ?>

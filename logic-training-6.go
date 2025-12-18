@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"math"
+	"strconv"
 	"strings"
 )
 
@@ -157,3 +158,58 @@ func Evaporator1(content float64, evapPerDay int, threshold int) int {
 func Evaporator2(_ float64, evapPerDay int, threshold int) int {
 	return int(math.Ceil(math.Log(float64(threshold)/100) / math.Log(1-float64(evapPerDay)/100))) //need to import "math" package
 } //same as pro solution 1, calculate it using log equation, but make it into 1 line
+
+// Codewars - A Rule of Divisibility by 7
+// A number m of the form 10x + y is divisible by 7 if and only if x − 2y is divisible by 7.
+// In other words, subtract twice the last digit from the number formed by the remaining digits.
+// Continue to do this until a number known to be divisible by 7 is obtained; you can stop when this
+// number has at most 2 digits because you are supposed to know if a number of at most 2 digits is
+// divisible by 7 or not. The original number is divisible by 7 if and only if the last number
+// obtained using this procedure is divisible by 7.
+// Examples:
+//  1. m = 371 -> 37 − (2×1) -> 37 − 2 = 35 ; thus, since 35 is divisible by 7, 371 is divisible by 7,
+//     the number of steps to get the result is 1.
+//  2. m = 1603 -> 160 - (2 x 3) -> 154 -> 15 - 8 = 7 and 7 is divisible by 7.
+//  3. m = 372 -> 37 − (2×2) -> 37 − 4 = 33 ; thus, since 33 is not divisible by 7, 372 is not
+//     divisible by 7.
+//  4. m = 477557101->47755708->4775554->477547->47740->4774->469->28 and 28 is divisible by 7, so is
+//  477557101. The number of steps is 7.
+//
+// Task:
+// Your task is to return to the function seven(m) (m integer >= 0) an array (or a pair, depending on
+// the language) of numbers, the first being the last number m with at most 2 digits obtained by your
+// function (this last m will be divisible or not by 7), the second one being the number of steps to
+// get the result. Return on the stack [last-number-m-with-at-most-2-digits, number-of-steps].
+// Unit test examples :
+// seven(371) should return [35, 1]
+// seven(1603) should return [7, 2]
+// seven(477557101) should return [28, 7]
+func Seven(n int64) []int {
+	nString := strconv.Itoa(int(n)) //need to import "strconv" package, change number n into string
+	//nString := strconv.FormatInt(n, 10) //convert string with base 10 (decimal)
+	step := 0
+	for len(nString) > 2 { //do loop based from the string length
+		step += 1 //counter up step
+		y := n % 10
+		n = (n / 10) - (2 * y) //create the new number n value with the mathematical operation
+		nString = strconv.Itoa(int(n))
+	}
+	return []int{int(n), step} //return slice of int {current_number_when_2_digits, number_of_step}
+} //so we change number to string, do loop based from it's length, use counter and update n with the math operation
+// Pro solution 1
+func Seven1(n int64) []int {
+	r := 0                                //r as a step
+	for ; n >= 100; n = n/10 - 2*(n%10) { //loop if n >= 100 (number reach 100 value), of course got 3 digits
+		r += 1
+	}
+	return []int{int(n), r} //return slice of int {current_number_when_2_digits, number_of_step}
+} //we do calculation and update the n also make it as a loop at the same time in one line
+// Pro solution 2
+func Seven2(n int64) []int { //just do n >= 100 in loop, not change it into string
+	i := 0
+	for n >= 100 {
+		n = n/10 - 2*(n%10) //do math calculation in one line makes it more clean
+		i++
+	}
+	return []int{int(n), i}
+} //same as my solution but more efficient
