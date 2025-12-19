@@ -186,4 +186,53 @@ function seven2(int $m): array {
 } //the ++$steps (pre-increment) syntax is for increases the variable's value before 
 //it's used in an expression, while $steps++ (post-increment) uses the variable's current value in the expression and 
 //then increases it
+
+//Codewars - Drying Potatoes
+//John bought potatoes: their weight is 100 kilograms. Potatoes contain water and dry matter. The water content is 
+//99 percent of the total weight. He thinks they are too wet and puts them in an oven - at low temperature - for 
+//them to lose some water. At the output the water content is only 98%. What is the total weight in kilograms (water
+//content plus dry matter) coming out of the oven? He finds 50 kilograms and he thinks he made a mistake: "So much 
+//weight lost for such a small change in water content!" Can you help him?
+//Write function potatoes with p0 (initial percent of water), w0 (initial weight), p1 (final percent of water)
+//potatoes() should return the final weight coming out of the oven w1 truncated as an int.
+//Example: potatoes(99, 100, 98) --> 50, potatoes(82, 127, 80) --> 114
+//Math analyze step by step for example 1:
+//1. Calculate dry matter: if water is 99%, then dry matter is 1%
+//	dry matter = 1% of 100 kg = 1 kg (that 1 kg of dry matter stays constant forever)
+//2. After drying: water = 98%, dry matter = 2% (that same 1 kg dry matter is now 2% of the total weight)
+//3. Calculate final weight: 1 kg = 2% of total weight
+//	total weight = (1 / 2%) x 100% = 50 kg
+//Math analyze step by step for example 2:
+//1. Calculate dry matter: if water is 82%, then dry matter is 100% - 82% = 18%
+//	dry matter = 18% of 127 kg = 22,86 kg (that 22,6 kg of dry matter stays constant forever)
+//2. After drying: water = 80%, dry matter = 20% (that same 22,86 kg dry matter is now 20% of the total weight)
+//3. Calculate final weight: 22,86 kg = 20% of total weight
+//	total weight = (22,86 / 20%) x 100% = 114,3 kg 
+function potatoes($p0, $w0, $p1) {
+    $dryMatter = 100 - $p0;
+    $dryMatterWeight = ($dryMatter / 100) * $w0;
+    $finalDryMatter = 100 - $p1;
+    $w1 = ($dryMatterWeight / $finalDryMatter) * 100; 
+    return intval(round($w1));
+}
+//Pro solution 1
+function potatoes1(int $p0, int $w0, int $p1): int {
+    return $w0 * (100 - $p0) / (100 - $p1);
+} //do it straight as a return, do calculculation in the return
+//Pro solution 2
+function potatoes2($p0, $w0, $p1): int {
+    return floor($w0 * 0.01 * (100 - $p0) / (0.01 * (100 - $p1)));
+} //same, straight as before, but conver all / 100 into * 0.01
+//Pro solution 3
+function potatoes3($p0, $w0, $p1) {
+    return intdiv($w0 * (100 - $p0), (100 - $p1)); //intdiv() function in PHP performs integer division, returning 
+} //the integer part of the quotient and discarding any remainder
+//Pro solution 4
+function potatoes4($p0, $w0, $p1) {
+    return (int)((double)$w0 * (100.0 - (double)$p0) / (100.0 - (double)$p1));
+} //(double) is a type cast, it forces a value to be treated as a floating-point number. 
+// double = float, they are the same thing, so these are equivalent: (double)$x and (float)$x
+//PHP integers do integer math if you’re not careful, Example: echo 1 / 2;  (result in PHP 7+ → 0.5) but older PHP 
+//versions (and some mixed expressions) could cause unexpected truncation when all operands are integers, using 
+//(double) forces floating-point arithmetic
 ?>

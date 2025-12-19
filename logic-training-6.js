@@ -178,3 +178,61 @@ function seven2(m, n = 0) { //declare the step n in the function parameter
 } //using recursive funtion concept, the ++n (pre-increment) syntax is for increases the variable's value before 
 //it's used in an expression, while n++ (post-increment) uses the variable's current value in the expression and 
 //then increases it
+
+//Codewars - Drying Potatoes
+//John bought potatoes: their weight is 100 kilograms. Potatoes contain water and dry matter. The water content is 
+//99 percent of the total weight. He thinks they are too wet and puts them in an oven - at low temperature - for 
+//them to lose some water. At the output the water content is only 98%. What is the total weight in kilograms (water
+//content plus dry matter) coming out of the oven? He finds 50 kilograms and he thinks he made a mistake: "So much 
+//weight lost for such a small change in water content!" Can you help him?
+//Write function potatoes with p0 (initial percent of water), w0 (initial weight), p1 (final percent of water)
+//potatoes() should return the final weight coming out of the oven w1 truncated as an int.
+//Example: potatoes(99, 100, 98) --> 50, potatoes(82, 127, 80) --> 114
+//Math analyze step by step for example 1:
+//1. Calculate dry matter: if water is 99%, then dry matter is 1%
+//	dry matter = 1% of 100 kg = 1 kg (that 1 kg of dry matter stays constant forever)
+//2. After drying: water = 98%, dry matter = 2% (that same 1 kg dry matter is now 2% of the total weight)
+//3. Calculate final weight: 1 kg = 2% of total weight
+//	total weight = (1 / 2%) x 100% = 50 kg
+//Math analyze step by step for example 2:
+//1. Calculate dry matter: if water is 82%, then dry matter is 100% - 82% = 18%
+//	dry matter = 18% of 127 kg = 22,86 kg (that 22,6 kg of dry matter stays constant forever)
+//2. After drying: water = 80%, dry matter = 20% (that same 22,86 kg dry matter is now 20% of the total weight)
+//3. Calculate final weight: 22,86 kg = 20% of total weight
+//	total weight = (22,86 / 20%) x 100% = 114,3 kg 
+function potatoes(p0, w0, p1) {
+    let dryMatter = 100 - p0;
+    let dryMatterWeight = (dryMatter / 100) * w0;
+    let finalDryMatter = 100 - p1;
+    let w1 = (dryMatterWeight / finalDryMatter) * 100;
+    return Math.floor(w1)
+}
+//Pro solution 1
+function potatoes1(p0, w0, p1) {
+    return Math.floor(w0 * (100 - p0) / (100 - p1))
+} //do it straight as a return
+//Pro solution 2
+function potatoes2(p0, w0, p1) {
+    return ~~(w0 * (100.0 - p0) / (100.0 - p1))
+} //same as before, do it straight, ~~ is a fast way to convert a number to a 32-bit integer by truncating the 
+//decimal part, this is how it works (both 2 is the same):
+//~~x ≈ Math.trunc(x)
+//~~x ≈ parseInt(x, 10) (for positive numbers)
+//Pro solution 3
+const potatoes3 = (p0, w0, p1) => (100 - p0) / (100 - p1) * w0 ^ 0;
+//same, straight return the calculation, but with arrow function syntax, ^ is the bitwise XOR (exclusive OR) 
+//operator, when we do x ^ 0:
+//JavaScript converts x to a 32-bit signed integer, performs XOR with 0, then returns the integer result
+//since XOR with 0 does nothing to the bits so: 
+//x XOR 0 = x (the real purpose is NOT XOR, the purpose is the integer conversion)
+//Pro solution 4
+function potatoes4(p0, w0, p1) {
+  //do the math first
+  //50 = 100-99+49
+  //w1 = w0 - w0*p0 + w1*p1
+  // =>
+  //w1 - w1*p1 = w0 - w0*p0
+  //w1*(1 -p1) = w0 - w0*p0
+  //w1 = (w0 - w0*p0) / (1 - p1)
+  return Math.trunc(Math.fround((w0 - w0 * (p0 / 100)) / (1 - (p1 / 100))));
+}

@@ -213,3 +213,50 @@ func Seven2(n int64) []int { //just do n >= 100 in loop, not change it into stri
 	}
 	return []int{int(n), i}
 } //same as my solution but more efficient
+
+// Codewars - Drying Potatoes
+// John bought potatoes: their weight is 100 kilograms. Potatoes contain water and dry matter. The water content is
+// 99 percent of the total weight. He thinks they are too wet and puts them in an oven - at low temperature - for
+// them to lose some water. At the output the water content is only 98%. What is the total weight in kilograms (water
+// content plus dry matter) coming out of the oven? He finds 50 kilograms and he thinks he made a mistake: "So much
+// weight lost for such a small change in water content!" Can you help him?
+// Write function potatoes with p0 (initial percent of water), w0 (initial weight), p1 (final percent of water)
+// potatoes() should return the final weight coming out of the oven w1 truncated as an int.
+// Example: potatoes(99, 100, 98) --> 50, potatoes(82, 127, 80) --> 114
+// Math analyze step by step for example 1:
+//  1. Calculate dry matter: if water is 99%, then dry matter is 1%
+//     dry matter = 1% of 100 kg = 1 kg (that 1 kg of dry matter stays constant forever)
+//  2. After drying: water = 98%, dry matter = 2% (that same 1 kg dry matter is now 2% of the total weight)
+//  3. Calculate final weight: 1 kg = 2% of total weight
+//     total weight = (1 / 2%) x 100% = 50 kg
+//
+// Math analyze step by step for example 2:
+//  1. Calculate dry matter: if water is 82%, then dry matter is 100% - 82% = 18%
+//     dry matter = 18% of 127 kg = 22,86 kg (that 22,6 kg of dry matter stays constant forever)
+//  2. After drying: water = 80%, dry matter = 20% (that same 22,86 kg dry matter is now 20% of the total weight)
+//  3. Calculate final weight: 22,86 kg = 20% of total weight
+//     total weight = (22,86 / 20%) x 100% = 114,3 kg
+func Potatoes(p0, w0, p1 int) int {
+	dryMatter := 100 - float64(p0)
+	dryMatterWeight := dryMatter * float64(w0) / 100 //always do the multiply process first
+	finalDryMatter := 100 - float64(p1)
+	w1 := dryMatterWeight * 100 / finalDryMatter //always do the multiply process first
+	return int(w1)
+} //just do the calculation step by step like the math analyze
+// Pro solution 1
+func Potatoes1(p0, w0, p1 int) int {
+	return w0 * 100 * (100 - p0) / (100 - p1) / 100
+} //do it straight as a return
+// Pro solution 2
+func Potatoes2(p0, w0, p1 int) int {
+	return w0 * (100 - p0) / (100 - p1)
+} //same as before, do it straight in return but simple, cause there's "* 100" and "/ 100", just delete that part
+// Pro solution 3
+func Potatoes3(p0, w0, p1 int) int {
+	const percent = 100
+	return int(float64(w0) * (float64(percent-p0) / float64(percent-p1)))
+} //same but still playing with the float64 data type
+// Pro solution 4
+func Potatoes4(p0, w0, p1 int) int {
+	return (100 - p0) * w0 / (100 - p1)
+} //same as before, but we just change the order of multiply (math process)
