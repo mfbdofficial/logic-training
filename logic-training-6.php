@@ -235,4 +235,103 @@ function potatoes4($p0, $w0, $p1) {
 //PHP integers do integer math if you’re not careful, Example: echo 1 / 2;  (result in PHP 7+ → 0.5) but older PHP 
 //versions (and some mixed expressions) could cause unexpected truncation when all operands are integers, using 
 //(double) forces floating-point arithmetic
+
+//Codewars - What Dominates Your Array?
+//A zero-indexed array arr consisting of n integers is given. The dominator of array arr is the value that occurs 
+//in more than half of the elements of arr. For example, consider array arr such that arr = [3,4,3,2,3,1,3,3]. The 
+//dominator of arr is 3 because it occurs in 5 out of 8 elements of arr and 5 is more than a half of 8. Write a 
+//function dominator(arr) that, given a zero-indexed array arr consisting of n integers, returns the dominator of 
+//arr. The function should return −1 if array does not have a dominator. All values in arr will be >=0.
+function dominator($arr) {
+    $halfLimit = count($arr) / 2;
+    $numDone = [];
+    for ($i = 0; $i < count($arr); $i++) {
+        $current = $arr[$i];
+        $counter = 0;
+        if (!in_array($current, $numDone)) {
+            for ($j = 0; $j < count($arr); $j++) {
+                if ($current == $arr[$j]) {
+                    $counter++;
+                }
+            }
+            $numDone[] = $current;
+        }
+        if ($counter > $halfLimit) {
+            return $current;
+        }
+    }
+    return -1;
+} //the most common basic way
+//My other solution 1
+function dominator0($arr) {
+    $halfLimit = count($arr) / 2;
+    $numDone = [];
+    for ($i = 0; $i < count($arr); $i++) {
+        $current = $arr[$i];
+        $counter = 0;
+        if (!contains0($numDone, $current)) {
+            for ($j = 0; $j < count($arr); $j++) {
+                if ($current == $arr[$j]) {
+                    $counter++;
+                }
+            }
+            $numDone[] = $current;
+        }
+        if ($counter > $halfLimit) {
+            return $current;
+        }
+    }
+    return -1;
+}
+function contains0($arr, $current) {
+    for ($i = 0; $i < count($arr); $i++) {
+        if ($current == $arr[$i]) {
+            return true;
+        }
+    }
+    return false;
+} //same as before, but we use another function manually to change the in_array() if that's not allowed
+//My other solution 2
+function dominator00($arr) {
+    if (count($arr) <= 0) {
+        return -1;
+    } 
+    $candidate = $arr[0]; //phase 1, find candidate (using Boyer-Moore algorithm)
+    $count = 1;
+    for ($i = 0; $i < count($arr); $i++) {
+        if ($candidate == $arr[$i]) {
+            $count++; //increase count when we see the same number
+        } else {
+            $count--; //decrease count when we see a different number
+        }
+        if ($count == 0) { //when count reaches 0, we abandon the current candidate and choose a new one
+            $candidate = $arr[$i];
+            $count = 1;
+        } 
+    }
+    $occurance = 0; //phase 2, verify candidate
+    for ($j = 0; $j < count($arr); $j++) { //make sure the candidate we get is really the majority (more than the half), by count it
+        if ($candidate == $arr[$j]) { //using for loop
+            $occurance++;
+        }
+    }
+    if ($occurance > count($arr) / 2) { //then compare it with the half size based from slice's length divide by 2
+        return $candidate;
+    }
+    return -1;
+} //filter every empty array, find majority candidate using Boyer-Moore algorith, then verify the cannditate > half
+//more about Boyer-Moore algorithm:
+//- A dominator appears more than half
+//- Pair every dominator value with a different value → dominator still survives
+//so the process we do is:
+//- Increase count when we see the same number
+//- Decrease count when we see a different number
+//- When count reaches 0, we abandon the current candidate and choose a new one
+//why this always works (simple proof)
+//- Dominator count > n/2
+//- All non-dominator elements combined < n/2
+//- Pairing cancels one dominator with one non-dominator
+//- Dominator cannot be fully canceled
+//- It must remain as final candidate
+//mental model: “Every different number cancels one vote of the current candidate; only a true majority can survive.”
 ?>

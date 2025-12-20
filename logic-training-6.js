@@ -236,3 +236,134 @@ function potatoes4(p0, w0, p1) {
   //w1 = (w0 - w0*p0) / (1 - p1)
   return Math.trunc(Math.fround((w0 - w0 * (p0 / 100)) / (1 - (p1 / 100))));
 }
+
+//Codewars - What Dominates Your Array?
+//A zero-indexed array arr consisting of n integers is given. The dominator of array arr is the value that occurs 
+//in more than half of the elements of arr. For example, consider array arr such that arr = [3,4,3,2,3,1,3,3]. The 
+//dominator of arr is 3 because it occurs in 5 out of 8 elements of arr and 5 is more than a half of 8. Write a 
+//function dominator(arr) that, given a zero-indexed array arr consisting of n integers, returns the dominator of 
+//arr. The function should return −1 if array does not have a dominator. All values in arr will be >=0.
+function dominator(arr) {
+    let halfLimit = arr.length / 2;
+    let numDone = [];
+    for (let i = 0; i < arr.length; i++) {
+        let current = arr[i];
+        let counter = 0;
+        if (!numDone.includes(current)) {
+            for (let j = 0; j < arr.length; j++) {
+                if (current == arr[j]) {
+                    counter++;
+                }
+            }
+            numDone.push(current);
+        }
+        if (counter > halfLimit) {
+            return current;
+        }
+    }
+    return -1;
+} //the most common basic way
+//My other solution 1
+function dominator0(arr) {
+    let halfLimit = arr.length / 2;
+    let numDone = [];
+    for (let i = 0; i < arr.length; i++) {
+        let current = arr[i];
+        let counter = 0;
+        if (!contains0(numDone, current)) {
+            for (let j = 0; j < arr.length; j++) {
+                if (current == arr[j]) {
+                    counter++;
+                }
+            }
+            numDone.push(current);
+        }
+        if (counter > halfLimit) {
+            return current;
+        }
+    }
+    return -1;
+}
+function contains0(arr, current) {
+    for (let i = 0; i < arr.length; i++) {
+        if (current == arr[i]) {
+            return true;
+        }
+    }
+    return false;
+} //same as before, but we use another function manually to change the .includes() if that's not allowed
+//My other solution 2
+function dominator00(arr) {
+    if (arr.length <= 0) {
+        return -1;
+    }
+    let candidate = arr[0]; //phase 1, find candidate (using Boyer-Moore algorithm)
+    let count = 1;
+    for (let i = 1; i < arr.length; i++) {
+        if (candidate == arr[i]) {
+            count++; //increase count when we see the same number
+        } else {
+            count--; //decrease count when we see a different number
+        }
+        if (count == 0) { //when count reaches 0, we abandon the current candidate and choose a new one
+            candidate = arr[i];
+            count = 1;
+        }
+    }
+    let occurance = 0; //phase 2, verify candidate
+    for (let j = 0; j < arr.length; j++) { //make sure the candidate we get is really the majority (more than the half), by count it
+        if (candidate == arr[j]) { //using for loop
+            occurance++;
+        }
+    }
+    if (occurance > arr.length / 2) { //then compare it with the half size based from slice's length divide by 2
+        return candidate;
+    }
+    return -1;
+} //filter every empty array, find majority candidate using Boyer-Moore algorith, then verify the cannditate > half
+//more about Boyer-Moore algorithm:
+//- A dominator appears more than half
+//- Pair every dominator value with a different value → dominator still survives
+//so the process we do is:
+//- Increase count when we see the same number
+//- Decrease count when we see a different number
+//- When count reaches 0, we abandon the current candidate and choose a new one
+//why this always works (simple proof)
+//- Dominator count > n/2
+//- All non-dominator elements combined < n/2
+//- Pairing cancels one dominator with one non-dominator
+//- Dominator cannot be fully canceled
+//- It must remain as final candidate
+//mental model: “Every different number cancels one vote of the current candidate; only a true majority can survive.”
+//Pro solution 1
+function dominator1(arr) {
+    arr.sort(); //just do sorting first
+    for (var i = 0, v = 0, c = 0; i < arr.length; i++) { //do loop for every element, c as counter, v as current value
+        if (v == arr[i]) c++; //cause it already sorted, everytime finding same value v, then just counter up
+            else { //if finding difference value v, then just change the value v with the new one
+                v = arr[i];
+                c = 1;
+            }
+        if (c > arr.length / 2) return v; //if finding the moment when the counter c is more than half, then intercept
+    } //it, just return the value v immediately
+    return -1;
+}
+//Pro solution 2
+function dominator2(arr) {
+    for(let i = 0, obj = {}; i < arr.length; i++) {
+  	    obj[arr[i]] = obj[arr[i]] + 1 || 1
+  	    if(obj[arr[i]] > arr.length / 2) return arr[i]
+    }
+    return -1 
+} //playing with object, need more research
+//Pro solution 3
+const dominator3 = arr => {
+   let count  = {};
+    arr.forEach(el => {
+        count[el] ? count[el]++ : count[el] = 1;
+    })
+    for (let k in count) {
+        if (count[k] > arr.length / 2) return + k
+    }
+    return -1;
+}

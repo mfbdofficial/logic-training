@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"math"
+	"slices"
 	"strconv"
 	"strings"
 )
@@ -260,3 +261,126 @@ func Potatoes3(p0, w0, p1 int) int {
 func Potatoes4(p0, w0, p1 int) int {
 	return (100 - p0) * w0 / (100 - p1)
 } //same as before, but we just change the order of multiply (math process)
+
+// Codewars - What Dominates Your Array?
+// A zero-indexed array arr consisting of n integers is given. The dominator of array arr is the value that occurs
+// in more than half of the elements of arr. For example, consider array arr such that arr = [3,4,3,2,3,1,3,3]. The
+// dominator of arr is 3 because it occurs in 5 out of 8 elements of arr and 5 is more than a half of 8. Write a
+// function dominator(arr) that, given a zero-indexed array arr consisting of n integers, returns the dominator of
+// arr. The function should return −1 if array does not have a dominator. All values in arr will be >=0.
+func Dominator(a []int) int {
+	halfLimit := len(a) / 2
+	var numDone []int
+	for i := 0; i < len(a); i++ {
+		current := a[i]
+		counter := 0
+		if !slices.Contains(numDone, current) { //need to import "slices" package
+			for j := 0; j < len(a); j++ {
+				if current == a[j] {
+					counter++
+				}
+			}
+			numDone = append(numDone, current)
+		}
+		if counter > halfLimit {
+			return current
+		}
+	}
+	return -1
+} //first solution doesn't work because Codewars doesn't support "slices" package
+// My other solution 1
+func Dominator0(a []int) int {
+	halfLimit := len(a) / 2
+	var numDone []int
+	for i := 0; i < len(a); i++ {
+		current := a[i]
+		counter := 0
+		if !contains0(numDone, current) {
+			for j := 0; j < len(a); j++ {
+				if current == a[j] {
+					counter++
+				}
+			}
+			numDone = append(numDone, current)
+		}
+		if counter > halfLimit {
+			return current
+		}
+	}
+	return -1
+}
+func contains0(arr []int, val int) bool {
+	for _, v := range arr {
+		if v == val {
+			return true
+		}
+	}
+	return false
+} //same as before, but we use another function manually to change the "slices" package
+// My other solution 2
+func Dominator00(a []int) int {
+	if len(a) == 0 {
+		return -1
+	}
+	candidate := a[0] //phase 1, find candidate (using Boyer-Moore algorithm)
+	count := 1
+	for i := 1; i < len(a); i++ {
+		if a[i] == candidate {
+			count++ //increase count when we see the same number
+		} else {
+			count-- //decrease count when we see a different number
+		}
+		if count == 0 { //when count reaches 0, we abandon the current candidate and choose a new one
+			candidate = a[i]
+			count = 1
+		}
+	}
+	occurrences := 0      //phase 2, verify candidate
+	for _, v := range a { //make sure the candidate we get is really the majority (more than the half), by count it
+		if v == candidate { //using for loop
+			occurrences++
+		}
+	}
+	if occurrences > len(a)/2 { //then compare it with the half size based from slice's length divide by 2
+		return candidate
+	}
+	return -1
+} //filter every empty array, find majority candidate using Boyer-Moore algorith, then verify the cannditate > half
+// more about Boyer-Moore algorithm:
+// - A dominator appears more than half
+// - Pair every dominator value with a different value → dominator still survives
+// so the process we do is:
+// - Increase count when we see the same number
+// - Decrease count when we see a different number
+// - When count reaches 0, we abandon the current candidate and choose a new one
+// why this always works (simple proof)
+// - Dominator count > n/2
+// - All non-dominator elements combined < n/2
+// - Pairing cancels one dominator with one non-dominator
+// - Dominator cannot be fully canceled
+// - It must remain as final candidate
+// mental model: “Every different number cancels one vote of the current candidate; only a true majority can survive.”
+// Pro solution 1
+func Dominator1(a []int) int {
+	counts := make(map[int]int)
+	for _, val := range a {
+		counts[val]++
+		if counts[val] > len(a)/2 {
+			return val
+		}
+	}
+	return -1
+} //using map, need more research
+// Pro solution 2
+func Dominator2(a []int) int {
+	m := make(map[int]int)
+	for _, val := range a {
+		m[val] += 1
+	}
+	for ele, count := range m {
+		if count > len(a)/2 {
+			return ele
+		}
+	}
+	return -1
+} //also using map, need more research
