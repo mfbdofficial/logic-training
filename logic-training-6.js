@@ -367,3 +367,59 @@ const dominator3 = arr => {
     }
     return -1;
 }
+
+//Codewars - Char Code Calculation
+//Given a string, turn each character into its ASCII character code and join them together to create a number - 
+//let's call this number total1:
+//'ABC' --> 'A' = 65, 'B' = 66, 'C' = 67 --> 656667
+//Then replace any incidence of the number 7 with the number 1, and call this number 'total2':
+//total1 = 656667
+//              ^
+//total2 = 656661
+//Then return the difference between the sum of the digits in total1 and total2:
+// (6 + 5 + 6 + 6 + 6 + 7)
+//-(6 + 5 + 6 + 6 + 6 + 1)
+//-------------------------
+//                      6
+function calc(x) {
+    let xArr = x.split("");
+    let xArrASCII = [];
+    xArr.forEach(letter => {
+        xArrASCII.push(letter.charCodeAt(0));
+    })  
+    let xArrTotal1 = xArrASCII.join("").split("");
+    let xArrTotal2 = [];
+    xArrTotal1.forEach(sNumber => {
+        if (sNumber == "7") {
+            sNumber = "1";
+        }
+        xArrTotal2.push(number);
+    })
+    let total1 = 0;
+    xArrTotal1.forEach(sNumber => {
+        let number = Number(sNumber);
+        total1 += number; 
+    })
+    let total2 = 0;
+    xArrTotal2.forEach(sNumber => {
+        let number = Number(sNumber);
+        total2 += number; 
+    })
+    return total1 - total2;
+}
+//Pro solution 1
+function calc1(x) {
+    let sum = n => [...n].reduce((a,b) => +a + +b); //function to sum every string number digit in a string
+    let total1 = x.replace(/./g, x => x.charCodeAt(0)); //use regex to convert every string letter into Unicode (0 as the index in charCodeAt) 
+    let total2 = total1.replace(/7/g, '1'); //use regex to change every "7" Unicode string in total1 into "1" 
+    return sum(total1) - sum(total2); //do substraction between total1 and total2
+} 
+//Pro solution 2
+const calc2 = x => (x.replace(/./g, x => x.charCodeAt()).match(/7/g) || []).length * 6; //regex replace to Unicode,
+//do regex to match every "7", count the length and multiple it with 6, when 6 itself is the different value will be 
+//counted (7 - 1 = 6). So it's like we count how much we found string "7" and multiple it with 6
+//Pro solution 3
+function calc3(x) {
+    return x.split('').map(c => c.charCodeAt(0)).join('').split('').map(Number).filter(x => x === 7).length * 6;
+} //split the string, do map to change every element into Unicode, join it fist (as a map condition rules), split
+//the joined Unicode again, do map again to filter if we found 7, count it's length and multiple with 6 (like before)

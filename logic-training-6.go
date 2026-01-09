@@ -384,3 +384,85 @@ func Dominator2(a []int) int {
 	}
 	return -1
 } //also using map, need more research
+
+// Codewars - Char Code Calculation
+// Given a string, turn each character into its ASCII character code and join them together to create a number -
+// let's call this number total1:
+// 'ABC' --> 'A' = 65, 'B' = 66, 'C' = 67 --> 656667
+// Then replace any incidence of the number 7 with the number 1, and call this number 'total2':
+// total1 = 656667 -> total2 = 656661
+// Then return the difference between the sum of the digits in total1 and total2:
+// (6 + 5 + 6 + 6 + 6 + 7) - (6 + 5 + 6 + 6 + 6 + 1) = 6
+func Calc(s string) int {
+	sArr := strings.Split(s, "")
+	sArrASCII := make([]string, 0, len(s))
+	for _, letter := range sArr {
+		sArrASCII = append(sArrASCII, strconv.Itoa(int(letter[0]))) //need to import "strconv" package
+	}
+	sArrTotal1 := strings.Split(strings.Join(sArrASCII, ""), "") //need to import "strings" package
+	sArrTotal2 := make([]string, 0, len(sArrTotal1))
+	for _, number := range sArrTotal1 {
+		if number == "7" {
+			number = "1"
+		}
+		sArrTotal2 = append(sArrTotal2, number)
+	}
+	total1 := 0
+	for _, sNumber := range sArrTotal1 {
+		number, err := strconv.Atoi(sNumber)
+		if err != nil {
+			return 0
+		}
+		total1 = total1 + number
+	}
+	total2 := 0
+	for _, sNumber := range sArrTotal2 {
+		number, err := strconv.Atoi(sNumber)
+		if err != nil {
+			return 0
+		}
+		total2 = total2 + number
+	}
+	return total1 - total2
+} //manual way -> split string, change itu ASCII, split ASCII, create a second data (rules 7 into 1), sum the total
+// of each, then just do subtraction operation
+// Pro solution 1
+func Calc1(s string) int {
+	n := 0
+	for _, c := range s {
+		if (c / 10) == 7 {
+			n++ //checking for the last digit number
+		}
+		if (c % 10) == 7 { //everytime there's 7, then do counter up (cause that's the place where making the result
+			n++ //will be different, other number just gonna kill each other into 0)
+		}
+	}
+	return 6 * n //n (that we do counter up is how much we found the digit that need to be changed from 7 to 1)
+} //6 is the different value will be counted (7 - 1 = 6)
+// all number that not 7 will gone anyway, so just make a counter up everytime  there's 7
+// Pro solution 2
+func Calc2(s string) int {
+	str := ""
+	for _, val := range s { //when we loop over a string using for _, val := range s, the variable val is not a
+		//string; it is a rune (an alias for int32). A rune represents the Unicode code point of the character.
+		str += fmt.Sprintf("%d", val) //fmt.Sprintf to format a string according to a format specifier and return
+	} //the resulting string, rather than printing it to standard output like fmt.Printf, so we create a joined
+	//string of a converted string (rune) value
+	return strings.Count(str, "7") * 6 //count how much we found string "7" and multiple it with 6 like before
+} //this is the standard format for fmt.Sprintf :
+// - %s = the value as a string
+// - %d = the value as a decimal integer
+// - %.2f = a floating-point number with two decimal places
+// - %v = the value in its default format
+// - %+v = for structs, includes field names
+// - %T = the type of the value
+// - %p = the pointer address in hexadecimal
+// Pro solution 3
+func Calc3(s string) int {
+	diff := 0
+	for _, d := range s {
+		ds := strconv.Itoa(int(d))         //convert the string (rune) into string number
+		diff += 6 * strings.Count(ds, "7") //check if that string number is "7", we'll get 1 multiple by 6 and do sum
+	} //we do that for every loop, so strings.Count will give us only 1 or 0
+	return diff
+} //the concept is the same, but we do string convert, and sum in every loop

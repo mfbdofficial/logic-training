@@ -334,4 +334,61 @@ function dominator00($arr) {
 //- Dominator cannot be fully canceled
 //- It must remain as final candidate
 //mental model: “Every different number cancels one vote of the current candidate; only a true majority can survive.”
+
+//Codewars - Char Code Calculation
+//Given a string, turn each character into its ASCII character code and join them together to create a number - 
+//let's call this number total1:
+//'ABC' --> 'A' = 65, 'B' = 66, 'C' = 67 --> 656667
+//Then replace any incidence of the number 7 with the number 1, and call this number 'total2':
+//total1 = 656667
+//              ^
+//total2 = 656661
+//Then return the difference between the sum of the digits in total1 and total2:
+// (6 + 5 + 6 + 6 + 6 + 7)
+//-(6 + 5 + 6 + 6 + 6 + 1)
+//-------------------------
+//                      6
+function calc($s) {
+    $sArr = str_split($s); //why not explode($delimiter, $string)? because it would be error if delimiter is ""
+    $sArrASCII = [];
+    foreach ($sArr as $letter) {
+        $sArrASCII[] = ord($letter);
+    }
+    $sArrTotal1 = str_split(join("", $sArrASCII));
+    $sArrTotal2 = [];
+    foreach ($sArrTotal1 as $sNumber) {
+        if ($sNumber == "7") {
+            $sNumber = "1";
+        }
+        $sArrTotal2[] = $sNumber;
+    }
+    $total1 = 0;
+    foreach ($sArrTotal1 as $sNumber) {
+        $number = (int)$sNumber;
+        $total1 += $number;
+    }
+    $total2 = 0;
+    foreach ($sArrTotal2 as $sNumber) {
+        $number = (int)$sNumber;
+        $total2 += $number;
+    }
+    return $total1 - $total2;
+}
+//Pro solution 1
+function calc1($s) {
+    $total1 = implode(array_map(fn(string $s) => ord($s), str_split($s))); //split the string, do map to change every
+    //element into Unicode string, then implode it into one string data again
+    $total2 = str_replace('7', '1', $total1); //replace every '7' found in the $total1 variable and change it into '1'
+    return array_sum(str_split($total1)) - array_sum(str_split($total2)); //do substraction between the sum of array
+}  //$total1 and the sum of array $total2
+//Pro solution 2
+function calc2($s) {
+    return substr_count(join(array_map('ord', str_split($s))), '7') * 6; //split the string, do map to change every
+} //element into Unicode with ord() built-in function, join it, then count for '7' detected, multiple it with 6. When 
+//6 itself is the different value will be counted (7 - 1 = 6) 
+function calc3($s) {
+    return array_sum(str_split(join(array_map('ord', str_split($s))))) - array_sum(str_split(str_replace('7', '1', join(array_map('ord', str_split($s))))));
+} //split the string, do map to change every element with ord(), join it, split and do sum of elements (as total1)
+//for total2 we do the same but after we join the Unicode, we replace every '7' founded into '1', then split and do
+//sum of that elements. Finally we do substraction (total1 - total2)
 ?>
