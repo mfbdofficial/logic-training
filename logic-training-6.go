@@ -466,3 +466,11 @@ func Calc3(s string) int {
 	} //we do that for every loop, so strings.Count will give us only 1 or 0
 	return diff
 } //the concept is the same, but we do string convert, and sum in every loop
+
+// Codewars - Ordered Count of Characters
+// Count the number of occurrences of each character and return it as a (list of tuples) in order of appearance. For
+// empty output return (an empty list). Consult the solution set-up for the exact data structure implementation
+// depending on your language.
+func OrderedCount(text string) []Tuple {
+
+}
